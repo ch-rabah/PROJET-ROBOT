@@ -12,7 +12,5 @@ Ce projet a pour objectif de créer un simulateur 3D pour tester des algorithmes
 - **Visualisation en temps réel** : Suivi des actions du robot dans un environnement simulé.
 
 ## Technologies
-- Python
-- PyBullet (moteur physique)
-- PyOpenGL ou Panda3D (moteur graphique)
+
 
