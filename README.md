@@ -1,19 +1,24 @@
-# Simulation 3D de Robot
+# Simulation 2D de Robot
 
-Ce projet a pour objectif de créer un simulateur 3D pour tester des algorithmes de robotique. Le simulateur permettra de :
-- **Contourner des obstacles**.
-- **Suivre des lignes**.
-- **Éviter des murs**.
+## Objectif du projet
+
+Ce projet a pour but de créer un simulateur 2D pour tester des algorithmes de robotique. Le simulateur permettra de simuler les comportements suivants du robot :
+
+- Contourner des obstacles.
+- Suivre des lignes.
+- Éviter des murs.
 
 ## Fonctionnalités
-- **Moteur graphique et physique personnalisé** : Simulation 3D réaliste.
-- **Environnement modulaire** : Possibilité d'ajouter différents niveaux et types d'obstacles.
-- **Contrôle du robot** : Algorithmes pour le déplacement autonome.
-- **Visualisation en temps réel** : Suivi des actions du robot dans un environnement simulé.
 
-## Technologies
+- **Moteur graphique personnalisé** : Simulation 2D avec Pygame.
+- **Environnement modulaire** : Possibilité d'ajouter différents types d'obstacles et de personnaliser l'environnement.
+- **Contrôle du robot** : Implémentation d'algorithmes pour le déplacement autonome du robot dans l'environnement.
+- **Visualisation en temps réel** : Suivi des actions du robot avec un affichage graphique en temps réel de sa position, de ses déplacements et de l'état de la simulation.
+
+## Technologies utilisées
+
+- **Python** : Langage principal utilisé pour développer la simulation.
+- **Pygame** : Bibliothèque utilisée pour la gestion des graphiques, de la gestion des événements et de l'interface utilisateur.
 
 ## Liens
-
-- **https://trello.com/b/dLotMAqw/projet
-
+  - **Trello** : **https://trello.com/b/dLotMAqw/projet
