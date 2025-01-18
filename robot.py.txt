@@ -1,0 +1,43 @@
+class Robot:
+    def __init__(self, x, y, vitesse, direction):
+
+        self.x = x
+        self.y = y
+        self.vitesse = vitesse
+        self.direction = direction  
+
+    def avancer(self):
+
+        if self.direction == "haut":
+            self.y += self.vitesse
+        elif self.direction == "bas":
+            self.y -= self.vitesse
+        elif self.direction == "droite":
+            self.x += self.vitesse
+        elif self.direction == "gauche":
+            self.x -= self.vitesse
+
+        print(f"Robot déplacé à la position ({self.x:.2f}, {self.y:.2f})")
+
+    def tourner_a_droite(self):
+
+        directions = ["haut", "droite", "bas", "gauche"]
+        index = directions.index(self.direction)
+        self.direction = directions[(index + 1) % 4]
+        print(f"Robot tourne à droite. Nouvelle direction : {self.direction}")
+
+    def tourner_a_gauche(self):
+
+        directions = ["haut", "droite", "bas", "gauche"]
+        index = directions.index(self.direction)
+        self.direction = directions[(index - 1) % 4]
+        print(f"Robot tourne à gauche. Nouvelle direction : {self.direction}")
+
+    def afficher_position(self):
+
+        print(f"Position actuelle : ({self.x:.2f}, {self.y:.2f}), Direction : {self.direction}")
+
+    def modifier_vitesse(self, nouvelle_vitesse):
+
+        self.vitesse = nouvelle_vitesse
+        print(f"Vitesse modifiée à {self.vitesse} unités par mouvement.")
