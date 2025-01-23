@@ -32,7 +32,7 @@ Le projet consiste à réaliser un programme qui servira à faire bouger un mini
 1. **pygame** https://pypi.org/project/pygame/
    - Bibliothèque pygame
   
-1. **librairie math** https://docs.python.org/3/library/math.html
-   - Bibliothèque pygame
+1. **math** https://docs.python.org/3/library/math.html
+   - Bibliothèque math
 
 ---
