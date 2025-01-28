@@ -39,7 +39,7 @@ Le projet consiste à réaliser un programme qui servira à faire bouger un mini
       - `Triangle` : Définie par trois sommets.
       - `Ligne` : Définie par deux points.
       
-Chaque sous-classe possède un constructeur spécifique et implémente les méthodes :
+    Chaque sous-classe possède un constructeur spécifique et implémente les méthodes :
         - `dessiner(ecran)` : Dessine la forme sur l'écran.
         - `est_dans(x, y)` : Vérifie si un point (x,y) appartient à la forme.
   
