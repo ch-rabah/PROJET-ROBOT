@@ -29,6 +29,18 @@ Le projet consiste à réaliser un programme qui servira à faire bouger un mini
     - Rotation avec angle dynamique (`rotation()` et `tourner()`).
     - Mise à jour des vitesses selon l'accélération (`mettre_a_jour_vitesse()`).
     - Récupération des informations du robot (position, direction, vitesse).
+
+  ### Développement des obstacles
+  - Création d'une classe mère 'Obstacle' définissant des méthodes générales (dessiner, est_dans) à implémenter dans les sous-classes.
+  - Création d'une classe intermédiaire 'Forme' pour des formes géométriques, initialisée avec un centre (pos_x, pos_y)
+  - Création des sous-classes dérivées de 'Forme':
+      - Ellipse : Définie par un centre, un grand axe, et un petit axe.
+      - Rectangle : Définie par un centre, une largeur, et une hauteur.
+      - Triangle : Définie par trois sommets.
+      - Ligne : Définie par deux points.
+      Chaque sous-classe possède un constructeur spécifique et implémente les méthodes :
+        - dessiner(ecran) : Dessine la forme sur l'écran.
+        - est_dans(x, y) : Vérifie si un point (x,y) appartient à la forme.
   
   #### Gestion graphique avec Pygame
   - Affichage d'un robot sous forme de triangle orienté en fonction de sa direction (`afficher_robot(robot)`).
