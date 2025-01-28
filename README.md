@@ -40,8 +40,8 @@ Le projet consiste à réaliser un programme qui servira à faire bouger un mini
       - `Ligne` : Définie par deux points.
       
     Chaque sous-classe possède un constructeur spécifique et implémente les méthodes :
-        - `dessiner(ecran)` : Dessine la forme sur l'écran.
-        - `est_dans(x, y)` : Vérifie si un point (x,y) appartient à la forme.
+    - `dessiner(ecran)` : Dessine la forme sur l'écran.
+    - `est_dans(x, y)` : Vérifie si un point (x,y) appartient à la forme.
   
   #### Gestion graphique avec Pygame
   - Affichage d'un robot sous forme de triangle orienté en fonction de sa direction (`afficher_robot(robot)`).
