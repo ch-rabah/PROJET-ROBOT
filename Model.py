@@ -10,16 +10,12 @@ class Robot:
         :param y: Position initiale en y
         :param vx: Vitesse initiale sur l'axe x
         :param vy: Vitesse initiale sur l'axe y
-        :param ax: Accélération initiale sur l'axe x (optionnel)
-        :param ay: Accélération initiale sur l'axe y (optionnel)
         :param direction: Direction initiale du robot (en radians, 0 par défaut)
         """
         self.x = x
         self.y = y
         self.vx = vx
         self.vy = vy
-        self.ax = ax
-        self.ay = ay
         self.direction = direction  # Direction du robot (en radians)
 
     def avancer(self, dt):
@@ -73,13 +69,5 @@ class Robot:
         self.vx += self.ax * dt
         self.vy += self.ay * dt
 
-    def appliquer_acceleration(self, ax, ay):
-        """
-        Applique une nouvelle accélération au robot.
-        
-        :param ax: Nouvelle accélération sur l'axe x
-        :param ay: Nouvelle accélération sur l'axe y
-        """
-        self.ax = ax
-        self.ay = ay
+
 
