@@ -1,5 +1,4 @@
 import math
-import numpy as np
 
 
 class Robot:
@@ -33,7 +32,7 @@ class Robot:
         self.x += self.vx * dt
         self.y += self.vy * dt
 
-    def tourner(self, angle_degrees):
+    def rotation(self, angle_degrees):
         """
         Fait tourner le robot d'un certain angle en degrés, en modifiant sa direction.
         
@@ -41,11 +40,28 @@ class Robot:
         """
         angle_radians = math.radians(angle_degrees)
         self.direction += angle_radians
-        
+
         # Mettre à jour la direction de la vitesse en fonction du nouvel angle
         new_vx = self.vx * math.cos(angle_radians) - self.vy * math.sin(angle_radians)
         new_vy = self.vx * math.sin(angle_radians) + self.vy * math.cos(angle_radians)
         self.vx, self.vy = new_vx, new_vy
+    
+    def tourner(robot, angle_total, duree, dt, angle_cumule):
+        """
+        Fait tourner le robot progressivement sans dépasser l'angle cible.
+        """
+        angle_par_dt = (angle_total / duree) * dt
+
+        # Limiter l'angle restant à tourner pour ne pas dépasser l'angle total
+        angle_restant = angle_total - angle_cumule
+        angle_a_tourner = min(angle_par_dt, angle_restant)
+
+        robot.rotation(angle_a_tourner)
+
+        angle_cumule += angle_a_tourner
+        rotation_terminee = angle_cumule >= angle_total
+        return rotation_terminee, angle_cumule
+
 
 
     def mettre_a_jour_vitesse(self, dt):
