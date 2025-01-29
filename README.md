@@ -7,7 +7,7 @@ Le projet consiste à réaliser un programme qui servira à faire bouger un mini
 ### Objectifs principaux :
 - Tracer un carré
 - S'approcher le plus vite possible et le plus près d'un mur sans le toucher
-- Suivre une balise ok
+- Suivre une balise 
 
 ### Composition du robot :
 - Un Raspberry Pi
