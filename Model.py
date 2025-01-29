@@ -83,20 +83,3 @@ class Robot:
         self.ax = ax
         self.ay = ay
 
-    def obtenir_position(self):
-        """
-        Retourne la position actuelle du robot.
-        """
-        return (self.x, self.y)
-
-    def obtenir_vitesse(self):
-        """
-        Retourne la vitesse actuelle du robot.
-        """
-        return (self.vx, self.vy)
-
-    def obtenir_direction(self):
-        """
-        Retourne la direction actuelle du robot (en radians).
-        """
-        return self.direction
