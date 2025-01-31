@@ -2,7 +2,7 @@
 
 ## Description du Projet
 
-Le projet consiste à réaliser un programme qui servira à faire bouger un mini-robot. L'objectif principal est de tester les différentes fonctions sur un simulateur avant le test physique dans le lequel on implémentera le code.
+Ce projet consiste à développer un mini-robot équipé de capteurs et contrôleur, capable de se déplacer et d'éviter des obstacles. Le but principal est de tester les fonctionnalités du robot sur un simulateur avant de le mettre en mouvement réel.
 
 ### Objectifs principaux :
 - Tracer un carré
