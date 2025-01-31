@@ -152,3 +152,11 @@ class Environnement:
         # Dimensions du monde
         min_x, max_x = self.dimensions_x
         min_y, max_y = self.dimensions_y
+
+        # Vérifier si le robot est en dehors des limites du monde
+        return (
+            x - taille_robot < min_x or
+            x + taille_robot > max_x or
+            y - taille_robot < min_y or
+            y + taille_robot > max_y
+        )
