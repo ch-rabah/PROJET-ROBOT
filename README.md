@@ -30,7 +30,7 @@ Ce projet consiste à développer un mini-robot équipé de capteurs et contrôl
     - Mise à jour des vitesses selon l'accélération (`mettre_a_jour_vitesse()`).
     - Récupération des informations du robot (position, direction, vitesse).
 
-  ### Développement des obstacles
+  #### Développement des obstacles
   - Création d'une classe mère `Obstacle` définissant des méthodes générales (`dessiner`, `est_dans`) à implémenter dans les sous-classes.
   - Création d'une classe intermédiaire `Forme` pour des formes géométriques, initialisée avec un centre (pos_x, pos_y)
   - Création des sous-classes dérivées de `Forme`:
