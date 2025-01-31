@@ -127,3 +127,9 @@ class Obstacle:
             distance = math.sqrt((robot.x - x_cercle) ** 2 + (robot.y - y_cercle) ** 2)
             return distance < robot.taille_robot + rayon
         return False
+    
+class Environnement:
+    def __init__(self,dimX= None,dimY= None):
+        self.obstacles = []  # Liste d'objets Obstacle stockés dans l'environnement
+        self.dimensions_x = dimX  # Largeur totale du monde
+        self.dimensions_y = dimY  # Hauteur totale du monde
