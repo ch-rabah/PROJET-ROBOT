@@ -2,22 +2,27 @@ import math
 
 
 class Robot:
-    def __init__(self, x, y, vx, vy, ax=0, ay=0, direction=0):
+    def __init__(self, x, y, direction=0, vitesse_gauche=0, vitesse_droite=0, distance_roues=30,taille_robot=20):
         """
-        Initialise un robot avec la position, la vitesse, l'accélération et la direction initiale.
+        Initialise un robot différentiel avec position, direction, et vitesses de roues.
         
         :param x: Position initiale en x
         :param y: Position initiale en y
-        :param vx: Vitesse initiale sur l'axe x
-        :param vy: Vitesse initiale sur l'axe y
-        :param direction: Direction initiale du robot (en radians, 0 par défaut)
+        :param direction: Direction initiale du robot (en radians)
+        :param vitesse_gauche: Vitesse initiale de la roue gauche (en unités par seconde)
+        :param vitesse_droite: Vitesse initiale de la roue droite (en unités par seconde)
+        :param distance_roues: Distance entre les roues (en unités)
+        :param taille_robot: Taille du robot (utilisé pour les collisions)
+
         """
         self.x = x
         self.y = y
-        self.vx = vx
-        self.vy = vy
-        self.direction = direction  # Direction du robot (en radians)
-
+        self.direction = direction  # Direction en radians
+        self.vitesse_gauche = vitesse_gauche
+        self.vitesse_droite = vitesse_droite
+        self.distance_roues = distance_roues
+        self.taille_robot = taille_robot
+        
     def avancer(self, dt):
         """
         Met à jour la position du robot en fonction de la vitesse et du temps écoulé.
