@@ -99,3 +99,15 @@ class Robot:
         return False, None  # Aucun obstacle détecté
 
 
+class Obstacle:
+    def __init__(self, type_forme, position, dimensions):
+        """
+        Crée un obstacle avec un type de forme, une position et des dimensions spécifiques.
+        
+        :param type_forme: Type de la forme ('rectangle', 'cercle', etc.)
+        :param position: Position de l'obstacle sous forme (x, y)
+        :param dimensions: Liste de dimensions adaptées à chaque forme (par exemple, [largeur, hauteur] pour un rectangle)
+        """
+        self.type_forme = type_forme
+        self.position = position
+        self.dimensions = dimensions
