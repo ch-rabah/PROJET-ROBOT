@@ -45,14 +45,28 @@ class Robot:
         self.y += dy
 
 
-    def mettre_a_jour_vitesse(self, dt):
+    def appliquer_vitesse_gauche(self, delta_vitesse):
         """
-        Met à jour la vitesse du robot en fonction de l'accélération et du temps écoulé.
+        Modifie la vitesse de la roue gauche en ajoutant une variation de vitesse.
         
-        :param dt: Intervalle de temps (en secondes)
+        :param delta_vitesse: Variation de la vitesse (positive ou négative)
         """
-        self.vx += self.ax * dt
-        self.vy += self.ay * dt
+        self.vitesse_gauche += delta_vitesse
 
+    def appliquer_vitesse_droite(self, delta_vitesse):
+        """
+        Modifie la vitesse de la roue droite en ajoutant une variation de vitesse.
+        
+        :param delta_vitesse: Variation de la vitesse (positive ou négative)
+        """
+        self.vitesse_droite += delta_vitesse
+    
+
+    def arreter_robot(self):
+        """
+        Modifie la vitesse de la roue droite et gauche en ajoutant la mettant à zero
+        """
+        self.vitesse_droite = 0
+        self.vitesse_gauche = 0
 
 
