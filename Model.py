@@ -133,3 +133,22 @@ class Environnement:
         self.obstacles = []  # Liste d'objets Obstacle stockés dans l'environnement
         self.dimensions_x = dimX  # Largeur totale du monde
         self.dimensions_y = dimY  # Hauteur totale du monde
+    
+    def ajouter_obstacle(self, obstacle):
+        """Ajoute un obstacle à l'environnement"""
+        self.obstacles.append(obstacle)
+
+    def detecter_sorties(self, robot):
+        """
+        Vérifie si le robot est en dehors des limites du monde.
+        Si oui, retourne True pour indiquer une sortie.
+        Sinon, retourne False.
+        """
+        # Position et taille du robot
+        x = robot.x
+        y = robot.y
+        taille_robot = robot.taille_robot
+
+        # Dimensions du monde
+        min_x, max_x = self.dimensions_x
+        min_y, max_y = self.dimensions_y
