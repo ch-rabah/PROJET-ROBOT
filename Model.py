@@ -69,4 +69,33 @@ class Robot:
         self.vitesse_droite = 0
         self.vitesse_gauche = 0
 
+    
+    def cpadistance(self, environnement):
+        """Retourne True et la distance si un obstacle est détecté devant le robot, False sinon."""
+        
+        angle = self.direction  # La direction du robot
+        step = 1  # Distance entre chaque échantillon
+        max_distance = 1000  # Distance maximale du capteur
+
+        # Position initiale du capteur (centre du robot)
+        x, y = self.x, self.y
+        current_x, current_y = x, y
+
+        # Parcourir la distance max
+        for _ in range(int(max_distance / step)):
+            # Avancer dans la direction du robot
+            current_x += step * math.cos(angle)
+            current_y += step * math.sin(angle)
+
+            # Création d'un robot virtuel pour détecter la collision
+            test_robot = Robot(current_x, current_y, direction=self.direction, taille_robot=self.taille_robot)
+
+            # Vérification de collision avec les obstacles
+            for obstacle in environnement.obstacles:
+                if obstacle.detecter_collision(test_robot):
+                    distance = math.sqrt((current_x - x) ** 2 + (current_y - y) ** 2)
+                    return True, distance
+
+        return False, None  # Aucun obstacle détecté
+
 
