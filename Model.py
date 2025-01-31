@@ -22,47 +22,27 @@ class Robot:
         self.vitesse_droite = vitesse_droite
         self.distance_roues = distance_roues
         self.taille_robot = taille_robot
-        
+
     def avancer(self, dt):
         """
-        Met à jour la position du robot en fonction de la vitesse et du temps écoulé.
+        Met à jour la position et la direction du robot sur une période de temps donnée.
         
         :param dt: Intervalle de temps (en secondes)
         """
-        # Mise à jour des positions P2.x et P2.y avec la vitesse actuelle
-        self.x += self.vx * dt
-        self.y += self.vy * dt
+        # Calcul de la vitesse linéaire et angulaire
+        vitesse_lineaire = (self.vitesse_gauche + self.vitesse_droite) / 2
+        vitesse_angulaire = (self.vitesse_droite - self.vitesse_gauche) / self.distance_roues
 
-    def rotation(self, angle_degrees):
-        """
-        Fait tourner le robot d'un certain angle en degrés, en modifiant sa direction.
-        
-        :param angle_degrees: Angle de rotation en degrés
-        """
-        angle_radians = math.radians(angle_degrees)
-        self.direction += angle_radians
+        # Mise à jour de la direction
+        self.direction += vitesse_angulaire * dt
 
-        # Mettre à jour la direction de la vitesse en fonction du nouvel angle
-        new_vx = self.vx * math.cos(angle_radians) - self.vy * math.sin(angle_radians)
-        new_vy = self.vx * math.sin(angle_radians) + self.vy * math.cos(angle_radians)
-        self.vx, self.vy = new_vx, new_vy
-    
-    def tourner(robot, angle_total, duree, dt, angle_cumule):
-        """
-        Fait tourner le robot progressivement sans dépasser l'angle cible.
-        """
-        angle_par_dt = (angle_total / duree) * dt
+        # Calcul du déplacement en x et y
+        dx = vitesse_lineaire * math.cos(self.direction) * dt
+        dy = vitesse_lineaire * math.sin(self.direction) * dt
 
-        # Limiter l'angle restant à tourner pour ne pas dépasser l'angle total
-        angle_restant = angle_total - angle_cumule
-        angle_a_tourner = min(angle_par_dt, angle_restant)
-
-        robot.rotation(angle_a_tourner)
-
-        angle_cumule += angle_a_tourner
-        rotation_terminee = angle_cumule >= angle_total
-        return rotation_terminee, angle_cumule
-
+        # Mise à jour de la position
+        self.x += dx
+        self.y += dy
 
 
     def mettre_a_jour_vitesse(self, dt):
