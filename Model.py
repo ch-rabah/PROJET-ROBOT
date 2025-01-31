@@ -111,3 +111,19 @@ class Obstacle:
         self.type_forme = type_forme
         self.position = position
         self.dimensions = dimensions
+
+    def detecter_collision(self, robot):
+        """Vérifie si l'obstacle entre en collision avec le robot."""
+        if self.type_forme == "rectangle":
+            # Collision avec un rectangle
+            x, y = self.position
+            largeur, hauteur = self.dimensions
+            return (robot.x + robot.taille_robot > x and robot.x - robot.taille_robot < x + largeur and
+                    robot.y + robot.taille_robot > y and robot.y - robot.taille_robot < y + hauteur)
+        elif self.type_forme == "cercle":
+            # Collision avec un cercle
+            x_cercle, y_cercle = self.position
+            rayon = self.dimensions[0]
+            distance = math.sqrt((robot.x - x_cercle) ** 2 + (robot.y - y_cercle) ** 2)
+            return distance < robot.taille_robot + rayon
+        return False
