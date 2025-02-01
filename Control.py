@@ -38,22 +38,23 @@ def main():
 
         # Modifier les vitesses des roues selon les touches
         if keys[pygame.K_UP]:
-            robot.appliquer_vitesse_gauche(1)
-            robot.appliquer_vitesse_droite(1)
-        if keys[pygame.K_DOWN]:
-            robot.appliquer_vitesse_gauche(-1)
-            robot.appliquer_vitesse_droite(-1)
-        if keys[pygame.K_RIGHT]:
-            robot.appliquer_vitesse_gauche(-1)
-            robot.appliquer_vitesse_droite(1)
-        if keys[pygame.K_LEFT]:
-            robot.appliquer_vitesse_gauche(1)
-            robot.appliquer_vitesse_droite(-1)
-        if keys[pygame.K_SPACE]:
-            robot.arreter_robot
-
-        # Mise à jour du robot
-        robot.avancer(dt) 
+            robot.appliquer_vitesse_gauche(10)
+            robot.appliquer_vitesse_droite(10)
+            robot.avancer(dt) 
+        elif keys[pygame.K_DOWN]:
+            robot.appliquer_vitesse_gauche(-10)
+            robot.appliquer_vitesse_droite(-10)
+            robot.avancer(dt) 
+        elif keys[pygame.K_RIGHT]:
+            robot.appliquer_vitesse_gauche(-3)
+            robot.appliquer_vitesse_droite(3)
+            robot.avancer(dt) 
+        elif keys[pygame.K_LEFT]:
+            robot.appliquer_vitesse_gauche(3)
+            robot.appliquer_vitesse_droite(-3)
+            robot.avancer(dt) 
+        else:
+            robot.arreter_robot()
 
         # Vérifier les collisions avec les obstacles
         for obstacle in environnement.obstacles:
@@ -71,7 +72,7 @@ def main():
             print(f"Distance a l'obstacle : {distance}")
 
         # Remplir l'écran avec une couleur de fond
-        screen.fill((0, 0, 0))  # Fond noir
+        screen.fill((128, 128, 128))  # Fond gris
 
         # Affichage des obstacles
         afficher_obstacles(screen, environnement.obstacles)

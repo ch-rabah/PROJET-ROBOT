@@ -2,7 +2,7 @@ import math
 
 
 class Robot:
-    def __init__(self, x, y, direction=0, vitesse_gauche=0, vitesse_droite=0, distance_roues=30,taille_robot=20):
+    def __init__(self, x, y, direction=0, vitesse_gauche=0, vitesse_droite=0, distance_roues=30,taille_robot=20,vitesse_max=200):
         """
         Initialise un robot différentiel avec position, direction, et vitesses de roues.
         
@@ -22,6 +22,7 @@ class Robot:
         self.vitesse_droite = vitesse_droite
         self.distance_roues = distance_roues
         self.taille_robot = taille_robot
+        self.vitesse_max = vitesse_max
 
     def avancer(self, dt):
         """
@@ -51,7 +52,9 @@ class Robot:
         
         :param delta_vitesse: Variation de la vitesse (positive ou négative)
         """
-        self.vitesse_gauche += delta_vitesse
+        v = self.vitesse_gauche
+        if (v + delta_vitesse < self.vitesse_max):
+            self.vitesse_gauche += delta_vitesse
 
     def appliquer_vitesse_droite(self, delta_vitesse):
         """
@@ -59,7 +62,9 @@ class Robot:
         
         :param delta_vitesse: Variation de la vitesse (positive ou négative)
         """
-        self.vitesse_droite += delta_vitesse
+        v = self.vitesse_droite
+        if (v + delta_vitesse < self.vitesse_max):
+            self.vitesse_droite += delta_vitesse
     
 
     def arreter_robot(self):
