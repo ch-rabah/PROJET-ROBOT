@@ -13,6 +13,7 @@ class Robot:
         :param vitesse_droite: Vitesse initiale de la roue droite (en unités par seconde)
         :param distance_roues: Distance entre les roues (en unités)
         :param taille_robot: Taille du robot (utilisé pour les collisions)
+        :param vitesse_max: Vitesse maximale que peut atteindre le robot
 
         """
         self.x = x
