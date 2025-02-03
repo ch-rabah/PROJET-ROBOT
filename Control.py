@@ -46,15 +46,16 @@ def main():
             robot.appliquer_vitesse_droite(-10)
             robot.avancer(dt) 
         elif keys[pygame.K_RIGHT]:
-            robot.appliquer_vitesse_gauche(-3)
-            robot.appliquer_vitesse_droite(3)
+            robot.appliquer_vitesse_gauche(-4)
+            robot.appliquer_vitesse_droite(4)
             robot.avancer(dt) 
         elif keys[pygame.K_LEFT]:
-            robot.appliquer_vitesse_gauche(3)
-            robot.appliquer_vitesse_droite(-3)
+            robot.appliquer_vitesse_gauche(4)
+            robot.appliquer_vitesse_droite(-4)
             robot.avancer(dt) 
         else:
-            robot.arreter_robot()
+            robot.decelerer_robot()
+            robot.avancer(dt) 
 
         # Vérifier les collisions avec les obstacles
         for obstacle in environnement.obstacles:

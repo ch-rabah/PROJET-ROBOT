@@ -69,6 +69,21 @@ class Robot:
             self.vitesse_droite += delta_vitesse
         if (delta_vitesse < 0 and v + delta_vitesse > -self.vitesse_max):
             self.vitesse_droite += delta_vitesse
+
+    def decelerer_robot(self):
+        """
+        Modifie la vitesse des deux roues en les ajustant pour qu'elle se rapproche du plus possible de la vitesse nulle.
+        """
+        
+        if (self.vitesse_droite > 0 and self.vitesse_droite != 0):
+            self.appliquer_vitesse_droite(-2)
+        else:
+            self.appliquer_vitesse_droite(2)
+
+        if (self.vitesse_gauche > 0 and self.vitesse_gauche != 0):
+            self.appliquer_vitesse_gauche(-2)
+        else:
+            self.appliquer_vitesse_gauche(2)
     
 
     def arreter_robot(self):
