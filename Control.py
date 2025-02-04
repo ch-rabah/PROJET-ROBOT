@@ -32,7 +32,6 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
         
-
         # Contrôles clavier
         keys = pygame.key.get_pressed()
 
@@ -41,6 +40,13 @@ def main():
             robot.appliquer_vitesse_gauche(10)
             robot.appliquer_vitesse_droite(10)
             robot.avancer(dt) 
+            
+            # Permettre de tourner tout en avançant
+            if keys[pygame.K_RIGHT]:
+                robot.appliquer_vitesse_gauche(2)  # Tourner légèrement à droite
+            elif keys[pygame.K_LEFT]:
+                robot.appliquer_vitesse_droite(2)  # Tourner légèrement à gauche
+        
         elif keys[pygame.K_DOWN]:
             robot.appliquer_vitesse_gauche(-10)
             robot.appliquer_vitesse_droite(-10)
@@ -53,17 +59,6 @@ def main():
             robot.appliquer_vitesse_gauche(4)
             robot.appliquer_vitesse_droite(-4)
             robot.avancer(dt) 
-        elif keys[pygame.K_a]:
-            robot.appliquer_vitesse_gauche(8)
-            robot.appliquer_vitesse_droite(0)
-            robot.avancer(dt) 
-        elif keys[pygame.K_z]:
-            robot.appliquer_vitesse_gauche(0)
-            robot.appliquer_vitesse_droite(8)
-            robot.avancer(dt) 
-        elif -1<=robot.vitesse_droite<=2 and -1<=robot.vitesse_gauche<=2:
-            robot.arreter_robot()
-        
         else:
             robot.decelerer_robot()
             robot.avancer(dt) 
@@ -105,3 +100,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
