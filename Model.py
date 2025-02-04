@@ -138,6 +138,53 @@ class Obstacle:
         self.dimensions = dimensions
 
     def detecter_collision(self, robot):
+        """Vérifie si l'obstacle entre en collision avec le robot (considéré comme un triangle)."""
+        # Récupérer les sommets du triangle du robot
+        x, y = robot.x, robot.y
+        direction = robot.direction
+        taille_triangle = robot.taille_robot
+        base_triangle = robot.taille_robot
+
+        point1 = (
+            x + base_triangle * math.cos(direction - math.pi / 2),
+            y + base_triangle * math.sin(direction - math.pi / 2)
+        )
+        point2 = (
+            x + base_triangle * math.cos(direction + math.pi / 2),
+            y + base_triangle * math.sin(direction + math.pi / 2)
+        )
+        point3 = (
+            x + taille_triangle * math.cos(direction + math.pi),
+            y + taille_triangle * math.sin(direction + math.pi)
+        )
+
+        triangle_points = [point1, point2, point3, (x, y)]
+
+        if self.type_forme == "rectangle":
+            rect_x, rect_y = self.position
+            rect_w, rect_h = self.dimensions
+
+            # Vérifier si un sommet du triangle est à l'intérieur du rectangle
+            for px, py in triangle_points:
+                if rect_x <= px <= rect_x + rect_w and rect_y <= py <= rect_y + rect_h:
+                    return True
+
+            return False  # Aucun sommet du triangle à l'intérieur du rectangle
+
+        elif self.type_forme == "cercle":
+            cercle_x, cercle_y = self.position
+            rayon = self.dimensions[0]
+
+            # Vérifier si un sommet du triangle est à l'intérieur du cercle
+            for px, py in triangle_points:
+                if math.sqrt((px - cercle_x) ** 2 + (py - cercle_y) ** 2) < rayon:
+                    return True
+
+            return False  # Aucun sommet du triangle à l'intérieur du cercle
+
+        return False  # Aucun type d'obstacle reconnu
+
+    def detecter_collision2(self, robot):
         """Vérifie si l'obstacle entre en collision avec le robot."""
         if self.type_forme == "rectangle":
             # Collision avec un rectangle
@@ -164,6 +211,44 @@ class Environnement:
         self.obstacles.append(obstacle)
 
     def detecter_sorties(self, robot):
+        """
+        Vérifie si le robot est en dehors des limites du monde.
+        Si oui, retourne True pour indiquer une sortie.
+        Sinon, retourne False.
+        """
+        # Position et taille du robot
+        rx = robot.x
+        ry = robot.y
+        taille_robot = robot.taille_robot
+        base_triangle = robot.taille_robot
+        direction = robot.direction
+        point1 = (
+            rx + base_triangle * math.cos(direction - math.pi / 2),
+            ry + base_triangle * math.sin(direction - math.pi / 2)
+        )
+        point2 = (
+            rx + base_triangle * math.cos(direction + math.pi / 2),
+            ry + base_triangle * math.sin(direction + math.pi / 2)
+        )
+        point3 = (
+            rx + taille_robot * math.cos(direction + math.pi),
+            ry + taille_robot * math.sin(direction + math.pi)
+        )
+        
+        
+
+        # Dimensions du monde
+        min_x, max_x = self.dimensions_x
+        min_y, max_y = self.dimensions_y
+
+        # Vérifier si le robot est en dehors des limites du monde
+        for x, y in [point1, point2, point3, (rx, ry)]:
+            if x  < min_x or x  > max_x or y  < min_y or y  > max_y:
+                    return True
+        return False
+
+
+    def detecter_sorties2(self, robot):
         """
         Vérifie si le robot est en dehors des limites du monde.
         Si oui, retourne True pour indiquer une sortie.

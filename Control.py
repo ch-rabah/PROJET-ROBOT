@@ -75,6 +75,10 @@ def main():
         # Remplir l'écran avec une couleur de fond
         screen.fill((128, 128, 128))  # Fond gris
 
+        #afficher les informations
+        temps = pygame.time.get_ticks() / 1000
+        afficher_infos(screen, robot, temps)
+
         # Affichage des obstacles
         afficher_obstacles(screen, environnement.obstacles)
 
