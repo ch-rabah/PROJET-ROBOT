@@ -65,10 +65,20 @@ def main():
 
         # Vérifier les collisions avec les obstacles
         for obstacle in environnement.obstacles:
-            if obstacle.detecter_collision(robot):
+            collision=obstacle.detecter_collision(robot)
+            if collision[0]:
                 print("Collision détectee!")
                 robot.arreter_robot()  # Arrêter le robot si collision
-                break  # Sortir dès qu'une collision est détectée
+                if collision[1]==False:
+                    robot.appliquer_vitesse_gauche(-5)
+                    robot.appliquer_vitesse_droite(-5)
+                    robot.avancer(dt) 
+                    break  # Sortir dès qu'une collision est détectée
+                else:
+                    robot.appliquer_vitesse_gauche(5)
+                    robot.appliquer_vitesse_droite(5)
+                    robot.avancer(dt) 
+                    break  # Sortir dès qu'une collision est détectée
     
         if environnement.detecter_sorties(robot):
             print("Sortie du Monde detectee!")

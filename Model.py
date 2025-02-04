@@ -117,7 +117,8 @@ class Robot:
 
             # Vérification de collision avec les obstacles
             for obstacle in environnement.obstacles:
-                if obstacle.detecter_collision(test_robot):
+                collision=obstacle.detecter_collision(test_robot)
+                if collision[0]:
                     distance = math.sqrt((current_x - x) ** 2 + (current_y - y) ** 2)
                     return True, distance
 
@@ -138,20 +139,22 @@ class Obstacle:
         self.dimensions = dimensions
 
     def detecter_collision(self, robot):
-        """Vérifie si l'obstacle entre en collision avec le robot (considéré comme un triangle)."""
+        """
+        Vérifie si l'obstacle entre en collision avec le robot (considéré comme un triangle)
+        Elle retourne un couple de booléen le premier indique si le robot entre en collision avec l'obstacle l'autre indique si la collision est avec la partie arriére de l'obstacle
+        """
         # Récupérer les sommets du triangle du robot
         x, y = robot.x, robot.y
         direction = robot.direction
         taille_triangle = robot.taille_robot
-        base_triangle = robot.taille_robot
 
         point1 = (
-            x + base_triangle * math.cos(direction - math.pi / 2),
-            y + base_triangle * math.sin(direction - math.pi / 2)
+            x + taille_triangle * math.cos(direction - math.pi / 2),
+            y + taille_triangle * math.sin(direction - math.pi / 2)
         )
         point2 = (
-            x + base_triangle * math.cos(direction + math.pi / 2),
-            y + base_triangle * math.sin(direction + math.pi / 2)
+            x + taille_triangle * math.cos(direction + math.pi / 2),
+            y + taille_triangle * math.sin(direction + math.pi / 2)
         )
         point3 = (
             x + taille_triangle * math.cos(direction + math.pi),
@@ -167,9 +170,9 @@ class Obstacle:
             # Vérifier si un sommet du triangle est à l'intérieur du rectangle
             for px, py in triangle_points:
                 if rect_x <= px <= rect_x + rect_w and rect_y <= py <= rect_y + rect_h:
-                    return True
+                    return (True,(px,py)==point3)
 
-            return False  # Aucun sommet du triangle à l'intérieur du rectangle
+            return (False,False)  # Aucun sommet du triangle à l'intérieur du rectangle
 
         elif self.type_forme == "cercle":
             cercle_x, cercle_y = self.position
@@ -178,11 +181,11 @@ class Obstacle:
             # Vérifier si un sommet du triangle est à l'intérieur du cercle
             for px, py in triangle_points:
                 if math.sqrt((px - cercle_x) ** 2 + (py - cercle_y) ** 2) < rayon:
-                    return True
+                    return (True,(px,py)==point3)
 
-            return False  # Aucun sommet du triangle à l'intérieur du cercle
+            return (False,False)  # Aucun sommet du triangle à l'intérieur du cercle
 
-        return False  # Aucun type d'obstacle reconnu
+        return (False,False)  # Aucun type d'obstacle reconnu
 
     def detecter_collision2(self, robot):
         """Vérifie si l'obstacle entre en collision avec le robot."""
