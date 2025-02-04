@@ -49,6 +49,10 @@ Ce projet consiste à développer un mini-robot équipé de capteurs et contrôl
   - Affichage dynamique des déplacements et rotations sur l'écran.
   - Affichage des obstacles avec la méthode `dessiner(ecran)` pour chaque sous-classe (`Ellipse`, `Rectangle`, `Triangle`, `Ligne`).
 
+
+### Compte Rendu 1 : 
+- **Date :** 05/02/2025
+- **Résumé :**
   
 
 ## Bibliographie
