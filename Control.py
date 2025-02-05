@@ -1,5 +1,7 @@
 import pygame
-from Model import *
+from Model.Robot import *
+from Model.Obsatcle import *
+from Model.Environnement import *
 from View import *
 
 def main():
