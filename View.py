@@ -1,5 +1,7 @@
 import pygame
 import math
+from Model.Obsatcle import *
+from functools import singledispatch
 
 ROBOT_COLOR = (255, 0, 0)
 
@@ -68,16 +70,40 @@ def afficher_robot2(screen, robot):
     pygame.draw.line(screen, (255, 255, 255), (screen_x, screen_y), (ligne_x, ligne_y), 2)
 
 
+# Définition de la fonction principale avec @singledispatch
+# Cette fonction est appelée si aucun type enregistré ne correspond
+@singledispatch
+def afficher_obstacle(obstacle, screen):
+    """ Fonction générique pour afficher un obstacle.
+    Si le type de l'obstacle n'est pas reconnu, une erreur est levée.
+    """
+    raise TypeError(f"Type d'obstacle non pris en charge: {type(obstacle)}")
+
+@afficher_obstacle.register
+def _(obstacle: Cercle, screen):
+    """
+    Affiche un obstacle de type Cercle sur l'écran.
+    :param obstacle: Instance de la classe Cercle.
+    :param screen: Surface Pygame sur laquelle dessiner.    
+    """
+    pygame.draw.circle(screen, COLOR_OBSTACLE, obstacle.position, obstacle.rayon)
+
+@afficher_obstacle.register
+def _(obstacle: Rectangle, screen):
+    """
+    Affiche un obstacle de type Rectangle sur l'écran.
+    :param obstacle: Instance de la classe Rectangle.
+    :param screen: Surface Pygame sur laquelle dessiner.     
+    """
+    pygame.draw.rect(screen, COLOR_OBSTACLE, (obstacle.position[0], obstacle.position[1], obstacle.dimensions[0], obstacle.dimensions[1]))
+
 def afficher_obstacles(screen, obstacles):
     """
-    Affiche tous les obstacles sur l'écran.
+    :param screen: Surface Pygame sur laquelle dessiner.
+    :param obstacles: Liste contenant des objets de type Cercle ou Rectangle.
     """
     for obstacle in obstacles:
-        if obstacle.type_forme == "rectangle":
-            pygame.draw.rect(screen, COLOR_OBSTACLE, (obstacle.position[0], obstacle.position[1],
-                                                       obstacle.dimensions[0], obstacle.dimensions[1]))
-        elif obstacle.type_forme == "cercle":
-            pygame.draw.circle(screen, COLOR_OBSTACLE, obstacle.position, obstacle.rayon)
+        afficher_obstacle(obstacle, screen)
 
 def afficher_infos(screen, robot, temps):
     """
