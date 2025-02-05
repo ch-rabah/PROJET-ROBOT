@@ -23,7 +23,7 @@ class Cercle(Obstacle):
 		:param position: Position en (X, Y) du centre.		
 		:param rayon: Rayon du cercle.
 		"""
-        self.type="cercle"
+        self.type_forme="cercle"
         self.position=position
         self.rayon=rayon
     
@@ -62,15 +62,15 @@ class Cercle(Obstacle):
         return (False,False)  # Aucun sommet du triangle à l'intérieur du cercle
     
 class Rectangle(Obstacle):
-    def __init__(self, position, dimension):
+    def __init__(self, position, dimensions):
         """
 		Initialise un rectangle avec sa position et ses dimensions (hauteurs et longeur).
 		:param position: Position en (X, Y).		
-		:param dimension: dimensions de rectangle (hauteurs et longeur).
+		:param dimensions: dimensions de rectangle (hauteurs et longeur).
 		"""
-        self.type="rectangle"
+        self.type_forme="rectangle"
         self.position=position
-        self.rayon=dimension
+        self.dimensions=dimensions
     
     def detecter_collision(self, robot):
         """

@@ -6,8 +6,8 @@ from View import *
 
 def main():
     environnement = Environnement((0, 800), (0, 600))
-    obstacle1 = Obstacle("rectangle", (100, 100), (200, 50))
-    obstacle2 = Obstacle("cercle", (500, 200), [30])
+    obstacle1 = Rectangle((100, 100), (200, 50))
+    obstacle2 = Cercle((500, 200), 30)
     environnement.ajouter_obstacle(obstacle1)
     environnement.ajouter_obstacle(obstacle2)
 

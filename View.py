@@ -77,7 +77,7 @@ def afficher_obstacles(screen, obstacles):
             pygame.draw.rect(screen, COLOR_OBSTACLE, (obstacle.position[0], obstacle.position[1],
                                                        obstacle.dimensions[0], obstacle.dimensions[1]))
         elif obstacle.type_forme == "cercle":
-            pygame.draw.circle(screen, COLOR_OBSTACLE, obstacle.position, obstacle.dimensions[0])
+            pygame.draw.circle(screen, COLOR_OBSTACLE, obstacle.position, obstacle.rayon)
 
 def afficher_infos(screen, robot, temps):
     """
