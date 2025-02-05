@@ -23,7 +23,6 @@ class Cercle(Obstacle):
 		:param position: Position en (X, Y) du centre.		
 		:param rayon: Rayon du cercle.
 		"""
-        self.type_forme="cercle"
         self.position=position
         self.rayon=rayon
     
@@ -68,7 +67,6 @@ class Rectangle(Obstacle):
 		:param position: Position en (X, Y).		
 		:param dimensions: dimensions de rectangle (hauteurs et longeur).
 		"""
-        self.type_forme="rectangle"
         self.position=position
         self.dimensions=dimensions
     
