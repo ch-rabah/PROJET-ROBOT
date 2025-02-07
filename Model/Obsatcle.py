@@ -87,3 +87,39 @@ class Ligne(Obstacle):
                 return True
         return False
     
+class Triangle(Obstacle):
+    def __init__(self, point1, point2, point3):
+        """
+        Initialise un triangle avec trois points.
+        :param point1: Premier sommet (x, y)
+        :param point2: Deuxième sommet (x, y)
+        :param point3: Troisième sommet (x, y)
+        """
+        self.point1 = point1
+        self.point2 = point2
+        self.point3 = point3
+    
+    def point_dans_triangle(self, px, py):
+        """
+        Vérifie si un point est à l'intérieur du triangle en utilisant la méthode des barycentriques.
+        """
+        x1, y1 = self.point1
+        x2, y2 = self.point2
+        x3, y3 = self.point3
+
+        detT = (y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3)
+        alpha = ((y2 - y3) * (px - x3) + (x3 - x2) * (py - y3)) / detT
+        beta = ((y3 - y1) * (px - x3) + (x1 - x3) * (py - y3)) / detT
+        gamma = 1 - alpha - beta
+
+        return 0 <= alpha <= 1 and 0 <= beta <= 1 and 0 <= gamma <= 1
+    
+    def detecter_collision(self, robot):
+        """
+        Vérifie si le robot entre en collision avec le triangle.
+        Retourne (collision: bool, arriere: bool, lateral: bool).
+        """
+        for px, py in robot.points():
+            if self.point_dans_triangle(px, py):
+                return True
+        return False
