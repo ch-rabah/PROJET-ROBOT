@@ -123,3 +123,18 @@ class Robot:
                     return True, distance
 
         return False, None  # Aucun obstacle détecté
+
+    def points(self):
+        """
+        Retourne les trois sommets du triangle représentant le robot, avec un point qui se trouve entre chaque 2 sommets (cette fonctions sert a tester les collisions avec ces points)
+        """
+        p1 = (self.x + self.taille_robot * math.cos(self.direction - math.pi / 2),
+              self.y + self.taille_robot * math.sin(self.direction - math.pi / 2))
+        p2 = (self.x + self.taille_robot * math.cos(self.direction + math.pi / 2),
+              self.y + self.taille_robot * math.sin(self.direction + math.pi / 2))
+        p3 = (self.x + self.taille_robot * math.cos(self.direction + math.pi),
+              self.y + self.taille_robot * math.sin(self.direction + math.pi))
+        x1, y1=p1
+        x2, y2=p2
+        x3, y3=p3
+        return [p1, p2, p3, (self.x,self.y),((x2+x3)/2,((y2+y3)/2)),((x1+x3)/2,((y1+y3)/2))]
