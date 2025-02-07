@@ -1,5 +1,5 @@
 import math
-
+import unittest
 
 class Robot:
     def __init__(self, x, y, direction=0, vitesse_gauche=0, vitesse_droite=0, distance_roues=30,taille_robot=20,vitesse_max=200):
@@ -123,3 +123,55 @@ class Robot:
         x2, y2=p2
         x3, y3=p3
         return [p1, p2, p3, (self.x,self.y),((x2+x3)/2,((y2+y3)/2)),((x1+x3)/2,((y1+y3)/2))]
+
+
+
+class TestRobot(unittest.TestCase):
+    def test_avancer(self):
+        robot = Robot(0, 0, direction=0, vitesse_gauche=10, vitesse_droite=10)
+        robot.avancer(1)
+        self.assertAlmostEqual(robot.x, 10)
+        self.assertAlmostEqual(robot.y, 0)
+
+    def test_appliquer_vitesse_gauche(self):
+        robot = Robot(0, 0)
+        robot.appliquer_vitesse_gauche(50)
+        self.assertEqual(robot.vitesse_gauche, 50)
+        robot.appliquer_vitesse_gauche(-30)
+        self.assertEqual(robot.vitesse_gauche, 20)
+
+    def test_appliquer_vitesse_droite(self):
+        robot = Robot(0, 0)
+        robot.appliquer_vitesse_droite(50)
+        self.assertEqual(robot.vitesse_droite, 50)
+        robot.appliquer_vitesse_droite(-30)
+        self.assertEqual(robot.vitesse_droite, 20)
+
+    def test_arreter_robot(self):
+        robot = Robot(0, 0, vitesse_gauche=50, vitesse_droite=50)
+        robot.arreter_robot()
+        self.assertEqual(robot.vitesse_gauche, 0)
+        self.assertEqual(robot.vitesse_droite, 0)
+
+    def test_cpadistance(self):
+        env = Environnement((0, 100), (0, 100))
+        obstacle = type('', (), {"detecter_collision": lambda self, r: True})()
+        env.ajouter_obstacle(obstacle)
+        robot = Robot(10, 10, direction=0)
+        result, distance = robot.cpadistance(env)
+        self.assertTrue(result)
+        self.assertIsNotNone(distance)
+
+    def test_points(self):
+        robot = Robot(0, 0, direction=0, taille_robot=10)
+        points = robot.points()
+        self.assertEqual(len(points), 6)
+        self.assertIsInstance(points, list)
+        for point in points:
+            self.assertEqual(len(point), 2)
+            self.assertIsInstance(point[0], (int, float))
+            self.assertIsInstance(point[1], (int, float))
+
+if __name__ == "__main__":
+    unittest.main()
+
