@@ -1,4 +1,5 @@
 import math
+import unittest
 
 class Environnement:
     def __init__(self,dimX= None,dimY= None):
@@ -46,6 +47,28 @@ class Environnement:
             if x  < min_x or x  > max_x or y  < min_y or y  > max_y:
                     return True
         return False
+
+
+class TestEnvironnement(unittest.TestCase):
+    def test_ajouter_obstacle(self):
+        env = Environnement(0, 10)
+        obstacle = "ObstacleTest"
+        env.ajouter_obstacle(obstacle)
+        self.assertIn(obstacle, env.obstacles)
+
+    def test_detecter_sorties(self):
+        env = Environnement((0, 10), (0, 10))
+        robot = type('', (), {"x": 5, "y": 5, "taille_robot": 2, "direction": 0})()
+        self.assertFalse(env.detecter_sorties(robot))
+        
+        robot = type('', (), {"x": 11, "y": 5, "taille_robot": 2, "direction": 0})()
+        self.assertTrue(env.detecter_sorties(robot))
+        
+        robot = type('', (), {"x": 5, "y": -1, "taille_robot": 2, "direction": 0})()
+        self.assertTrue(env.detecter_sorties(robot))
+
+if __name__ == "__main__":
+    unittest.main()
 
 
 
