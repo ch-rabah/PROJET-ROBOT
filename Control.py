@@ -80,20 +80,37 @@ def main():
         # Vérifier les collisions avec les obstacles
         for obstacle in environnement.obstacles:
             collision=obstacle.detecter_collision(robot)
-            if collision[0]:
+            if collision:
                 print("Collision détectee!")
                 robot.arreter_robot()  # Arrêter le robot si collision
-                if collision[1]==False:
+                # Calcul de la position de l'obstacle par rapport au robot
+                dx = obstacle.position[0] - robot.x
+                dy = obstacle.position[1] - robot.y
+        
+                # Calcul de l'angle d'orientation du robot
+                angle_robot = robot.direction  # en radians
+
+                # Calcul de la direction relative entre l'obstacle et le robot
+                # Utilisation d'une transformation pour savoir si l'obstacle est devant ou derrière
+                angle_obstacle = math.atan2(dy, dx)
+                
+                # Normalisation de l'angle pour savoir si l'obstacle est devant ou derrière
+                delta_angle = (angle_obstacle - angle_robot + math.pi) % (2 * math.pi) - math.pi
+                
+                # Si delta_angle est compris entre -π/2 et π/2, l'obstacle est devant
+                if -math.pi / 2 <= delta_angle <= math.pi / 2:
+                    print("Obstacle devant, le robot recule!")
                     robot.appliquer_vitesse_gauche(-5)
                     robot.appliquer_vitesse_droite(-5)
-                    robot.avancer(dt) 
-                    break  # Sortir dès qu'une collision est détectée
+                    robot.avancer(dt)
                 else:
+                    print("Obstacle derrière, le robot avance!")
                     robot.appliquer_vitesse_gauche(5)
                     robot.appliquer_vitesse_droite(5)
-                    robot.avancer(dt) 
-                    break  # Sortir dès qu'une collision est détectée
-    
+                    robot.avancer(dt)
+                
+                break  # Sortir dès qu'une collision est détectée
+                        
         if environnement.detecter_sorties(robot):
             print("Sortie du Monde detectee!")
             robot.arreter_robot()

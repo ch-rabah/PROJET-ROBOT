@@ -118,7 +118,7 @@ class Robot:
             # Vérification de collision avec les obstacles
             for obstacle in environnement.obstacles:
                 collision=obstacle.detecter_collision(test_robot)
-                if collision[0]:
+                if collision:
                     distance = math.sqrt((current_x - x) ** 2 + (current_y - y) ** 2)
                     return True, distance
 
