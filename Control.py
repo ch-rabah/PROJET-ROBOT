@@ -74,7 +74,6 @@ def main():
             robot.appliquer_vitesse_droite(0)
             robot.arreter_robot()
         else:
-            robot.decelerer_robot()
             robot.avancer(dt) 
 
         # Vérifier les collisions avec les obstacles
