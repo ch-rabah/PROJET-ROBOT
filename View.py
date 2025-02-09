@@ -1,6 +1,6 @@
 import pygame
 import math
-from Model.Obsatcle import *
+from Model.Obstacle import *
 from functools import singledispatch
 
 ROBOT_COLOR = (255, 0, 0)
