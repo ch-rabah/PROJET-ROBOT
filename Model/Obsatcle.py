@@ -107,19 +107,36 @@ class Ligne(Obstacle):
         self.point2 = point2
         self.epaisseur = epaisseur
     
-    def detecter_collision(self, robot):
+
+    def detecter_collision(self, entity):
         """
-        Vérifie si le robot entre en collision avec la ligne.
-        Retourne (collision: bool, arriere: bool, lateral: bool).
+        Vérifie si une entité entre en collision avec la ligne.
+        L'entité peut être :
+        - Un robot (vérification sur ses points)
+        - Un tuple (x, y) représentant un point.
+
+        Retourne True si une collision est détectée, sinon False.
         """
         x1, y1 = self.point1
         x2, y2 = self.point2
 
-        for px, py in robot.points():
-            dist = abs((y2 - y1) * px - (x2 - x1) * py + x2 * y1 - y2 * x1) / math.sqrt((y2 - y1) ** 2 + (x2 - x1) ** 2)
-            if dist <= self.epaisseur / 2:
-                return True
+        def distance_point_ligne(px, py):
+            """Calcul la distance d'un point (px, py) à la ligne définie par (x1, y1) et (x2, y2)."""
+            return abs((y2 - y1) * px - (x2 - x1) * py + x2 * y1 - y2 * x1) / math.sqrt((y2 - y1) ** 2 + (x2 - x1) ** 2)
+
+        # Si l'entité est un point (x, y) sous forme de tuple
+        if isinstance(entity, tuple) and len(entity) == 2:
+            px, py = entity
+            return distance_point_ligne(px, py) <= self.epaisseur / 2
+
+        # Si l'entité est un robot, vérifier tous ses points
+        else:
+            for px, py in entity.points():
+                if distance_point_ligne(px, py) <= self.epaisseur / 2:
+                    return True
+
         return False
+
     
 class Triangle(Obstacle):
     def __init__(self, point1, point2, point3):
