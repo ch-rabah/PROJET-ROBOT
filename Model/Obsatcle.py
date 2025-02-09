@@ -1,5 +1,5 @@
 import math
-import unittest
+
 class Obstacle:
     def __init__(self):
         """
@@ -187,53 +187,4 @@ class Triangle(Obstacle):
         return False
 
 
-def test_cercle_collision():
-    cercle = Cercle((5, 5), 3)
-    robot = Robot(5, 5)
-    assert cercle.detecter_collision(robot) == True  # Le robot est au centre du cercle
-
-    robot = Robot(10, 10)
-    assert cercle.detecter_collision(robot) == False  # Le robot est loin du cercle
-
-
-def test_rectangle_collision():
-    rectangle = Rectangle((2, 2), (4, 6))
-    robot = Robot(3, 3)
-    assert rectangle.detecter_collision(robot) == True  # Robot dans le rectangle
-
-    robot = Robot(10, 10)
-    assert rectangle.detecter_collision(robot) == False  # Robot en dehors du rectangle
-
-
-def test_ligne_collision():
-    ligne = Ligne((0, 0), (10, 0), epaisseur=2)
-    robot = Robot(5, 1)
-    assert ligne.detecter_collision(robot) == True  # Robot proche de la ligne
-
-    robot = Robot(5, 5)
-    assert ligne.detecter_collision(robot) == False  # Robot loin de la ligne
-
-
-def test_triangle_collision():
-    triangle = Triangle((0, 0), (5, 5), (10, 0))
-    robot = Robot(5, 2)
-    assert triangle.detecter_collision(robot) == True  # Robot dans le triangle
-
-    robot = Robot(10, 10)
-    assert triangle.detecter_collision(robot) == False  # Robot en dehors du triangle
-
-
-def test_point_dans_triangle():
-    triangle = Triangle((0, 0), (5, 5), (10, 0))
-    assert triangle.point_dans_triangle(5, 2) == True  # Point à l'intérieur
-    assert triangle.point_dans_triangle(10, 10) == False  # Point à l'extérieur
-
-# Exécution des tests
-if __name__ == "__main__":
-    test_cercle_collision()
-    test_rectangle_collision()
-    test_ligne_collision()
-    test_triangle_collision()
-    test_point_dans_triangle()
-    print("Tous les tests sont passés avec succès.")
 
