@@ -76,6 +76,17 @@ def _(obstacle: Rectangle, screen):
     """
     pygame.draw.rect(screen, COLOR_OBSTACLE, (obstacle.position[0], obstacle.position[1], obstacle.dimensions[0], obstacle.dimensions[1]))
 
+@afficher_obstacle.register
+def _(obstacle: Ligne, screen):
+    """
+    Affiche un obstacle de type Ligne sur l'écran.
+    :param obstacle: Instance de la classe Ligne.
+    :param screen: Surface Pygame sur laquelle dessiner.
+    """
+    x1, y1 = obstacle.point1
+    x2, y2 = obstacle.point2
+    pygame.draw.line(screen, COLOR_OBSTACLE, (x1, y1), (x2, y2), obstacle.epaisseur)
+
 def afficher_obstacles(screen, obstacles):
     """
     :param screen: Surface Pygame sur laquelle dessiner.
