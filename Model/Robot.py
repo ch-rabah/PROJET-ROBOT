@@ -97,12 +97,9 @@ class Robot:
             current_x += step * math.cos(angle)
             current_y += step * math.sin(angle)
 
-            # Création d'un robot virtuel pour détecter la collision
-            test_robot = Robot(current_x, current_y, direction=self.direction, taille_robot=self.taille_robot)
-
             # Vérification de collision avec les obstacles
             for obstacle in environnement.obstacles:
-                collision=obstacle.detecter_collision(test_robot)
+                collision=obstacle.detecter_collision((current_x,current_y))
                 if collision:
                     distance = math.sqrt((current_x - x) ** 2 + (current_y - y) ** 2)
                     return True, distance
