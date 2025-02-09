@@ -150,30 +150,42 @@ class Triangle(Obstacle):
         self.point2 = point2
         self.point3 = point3
     
-    def point_dans_triangle(self, px, py):
+    def detecter_collision(self, entity):
         """
-        Vérifie si un point est à l'intérieur du triangle en utilisant la méthode des barycentriques.
-        """
-        x1, y1 = self.point1
-        x2, y2 = self.point2
-        x3, y3 = self.point3
+        Vérifie si une entité entre en collision avec le triangle.
+        L'entité peut être :
+        - Un robot (vérification sur ses points)
+        - Un tuple (x, y) représentant un point.
 
-        detT = (y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3)
-        alpha = ((y2 - y3) * (px - x3) + (x3 - x2) * (py - y3)) / detT
-        beta = ((y3 - y1) * (px - x3) + (x1 - x3) * (py - y3)) / detT
-        gamma = 1 - alpha - beta
+        Retourne True si une collision est détectée, sinon False.
+        """
+        # Fonction interne pour vérifier si un point est dans le triangle
+        def point_dans_triangle(px, py):
+            """Vérifie si un point (px, py) est à l'intérieur du triangle."""
+            x1, y1 = self.point1
+            x2, y2 = self.point2
+            x3, y3 = self.point3
 
-        return 0 <= alpha <= 1 and 0 <= beta <= 1 and 0 <= gamma <= 1
-    
-    def detecter_collision(self, robot):
-        """
-        Vérifie si le robot entre en collision avec le triangle.
-        Retourne (collision: bool, arriere: bool, lateral: bool).
-        """
-        for px, py in robot.points():
-            if self.point_dans_triangle(px, py):
-                return True
+            detT = (y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3)
+            alpha = ((y2 - y3) * (px - x3) + (x3 - x2) * (py - y3)) / detT
+            beta = ((y3 - y1) * (px - x3) + (x1 - x3) * (py - y3)) / detT
+            gamma = 1 - alpha - beta
+
+            return 0 <= alpha <= 1 and 0 <= beta <= 1 and 0 <= gamma <= 1
+
+        # Si l'entité est un point (x, y) sous forme de tuple
+        if isinstance(entity, tuple) and len(entity) == 2:
+            px, py = entity
+            return point_dans_triangle(px, py)
+        
+        # Si l'entité est un robot, vérifier tous ses points
+        else:
+            for px, py in entity.points():
+                if point_dans_triangle(px, py):
+                    return True
+
         return False
+
 
 def test_cercle_collision():
     cercle = Cercle((5, 5), 3)
