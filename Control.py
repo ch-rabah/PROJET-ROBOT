@@ -1,6 +1,6 @@
 import pygame
 from Model.Robot import *
-from Model.Obsatcle import *
+from Model.Obstacle import *
 from Model.Environnement import *
 from View import *
 

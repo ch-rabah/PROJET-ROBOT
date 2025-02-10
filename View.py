@@ -1,6 +1,6 @@
 import pygame
 import math
-from Model.Obsatcle import *
+from Model.Obstacle import *
 from functools import singledispatch
 
 ROBOT_COLOR = (255, 0, 0)
@@ -47,6 +47,7 @@ def afficher_robot(screen, robot):
 
     # Dessiner une ligne indiquant la direction (optionnel, juste pour visualiser la direction)
     pygame.draw.line(screen, (255, 255, 255), (screen_x, screen_y), (int(point3_x), int(point3_y)), 2)
+
 
 
 # Définition de la fonction principale avec @singledispatch
