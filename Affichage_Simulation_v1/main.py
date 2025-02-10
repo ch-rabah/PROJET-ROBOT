@@ -1,5 +1,5 @@
 from simulation import *
-from View import *
+from affichage import *
 import pygame
 
 def main():
