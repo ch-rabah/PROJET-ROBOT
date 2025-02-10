@@ -120,6 +120,42 @@ class Robot:
         x3, y3=p3
         return [p1, p2, p3, (self.x,self.y),((x2+x3)/2,((y2+y3)/2)),((x1+x3)/2,((y1+y3)/2))]
 
+    def suivre_carre(self, dt):
+        """
+        Fait suivre au robot une trajectoire en carré.
+        Le robot avance, tourne à 90° et répète cela 4 fois.
+        """
+        if not hasattr(self, "etat_mouvement"):
+            self.etat_mouvement = 0  # 0: Avancer, 1: Tourner
+            self.etape = 0  # Numéro de l'étape dans le carré
+            self.temps_restant = 2  # Temps pour avancer sur un côté (ajuster selon la vitesse)
+        
+        if self.etape >= 4:
+            self.arreter_robot()
+            return  # Carré terminé
+
+        if self.etat_mouvement == 0:  # Avancer
+            self.vitesse_gauche = self.vitesse_max / 2
+            self.vitesse_droite = self.vitesse_max / 2
+            self.temps_restant -= dt
+            if self.temps_restant <= 0:
+                self.etat_mouvement = 1
+                self.temps_restant = 1  # Temps pour tourner
+
+        elif self.etat_mouvement == 1:  # Tourner
+            self.vitesse_gauche = -self.vitesse_max / 4
+            self.vitesse_droite = self.vitesse_max / 4
+            self.temps_restant -= dt
+            if self.temps_restant <= 0:
+                self.etape += 1
+                self.etat_mouvement = 0
+                self.temps_restant = 2  # Reprendre l'avance
+
+            # Appliquer les vitesses aux roues
+        self.avancer(dt)
+
+
+
 
 
 

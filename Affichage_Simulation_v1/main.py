@@ -18,13 +18,19 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
         
+        # Appeler la méthode qui fait avancer le robot en carré
+        robot = simulation.robot  # Récupérer l'objet robot
+        robot.suivre_carre(dt)  # Faire avancer le robot sur un parcours en carré
+        
+        # Mettre à jour l'état de la simulation
         simulation.step(dt)
         robot, environnement = simulation.get_state()
         
+        # Mise à jour de l'affichage
         screen.fill((128, 128, 128))  # Fond gris
-        afficher_robot(screen, robot)
-        afficher_obstacles(screen, environnement.obstacles)
-        pygame.display.flip()
+        afficher_robot(screen, robot)  # Afficher le robot
+        afficher_obstacles(screen, environnement.obstacles)  # Afficher les obstacles
+        pygame.display.flip()  # Rafraîchir l'écran
     
     pygame.quit()
 

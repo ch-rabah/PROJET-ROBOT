@@ -18,9 +18,7 @@ class Simulation:
     def step(self, dt):
         """ Met à jour la simulation (déplacement du robot, détection de collisions) """
 
-        self.robot.appliquer_vitesse_gauche(10)
-        self.robot.appliquer_vitesse_droite(10)
-        self.robot.avancer(dt)
+        self.robot.suivre_carre(dt)
 
         # Vérification des collisions
         for obstacle in self.environnement.obstacles:
