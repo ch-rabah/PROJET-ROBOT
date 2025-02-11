@@ -1,5 +1,6 @@
 # Ignorer les fichiers pycache
 __pycache__/
+.DS_Store
 
 # Ignorer les fichiers .pyc (générés par Python)
 *.pyc
