@@ -7,6 +7,39 @@ import time
 import math
 import keyboard
 
+def gerer_mouvement_robot(robot, dt):
+    if keyboard.is_pressed('up'):
+        robot.appliquer_vitesse_gauche(10)
+        robot.appliquer_vitesse_droite(10)
+
+        if keyboard.is_pressed('right'):
+            robot.appliquer_vitesse_gauche(2)  # Tourner légèrement à droite
+        elif keyboard.is_pressed('left'):
+            robot.appliquer_vitesse_droite(2)  # Tourner légèrement à gauche
+
+    elif keyboard.is_pressed('down'):
+        robot.appliquer_vitesse_gauche(-10)
+        robot.appliquer_vitesse_droite(-10)
+        
+    elif keyboard.is_pressed('right'):
+        robot.appliquer_vitesse_gauche(-4)
+        robot.appliquer_vitesse_droite(4)
+        
+    elif keyboard.is_pressed('left'):
+        robot.appliquer_vitesse_gauche(4)
+        robot.appliquer_vitesse_droite(-4)
+        
+    elif keyboard.is_pressed('z'):
+        robot.appliquer_vitesse_gauche(0)
+        robot.appliquer_vitesse_droite(8)
+        
+    elif keyboard.is_pressed('a'):
+        robot.appliquer_vitesse_gauche(8)
+        robot.appliquer_vitesse_droite(0)
+        
+
+
+
 def main():
     environnement = Environnement((0, 800), (0, 600))
     obstacle1 = Rectangle((100, 100), (200, 50))
