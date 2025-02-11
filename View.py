@@ -67,3 +67,10 @@ class SimulationView:
                 f"Vitesse Gauche: {self.robot.vitesse_gauche:.2f}\n" \
                 f"Vitesse Droite: {self.robot.vitesse_droite:.2f}"
         self.canvas.create_text(10, 10, text=texte, anchor="nw", fill="white")
+
+    def mise_a_jour(self,dt):
+        self.canvas.delete("all")  # Effacer l'écran avant de redessiner
+        self.afficher_infos(dt)
+        self.afficher_obstacles()
+        self.afficher_robot()
+        self.root.update()
