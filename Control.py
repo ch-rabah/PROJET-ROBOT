@@ -37,7 +37,39 @@ def gerer_mouvement_robot(robot, dt):
         robot.appliquer_vitesse_gauche(8)
         robot.appliquer_vitesse_droite(0)
         
+def gerer_collisions(robot, environnement, dt):
+    """
+    Gère les collisions avec les obstacles et la sortie de l'environnement.
+    """
+    for obstacle in environnement.obstacles:
+        collision = obstacle.detecter_collision(robot)
+        if collision:
+            print("Collision detectée!")
+            robot.arreter_robot()
 
+            dx = obstacle.position[0] - robot.x
+            dy = obstacle.position[1] - robot.y
+            angle_robot = robot.direction
+            angle_obstacle = math.atan2(dy, dx)
+            delta_angle = (angle_obstacle - angle_robot + math.pi) % (2 * math.pi) - math.pi
+
+            if -math.pi / 2 <= delta_angle <= math.pi / 2:
+                robot.appliquer_vitesse_gauche(-5)
+                robot.appliquer_vitesse_droite(-5)
+            else:
+                robot.appliquer_vitesse_gauche(5)
+                robot.appliquer_vitesse_droite(5)
+
+            robot.avancer(dt)
+            break
+
+    if environnement.detecter_sorties(robot):
+        print("Sortie du Monde dtectée!")
+        robot.arreter_robot()
+
+    obstacle, distance = robot.cpadistance(environnement)
+    if obstacle:
+        print(f"Distance à l'obstacle : {distance}")
 
 
 def main():
