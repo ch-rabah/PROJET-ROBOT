@@ -1,6 +1,6 @@
-import tkinter as tkimport math
+import tkinter as tk
+import math
 from Model.Obstacle import *
-from functools import singledispatch
 
 ROBOT_COLOR = "red"
 
