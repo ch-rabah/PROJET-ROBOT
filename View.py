@@ -58,3 +58,12 @@ class SimulationView:
             elif isinstance(obstacle, Triangle):
                 points = [obstacle.point1, obstacle.point2, obstacle.point3]
                 self.canvas.create_polygon(points, fill=COLOR_OBSTACLE)
+
+    def afficher_infos(self, temps):
+        """
+        Affiche les informations sur l'écran.
+        """
+        texte = f"Temps: {temps:.2f} s\n" \
+                f"Vitesse Gauche: {self.robot.vitesse_gauche:.2f}\n" \
+                f"Vitesse Droite: {self.robot.vitesse_droite:.2f}"
+        self.canvas.create_text(10, 10, text=texte, anchor="nw", fill="white")
