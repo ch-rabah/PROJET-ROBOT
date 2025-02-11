@@ -50,7 +50,7 @@ Ce projet consiste à développer un mini-robot équipé de capteurs et contrôl
   - Affichage des obstacles avec la méthode `dessiner(ecran)` pour chaque sous-classe (`Ellipse`, `Rectangle`, `Triangle`, `Ligne`).
 
 
-### Compte Rendu 1 : 
+### Compte Rendu 2 : 
 - **Date :** 05/02/2025
 - **Résumé :**
   
@@ -113,6 +113,31 @@ Ce projet consiste à développer un mini-robot équipé de capteurs et contrôl
     - Gestion des entrées utilisateur : Flèches Haut/Bas pour avancer/reculer, Flèches Gauche/Droite pour rotation sur place.
     - Arrêt progressif si aucune touche n'est pressée.
     - Vérification des collisions avec les obstacles et les sorties des limites.
+
+
+# Compte Rendu 3  
+- **Date :** 12/02/2025  
+
+## Séparation de la simulation et de la partie graphique  
+- La simulation et l'affichage sont désormais distincts.  
+
+## Refactorisation du modèle  
+- La classe `Model` a été divisée en trois fichiers distincts pour une meilleure organisation :  
+  - **`Robot.py`** : Contient la classe `Robot`, la vitesse et les mouvements.  
+  - **`Obstacles.py`** : Définit la classe mère `Obstacle` et les différentes formes géométriques.  
+  - **`Environnement.py`** : Gère l’ensemble des obstacles et leur interaction avec le robot.  
+
+## Ajout des nouvelles formes d'obstacles  
+- Création des sous-classes d'obstacles `Ligne` et `Triangle`. 
+- Chaque classe implémente :  
+  - Un **constructeur** spécifique.   
+  - Une méthode `detecter_collision()` pour vérifier la présence d’un point dans la forme.  
+
+## Ajout des tests unitaires  
+- Mise en place de tests unitaires avec `assert` pour valider le bon fonctionnement des méthodes :  
+  - Vérification des déplacements et rotations du robot.  
+  - Test des collisions entre le robot et les obstacles.  
+  - Validation des méthodes de dessin et de détection de points dans les formes.  
 
 
 
