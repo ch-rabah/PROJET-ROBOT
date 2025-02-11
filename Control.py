@@ -1,8 +1,11 @@
-import pygame
-from Model.Robot import *
-from Model.Obstacle import *
-from Model.Environnement import *
-from View import *
+from tkinter import Tk
+from View import SimulationView
+from Model.Robot import Robot
+from Model.Environnement import Environnement
+from Model.Obstacle import Rectangle, Cercle
+import time
+import math
+import keyboard
 
 def main():
     environnement = Environnement((0, 800), (0, 600))
