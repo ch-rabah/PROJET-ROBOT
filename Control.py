@@ -61,18 +61,6 @@ def main():
             robot.appliquer_vitesse_gauche(4)
             robot.appliquer_vitesse_droite(-4)
             robot.avancer(dt) 
-        elif keys[pygame.K_z]:
-            robot.appliquer_vitesse_gauche(0)
-            robot.appliquer_vitesse_droite(8)
-            robot.avancer(dt) 
-        elif keys[pygame.K_a]:
-            robot.appliquer_vitesse_gauche(8)
-            robot.appliquer_vitesse_droite(0)
-            robot.avancer(dt)
-        elif -1<=robot.vitesse_droite<=2 and -1<=robot.vitesse_gauche<=2:
-            robot.appliquer_vitesse_gauche(0)
-            robot.appliquer_vitesse_droite(0)
-            robot.arreter_robot()
         else:
             robot.avancer(dt) 
 
