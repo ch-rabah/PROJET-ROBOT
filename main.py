@@ -8,7 +8,6 @@ import time
 import math
 import keyboard
 
-EVITER = False
 
 def gerer_mouvement_robot(robot, dt):
     if keyboard.is_pressed('up'):

@@ -1,3 +1,4 @@
+EVITER = False
 
 
 def evitemment(environnement, robot,dt):
