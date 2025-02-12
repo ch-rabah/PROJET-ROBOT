@@ -55,10 +55,6 @@ Ce projet consiste à développer un mini-robot équipé de capteurs et contrôl
 - **Résumé :**
   
 
-- **Date :** 04/02/2025
-
-- **Résumé :**
-
   #### Développement du modèle de robot
   - Création d'une classe `Robot` avec les fonctionnalités suivantes :
     - Initialisation des paramètres (position, vitesse, accélération, direction).
@@ -126,7 +122,7 @@ Ce projet consiste à développer un mini-robot équipé de capteurs et contrôl
 
   #### Refactorisation du modèle  
   - La classe `Model` a été divisée en trois fichiers distincts pour une meilleure organisation :  
-    - **`Robot.py`** : Contient la classe `Robot`, la vitesse et les mouvements.  
+    - **`Robot.py`** : Contient la classe `Robot`, la vitesse et les mouvements. Améliorations de la fonction `cpadistance()` pour qu'elle ne dépende plus de la création d'un robot. 
     - **`Obstacles.py`** : Définit la classe mère `Obstacle` et les différentes formes géométriques.  
     - **`Environnement.py`** : Gère l’ensemble des obstacles et leur interaction avec le robot.  
 
