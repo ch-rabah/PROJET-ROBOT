@@ -79,7 +79,7 @@ class Robot:
         self.vitesse_gauche = 0
 
     
-    def cpadistance(self, environnement):
+    def capteurdistance(self, environnement):
         """Retourne True et la distance si un obstacle est détecté devant le robot, False sinon."""
         
         angle = self.direction  # La direction du robot

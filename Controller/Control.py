@@ -3,7 +3,7 @@ EVITER = False
 
 def evitemment(environnement, robot,dt):
     global EVITER
-    obstacle, distance = robot.cpadistance(environnement)
+    obstacle, distance = robot.capteurdistance(environnement)
 
     if obstacle:
         
