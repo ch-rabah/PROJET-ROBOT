@@ -83,7 +83,7 @@ def main():
     robot = Robot(400, 300, direction=180, vitesse_gauche=0, vitesse_droite=0)
 
     # Création de la vue de simulation
-    #simulation = SimulationView(Tk(),environnement, robot)
+    simulation = SimulationView(Tk(),environnement, robot)
 
     # Gestion du temps
     previous_time = time.time()
@@ -106,7 +106,7 @@ def main():
         robot.avancer(dt)
 
         # Mise à jour de la simulation (affichage, autres logiques)
-        #simulation.mise_a_jour(tempsecouler)
+        simulation.mise_a_jour(tempsecouler)
 
         # Ajouter un délai pour limiter la vitesse de la boucle (par exemple 60 FPS)
         time.sleep(1 / 60)  # ~60 FPS
