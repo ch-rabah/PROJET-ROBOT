@@ -115,29 +115,32 @@ Ce projet consiste à développer un mini-robot équipé de capteurs et contrôl
     - Vérification des collisions avec les obstacles et les sorties des limites.
 
 
-# Compte Rendu 3  
-- **Date :** 12/02/2025  
+### Compte Rendu 3  
+- **Date :** 12/02/2025 
+- **Résumé :**
 
-## Séparation de la simulation et de la partie graphique  
-- La simulation et l'affichage sont désormais distincts.  
+  #### Séparation de la simulation et de la partie graphique
+  - Changement de module, on passe de pygame à tkinter pour ça possible :
+    - La simulation et l'affichage sont désormais distincts.  
+    - Modifications du fichier `View.py` en conséquence.
 
-## Refactorisation du modèle  
-- La classe `Model` a été divisée en trois fichiers distincts pour une meilleure organisation :  
-  - **`Robot.py`** : Contient la classe `Robot`, la vitesse et les mouvements.  
-  - **`Obstacles.py`** : Définit la classe mère `Obstacle` et les différentes formes géométriques.  
-  - **`Environnement.py`** : Gère l’ensemble des obstacles et leur interaction avec le robot.  
+  #### Refactorisation du modèle  
+  - La classe `Model` a été divisée en trois fichiers distincts pour une meilleure organisation :  
+    - **`Robot.py`** : Contient la classe `Robot`, la vitesse et les mouvements.  
+    - **`Obstacles.py`** : Définit la classe mère `Obstacle` et les différentes formes géométriques.  
+    - **`Environnement.py`** : Gère l’ensemble des obstacles et leur interaction avec le robot.  
 
-## Ajout des nouvelles formes d'obstacles  
-- Création des sous-classes d'obstacles `Ligne` et `Triangle`. 
-- Chaque classe implémente :  
-  - Un **constructeur** spécifique.   
-  - Une méthode `detecter_collision()` pour vérifier la présence d’un point dans la forme.  
+  #### Ajout des nouvelles formes d'obstacles  
+  - Création des sous-classes d'obstacles `Ligne` et `Triangle`. 
+  - Chaque classe implémente :  
+    - Un **constructeur** spécifique.   
+    - Une méthode `detecter_collision()` pour vérifier la présence d’un point dans la forme.  
 
-## Ajout des tests unitaires  
-- Mise en place de tests unitaires avec `assert` pour valider le bon fonctionnement des méthodes :  
-  - Vérification des déplacements et rotations du robot.  
-  - Test des collisions entre le robot et les obstacles.  
-  - Validation des méthodes de dessin et de détection de points dans les formes.  
+  #### Ajout des tests unitaires  
+  - Mise en place de tests unitaires avec `assert` pour valider le bon fonctionnement des méthodes :  
+    - Vérification des déplacements et rotations du robot.  
+    - Test des collisions entre le robot et les obstacles.  
+    - Validation des méthodes de dessin et de détection de points dans les formes.  
 
 
 
@@ -146,7 +149,10 @@ Ce projet consiste à développer un mini-robot équipé de capteurs et contrôl
 1. **pygame** https://pypi.org/project/pygame/
    - Bibliothèque pygame
   
-1. **math** https://docs.python.org/3/library/math.html
+2. **math** https://docs.python.org/3/library/math.html
    - Bibliothèque math
+
+3. **tkinter** https://docs.python.org/fr/3/library/tkinter.html
+   - Bibliothèque tkinter
 
 ---
