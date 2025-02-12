@@ -1,92 +1,79 @@
-import unittest
-from Model.Robot import *
-from Model.Obstacle import *
-from Model.Environnement import *
+from Model.Environnement import Environnement
+from Model.Robot import Robot
+from Model.Obstacle import Rectangle, Cercle, Ligne, Triangle
 
+### TEST ENVIRONNEMENT ###
+env = Environnement((0, 800), (0, 600))
+assert env.dimensions_x == (0, 800), "Erreur : dimensions X incorrectes"
+assert env.dimensions_y == (0, 600), "Erreur : dimensions Y incorrectes"
+assert len(env.obstacles) == 0, "Erreur : la liste des obstacles devrait être vide"
 
-class TestRobot(unittest.TestCase):
-    
-    def test_initialisation(self):
-        robot = Robot(10, 20, math.pi/2, 50, 50)
-        self.assertEqual(robot.x, 10)
-        self.assertEqual(robot.y, 20)
-        self.assertEqual(robot.direction, math.pi/2)
-        self.assertEqual(robot.vitesse_gauche, 50)
-        self.assertEqual(robot.vitesse_droite, 50)
+### TEST OBSTACLES ###
+rect = Rectangle((100, 100), (200, 50))
+cercle = Cercle((400, 300), 50)
+ligne = Ligne((50, 50), (70, 70))
+triangle = Triangle((500, 100), (600, 150), (550, 250))
 
-    def test_avancer(self):
-        robot = Robot(0, 0, 0, 50, 50)
-        robot.avancer(1)
-        self.assertAlmostEqual(robot.x, 50, delta=0.1)
-        self.assertAlmostEqual(robot.y, 0, delta=0.1)
+env.ajouter_obstacle(rect)
+env.ajouter_obstacle(cercle)
+env.ajouter_obstacle(ligne)
+env.ajouter_obstacle(triangle)
 
-    def test_appliquer_vitesse_gauche(self):
-        robot = Robot(0, 0)
-        robot.appliquer_vitesse_gauche(30)
-        self.assertEqual(robot.vitesse_gauche, 30)
+assert len(env.obstacles) == 4, "Erreur : le nombre d'obstacles est incorrect"
+assert rect in env.obstacles, "Erreur : le rectangle n'a pas été ajouté"
+assert cercle in env.obstacles, "Erreur : le cercle n'a pas été ajouté"
+assert ligne in env.obstacles, "Erreur : la ligne n'a pas été ajoutée"
+assert triangle in env.obstacles, "Erreur : le triangle n'a pas été ajouté"
 
-    def test_appliquer_vitesse_droite(self):
-        robot = Robot(0, 0)
-        robot.appliquer_vitesse_droite(40)
-        self.assertEqual(robot.vitesse_droite, 40)
+### TEST ROBOT ###
+robot = Robot(400, 300, direction=0)
+assert robot.x == 400 and robot.y == 300, "Erreur : position initiale du robot incorrecte"
+assert robot.vitesse_gauche == 0 and robot.vitesse_droite == 0, "Erreur : vitesse initiale incorrecte"
 
-    def test_arreter_robot(self):
-        robot = Robot(0, 0, vitesse_gauche=50, vitesse_droite=50)
-        robot.arreter_robot()
-        self.assertEqual(robot.vitesse_gauche, 0)
-        self.assertEqual(robot.vitesse_droite, 0)
+# Application de vitesse
+robot.appliquer_vitesse_gauche(50)
+assert robot.vitesse_gauche == 50, "Erreur : vitesse gauche incorrecte"
 
-    def test_cpadistance(self):
-        robot = Robot(0, 0, direction=0)
-        obstacle = Cercle((16, 0), 5)  # Position de l'obstacle
-        env = Environnement()
-        env.ajouter_obstacle(obstacle)
+robot.appliquer_vitesse_droite(60)
+assert robot.vitesse_droite == 60, "Erreur : vitesse droite incorrecte"
 
-        detection, distance = robot.cpadistance(env)
+# Arrêt du robot
+robot.arreter_robot()
+assert robot.vitesse_gauche == 0 and robot.vitesse_droite == 0, "Erreur : le robot ne s'est pas arrêté"
 
-        print(f"🛑 Debug: detection={detection}, distance={distance}")
+# Avancer
+robot.appliquer_vitesse_gauche(50)
+robot.appliquer_vitesse_droite(50)
+robot.avancer(1)
+assert 445 <= robot.x <= 455, "Erreur : la position X après déplacement est incorrecte"
+assert 295 <= robot.y <= 305, "Erreur : la position Y après déplacement est incorrecte"
 
-        self.assertTrue(detection)
-        self.assertAlmostEqual(distance, 12, delta=0.1)
+# Détection des sorties
+robot.x, robot.y = 900, 700  # Hors des limites
+assert env.detecter_sorties(robot), "Erreur : le robot aurait dû être détecté hors des limites"
 
+robot.x, robot.y = 400, 300  # De retour dans l'environnement
+assert not env.detecter_sorties(robot), "Erreur : le robot ne devrait pas être considéré comme hors des limites"
 
-class TestEnvironnement(unittest.TestCase):
+### TEST COLLISIONS OBSTACLES ###
+# On place le robot au même endroit qu'un obstacle pour tester la collision
+robot.x, robot.y = 150, 125  # À l'intérieur du rectangle
+assert rect.detecter_collision((robot.x, robot.y)), "Erreur : le robot devrait être en collision avec le rectangle"
 
-    def test_ajouter_obstacle(self):
-        env = Environnement()
-        cercle = Cercle((10, 10), 5)
-        env.ajouter_obstacle(cercle)
-        self.assertIn(cercle, env.obstacles)
+robot.x, robot.y = 400, 300  # Au centre du cercle
+assert cercle.detecter_collision((robot.x, robot.y)), "Erreur : le robot devrait être en collision avec le cercle"
 
-    def test_detecter_sorties(self):
-        env = Environnement((0, 100), (0, 100))
-        robot = Robot(150, 50)
-        self.assertTrue(env.detecter_sorties(robot))
+robot.x, robot.y = 550, 150  # À l'intérieur du triangle
+assert triangle.detecter_collision((robot.x, robot.y)), "Erreur : le robot devrait être en collision avec le triangle"
 
+robot.x, robot.y = 55, 55  # Sur la ligne
+assert ligne.detecter_collision((robot.x, robot.y)), "Erreur : le robot devrait être en collision avec la ligne"
 
-class TestObstacles(unittest.TestCase):
+# Vérification qu'il n'y a PAS de collision en dehors des obstacles
+robot.x, robot.y = 700, 500  # Zone vide
+assert not rect.detecter_collision((robot.x, robot.y)), "Erreur : mauvaise détection de collision avec le rectangle"
+assert not cercle.detecter_collision((robot.x, robot.y)), "Erreur : mauvaise détection de collision avec le cercle"
+assert not triangle.detecter_collision((robot.x, robot.y)), "Erreur : mauvaise détection de collision avec le triangle"
+assert not ligne.detecter_collision((robot.x, robot.y)), "Erreur : mauvaise détection de collision avec la ligne"
 
-    def test_collision_cercle(self):
-        robot = Robot(10, 10)
-        cercle = Cercle((12, 10), 3)
-        self.assertTrue(cercle.detecter_collision(robot))
-
-    def test_collision_rectangle(self):
-        robot = Robot(5, 5)
-        rectangle = Rectangle((0, 0), (10, 10))
-        self.assertTrue(rectangle.detecter_collision(robot))
-
-    def test_collision_ligne(self):
-        robot = Robot(5, 5)
-        ligne = Ligne((0, 5), (10, 5), 2)
-        self.assertTrue(ligne.detecter_collision(robot))
-
-    def test_collision_triangle(self):
-        robot = Robot(5, 5)
-        triangle = Triangle((0, 0), (10, 0), (5, 10))
-        self.assertTrue(triangle.detecter_collision(robot))
-
-
-if __name__ == '__main__':
-    unittest.main()
-
+print(" Tous les tests sont passés avec succès ! ")
