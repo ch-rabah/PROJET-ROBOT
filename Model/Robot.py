@@ -69,7 +69,7 @@ class Robot:
             self.vitesse_droite += delta_vitesse
         if (delta_vitesse < 0 and v + delta_vitesse > -self.vitesse_max):
             self.vitesse_droite += delta_vitesse
-    
+
 
     def arreter_robot(self):
         """

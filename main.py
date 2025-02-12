@@ -1,11 +1,14 @@
 from tkinter import Tk
-from View import SimulationView
+from View.Affichage_Tkinter import SimulationView
 from Model.Robot import Robot
 from Model.Environnement import Environnement
+from Controller.Control import evitemment
 from Model.Obstacle import Rectangle, Cercle
 import time
 import math
 import keyboard
+
+EVITER = False
 
 def gerer_mouvement_robot(robot, dt):
     if keyboard.is_pressed('up'):
@@ -66,10 +69,7 @@ def gerer_collisions(robot, environnement, dt):
     if environnement.detecter_sorties(robot):
         print("Sortie du Monde dtectée!")
         robot.arreter_robot()
-
-    obstacle, distance = robot.cpadistance(environnement)
-    if obstacle:
-        print(f"Distance à l'obstacle : {distance}")
+            
 
 def main():
     # Création de l'environnement avec des obstacles
@@ -83,7 +83,7 @@ def main():
     robot = Robot(400, 300, direction=180, vitesse_gauche=0, vitesse_droite=0)
 
     # Création de la vue de simulation
-    simulation = SimulationView(Tk(),environnement, robot)
+    #simulation = SimulationView(Tk(),environnement, robot)
 
     # Gestion du temps
     previous_time = time.time()
@@ -101,10 +101,12 @@ def main():
 
         gerer_mouvement_robot(robot, dt)
 
+        evitemment(environnement,robot,dt)
+
         robot.avancer(dt)
 
         # Mise à jour de la simulation (affichage, autres logiques)
-        simulation.mise_a_jour(tempsecouler)
+        #simulation.mise_a_jour(tempsecouler)
 
         # Ajouter un délai pour limiter la vitesse de la boucle (par exemple 60 FPS)
         time.sleep(1 / 60)  # ~60 FPS
