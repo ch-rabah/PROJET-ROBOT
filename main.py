@@ -6,38 +6,73 @@ from Controller.Control import evitemment
 from Model.Obstacle import Rectangle, Cercle
 import time
 import math
-import keyboard
+from pynput import keyboard
 
+# Dictionnaire pour stocker l'état des touches
+touches_actives = set()
+
+def on_press(key):
+    try:
+        touches_actives.add(key.char)
+    except AttributeError:
+        if key == keyboard.Key.up:
+            touches_actives.add('up')
+        elif key == keyboard.Key.down:
+            touches_actives.add('down')
+        elif key == keyboard.Key.left:
+            touches_actives.add('left')
+        elif key == keyboard.Key.right:
+            touches_actives.add('right')
+
+def on_release(key):
+    try:
+        touches_actives.discard(key.char)
+    except AttributeError:
+        if key == keyboard.Key.up:
+            touches_actives.discard('up')
+        elif key == keyboard.Key.down:
+            touches_actives.discard('down')
+        elif key == keyboard.Key.left:
+            touches_actives.discard('left')
+        elif key == keyboard.Key.right:
+            touches_actives.discard('right')
+
+# Lancer l'écouteur dans un thread séparé
+listener = keyboard.Listener(on_press=on_press, on_release=on_release)
+listener.start()
 
 def gerer_mouvement_robot(robot, dt):
-    if keyboard.is_pressed('up'):
+    if 'up' in touches_actives:
         robot.appliquer_vitesse_gauche(10)
         robot.appliquer_vitesse_droite(10)
 
-        if keyboard.is_pressed('right'):
-            robot.appliquer_vitesse_gauche(2)  # Tourner légèrement à droite
-        elif keyboard.is_pressed('left'):
-            robot.appliquer_vitesse_droite(2)  # Tourner légèrement à gauche
+        if 'right' in touches_actives:
+            robot.appliquer_vitesse_gauche(2)
+        elif 'left' in touches_actives:
+            robot.appliquer_vitesse_droite(2)
 
-    elif keyboard.is_pressed('down'):
+    elif 'down' in touches_actives:
         robot.appliquer_vitesse_gauche(-10)
         robot.appliquer_vitesse_droite(-10)
         
-    elif keyboard.is_pressed('right'):
+    elif 'right' in touches_actives:
         robot.appliquer_vitesse_gauche(-4)
         robot.appliquer_vitesse_droite(4)
         
-    elif keyboard.is_pressed('left'):
+    elif 'left' in touches_actives:
         robot.appliquer_vitesse_gauche(4)
         robot.appliquer_vitesse_droite(-4)
         
-    elif keyboard.is_pressed('z'):
+    elif 'z' in touches_actives:
         robot.appliquer_vitesse_gauche(0)
         robot.appliquer_vitesse_droite(8)
         
-    elif keyboard.is_pressed('a'):
+    elif 'a' in touches_actives:
         robot.appliquer_vitesse_gauche(8)
         robot.appliquer_vitesse_droite(0)
+
+
+
         
 def gerer_collisions(robot, environnement, dt):
     """
