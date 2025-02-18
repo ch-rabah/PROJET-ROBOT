@@ -8,12 +8,23 @@ class Obstacle:
         """
         pass # Pas de propriété commune par défaut pour les obstacles
 
+    def detecter_collision_point(self, point):
+        """
+        Vérifie si un point entre en collision avec l'obstacle.
+        Retourne True si une collision est détectée, sinon False.
+        (doit être implémentée dans les sous-classes)
+        """
+        pass # Pas de propriété commune par défaut pour les obstacles
+
+    
     def detecter_collision(self, robot):
         """
         Vérifie si l'obstacle entre en collision avec le robot 
         (doit être implémentée dans les sous-classes)
         """
         pass # Pas de propriété commune par défaut pour les obstacles
+
+
 
 class Cercle(Obstacle):
     def __init__(self, position, rayon):
@@ -41,7 +52,7 @@ class Cercle(Obstacle):
     
     def detecter_collision(self, robot):
         """
-        Vérifie si un robot entre en collision avec le rectangle.
+        Vérifie si un robot entre en collision avec le cercle.
         Retourne True si une collision est détectée, sinon False.
         """
         for  p in robot.points():
@@ -92,12 +103,22 @@ class Rectangle(Obstacle):
         
 class Ligne:
     def __init__(self, point1, point2, largeur):
+        """
+        Initialise une ligne avec deux points et une largeur donnée.
+        :param point1: Premier point (X, Y) de la ligne.
+        :param point2: Deuxième point (X, Y) de la ligne.
+        :param largeur: Largeur de la ligne.
+        """
         self.point1 = point1
         self.point2 = point2
         self.largeur = largeur
         self.position = ((point1[0] + point2[0]) / 2, (point1[1] + point2[1]) / 2)  # Milieu de la ligne
 
     def detecter_collision_point(self, point):
+        """
+        Vérifie si un point entre en collision avec la ligne.
+        Retourne True si une collision est détectée, sinon False.
+        """
         x1, y1 = self.point1
         x2, y2 = self.point2
         px, py = point
@@ -111,6 +132,10 @@ class Ligne:
         return distance <= self.largeur / 2
     
     def detecter_collision(self, robot):
+        """
+        Vérifie si un robot entre en collision avec la ligne.
+        Retourne True si une collision est détectée, sinon False.
+        """
         for px, py in robot.points():
             if self.detecter_collision_point((px, py)):
                 return True
@@ -121,10 +146,20 @@ class Ligne:
     
 class Triangle:
     def __init__(self, point1, point2, point3):
+        """
+        Initialise un triangle avec trois sommets.
+        :param point1: Premier sommet (X, Y).
+        :param point2: Deuxième sommet (X, Y).
+        :param point3: Troisième sommet (X, Y).
+        """
         self.sommets = [point1, point2, point3]
         self.position = ((point1[0] + point2[0] + point3[0]) / 3, (point1[1] + point2[1] + point3[1]) / 3)
 
     def detecter_collision_point(self, point):
+        """
+        Vérifie si un point entre en collision avec le triangle.
+        Retourne True si une collision est détectée, sinon False.
+        """
         def signe(p1, p2, p3):
             return (p1[0] - p3[0]) * (p2[1] - p3[1]) - (p2[0] - p3[0]) * (p1[1] - p3[1])
         d1 = signe(point, self.sommets[0], self.sommets[1])
@@ -135,6 +170,10 @@ class Triangle:
         return not (has_neg and has_pos)
     
     def detecter_collision(self, robot):
+        """
+        Vérifie si un robot entre en collision avec le triangle.
+        Retourne True si une collision est détectée, sinon False.
+        """
         for px, py in robot.points():
             if self.detecter_collision_point((px, py)):
                 return True
@@ -142,6 +181,9 @@ class Triangle:
 
   
     def get_sommets(self):
+        """
+        Retourne la liste des sommets du triangle.
+        """
         return self.sommets
 
 
