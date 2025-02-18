@@ -95,96 +95,51 @@ class Rectangle(Obstacle):
 
             return False
         
-class Ligne(Obstacle):
-    def __init__(self, point1, point2, epaisseur=1):
-        """
-        Initialise une ligne avec deux points et une épaisseur.
-        :param point1: Premier point (x, y)
-        :param point2: Deuxième point (x, y)
-        :param epaisseur: Épaisseur de la ligne
-        """
+class Ligne:
+    def __init__(self, point1, point2, largeur):
         self.point1 = point1
         self.point2 = point2
-        self.epaisseur = epaisseur
-    
+        self.largeur = largeur
+        self.position = ((point1[0] + point2[0]) / 2, (point1[1] + point2[1]) / 2)  # Milieu de la ligne
 
-    def detecter_collision(self, entity):
-        """
-        Vérifie si une entité entre en collision avec la ligne.
-        L'entité peut être :
-        - Un robot (vérification sur ses points)
-        - Un tuple (x, y) représentant un point.
-
-        Retourne True si une collision est détectée, sinon False.
-        """
+    def detecter_collision(self, robot):
         x1, y1 = self.point1
         x2, y2 = self.point2
-
-        def distance_point_ligne(px, py):
-            """Calcul la distance d'un point (px, py) à la ligne définie par (x1, y1) et (x2, y2)."""
-            return abs((y2 - y1) * px - (x2 - x1) * py + x2 * y1 - y2 * x1) / math.sqrt((y2 - y1) ** 2 + (x2 - x1) ** 2)
-
-        # Si l'entité est un point (x, y) sous forme de tuple
-        if isinstance(entity, tuple) and len(entity) == 2:
-            px, py = entity
-            return distance_point_ligne(px, py) <= self.epaisseur / 2
-
-        # Si l'entité est un robot, vérifier tous ses points
-        else:
-            for px, py in entity.points():
-                if distance_point_ligne(px, py) <= self.epaisseur / 2:
-                    return True
-
-        return False
-
-    
-class Triangle(Obstacle):
-    def __init__(self, point1, point2, point3):
-        """
-        Initialise un triangle avec trois points.
-        :param point1: Premier sommet (x, y)
-        :param point2: Deuxième sommet (x, y)
-        :param point3: Troisième sommet (x, y)
-        """
-        self.point1 = point1
-        self.point2 = point2
-        self.point3 = point3
-    
-    def detecter_collision(self, entity):
-        """
-        Vérifie si une entité entre en collision avec le triangle.
-        L'entité peut être :
-        - Un robot (vérification sur ses points)
-        - Un tuple (x, y) représentant un point.
-
-        Retourne True si une collision est détectée, sinon False.
-        """
-        # Fonction interne pour vérifier si un point est dans le triangle
-        def point_dans_triangle(px, py):
-            """Vérifie si un point (px, py) est à l'intérieur du triangle."""
-            x1, y1 = self.point1
-            x2, y2 = self.point2
-            x3, y3 = self.point3
-
-            detT = (y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3)
-            alpha = ((y2 - y3) * (px - x3) + (x3 - x2) * (py - y3)) / detT
-            beta = ((y3 - y1) * (px - x3) + (x1 - x3) * (py - y3)) / detT
-            gamma = 1 - alpha - beta
-
-            return 0 <= alpha <= 1 and 0 <= beta <= 1 and 0 <= gamma <= 1
-
-        # Si l'entité est un point (x, y) sous forme de tuple
-        if isinstance(entity, tuple) and len(entity) == 2:
-            px, py = entity
-            return point_dans_triangle(px, py)
         
-        # Si l'entité est un robot, vérifier tous ses points
-        else:
-            for px, py in entity.points():
-                if point_dans_triangle(px, py):
-                    return True
-
+        for px, py in robot.points():
+            dx, dy = x2 - x1, y2 - y1
+            longueur = math.sqrt(dx**2 + dy**2)
+            if longueur == 0:
+                continue
+            t = max(0, min(1, ((px - x1) * dx + (py - y1) * dy) / (longueur**2)))
+            proj_x, proj_y = x1 + t * dx, y1 + t * dy
+            distance = math.sqrt((proj_x - px) ** 2 + (proj_y - py) ** 2)
+            if distance <= self.largeur / 2:
+                return True
         return False
+
+    
+class Triangle:
+    def __init__(self, point1, point2, point3):
+        self.sommets = [point1, point2, point3]
+        self.position = ((point1[0] + point2[0] + point3[0]) / 3, (point1[1] + point2[1] + point3[1]) / 3)
+
+    def detecter_collision(self, robot):
+        def signe(p1, p2, p3):
+            return (p1[0] - p3[0]) * (p2[1] - p3[1]) - (p2[0] - p3[0]) * (p1[1] - p3[1])
+        
+        for px, py in robot.points():
+            d1 = signe((px, py), self.sommets[0], self.sommets[1])
+            d2 = signe((px, py), self.sommets[1], self.sommets[2])
+            d3 = signe((px, py), self.sommets[2], self.sommets[0])
+            has_neg = (d1 < 0) or (d2 < 0) or (d3 < 0)
+            has_pos = (d1 > 0) or (d2 > 0) or (d3 > 0)
+            if not (has_neg and has_pos):
+                return True
+        return False
+
+    def get_sommets(self):
+        return self.sommets
 
 
 
