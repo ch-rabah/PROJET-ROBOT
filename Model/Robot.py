@@ -80,20 +80,22 @@ class Robot:
 
     
     def capteurdistance(self, environnement):
-        """Retourne True et la distance minimale si un obstacle est détecté par un des capteurs du robot, False sinon."""
+        """Retourne True et la distance minimale si un obstacle est détecté par un des capteurs avant du robot, False sinon."""
         
         step = 1  # Distance entre chaque échantillon
         max_distance = 1000  # Distance maximale du capteur
 
-        # Récupération des points du robot (3 sommets + 1 centre)
-        capteurs = self.points()  # Liste contenant les 4 points du robot
+        # Récupération des points du robot
+        capteurs = self.points()  # Liste contenant les 6 points du robot
+        capteur_gauche = capteurs[0]  # Point avant gauche
+        capteur_droite = capteurs[1]  # Point avant droit
 
         distances_detectees = []
 
-        for capteur in capteurs:
+        for capteur in [capteur_gauche, capteur_droite]:
             x, y = capteur  # Position initiale du capteur
             current_x, current_y = x, y
-            angle = self.direction  # Le capteur regarde vers l'avant (même direction que le robot)
+            angle = self.direction  # Capteur aligné avec la direction du robot
 
             # Avancer jusqu'à la distance maximale
             for _ in range(int(max_distance / step)):
@@ -108,26 +110,26 @@ class Robot:
                         break  # Arrêter ce capteur après avoir détecté un obstacle
 
         if distances_detectees:
-            return True, min(distances_detectees)  # Retourne la distance minimale trouvée
+            return True, min(distances_detectees)  # Retourne la plus petite distance trouvée
         else:
             return False, None  # Aucun obstacle détecté
 
 
 
     def points(self):
-        """
-        Retourne les trois sommets du triangle représentant le robot, avec un point qui se trouve entre chaque 2 sommets (cette fonctions sert a tester les collisions avec ces points)
-        """
-        p1 = (self.x + self.taille_robot * math.cos(self.direction - math.pi / 2),
-              self.y + self.taille_robot * math.sin(self.direction - math.pi / 2))
-        p2 = (self.x + self.taille_robot * math.cos(self.direction + math.pi / 2),
-              self.y + self.taille_robot * math.sin(self.direction + math.pi / 2))
-        p3 = (self.x + self.taille_robot * math.cos(self.direction + math.pi),
-              self.y + self.taille_robot * math.sin(self.direction + math.pi))
-        x1, y1=p1
-        x2, y2=p2
-        x3, y3=p3
-        return [p1, p2, p3, (self.x,self.y),((x2+x3)/2,((y2+y3)/2)),((x1+x3)/2,((y1+y3)/2))]
+            """
+            Retourne les trois sommets du triangle représentant le robot, avec un point qui se trouve entre chaque 2 sommets (cette fonctions sert a tester les collisions avec ces points)
+            """
+            p1 = (self.x + self.taille_robot * math.cos(self.direction - math.pi / 2),
+                self.y + self.taille_robot * math.sin(self.direction - math.pi / 2))
+            p2 = (self.x + self.taille_robot * math.cos(self.direction + math.pi / 2),
+                self.y + self.taille_robot * math.sin(self.direction + math.pi / 2))
+            p3 = (self.x + self.taille_robot * math.cos(self.direction + math.pi),
+                self.y + self.taille_robot * math.sin(self.direction + math.pi))
+            x1, y1=p1
+            x2, y2=p2
+            x3, y3=p3
+            return [p1, p2, p3, (self.x,self.y),((x2+x3)/2,((y2+y3)/2)),((x1+x3)/2,((y1+y3)/2))]
 
 
 
