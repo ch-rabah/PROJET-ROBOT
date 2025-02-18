@@ -27,5 +27,13 @@ def evitemment(environnement, robot,dt):
     elif EVITER:  # Une fois l'obstacle évité, rétablir la trajectoire
         robot.appliquer_vitesse_gauche(-robot.vitesse_gauche)
         robot.appliquer_vitesse_droite(-robot.vitesse_droite)
+        robot.avancer(dt)
+        robot.appliquer_vitesse_gauche(20)
+        robot.appliquer_vitesse_droite(20)
+
         EVITER = False
+
+def carrer(environnement, robot,dt):
+    pass
+
 

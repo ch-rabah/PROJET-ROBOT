@@ -54,9 +54,9 @@ class SimulationView:
             elif isinstance(obstacle, Ligne):
                 x1, y1 = obstacle.point1
                 x2, y2 = obstacle.point2
-                self.canvas.create_line(x1, y1, x2, y2, fill=COLOR_OBSTACLE)
+                self.canvas.create_line(x1, y1, x2, y2, fill=COLOR_OBSTACLE, width=obstacle.largeur)
             elif isinstance(obstacle, Triangle):
-                points = [obstacle.point1, obstacle.point2, obstacle.point3]
+                points = obstacle.get_sommets()
                 self.canvas.create_polygon(points, fill=COLOR_OBSTACLE)
 
     def afficher_infos(self, temps):
