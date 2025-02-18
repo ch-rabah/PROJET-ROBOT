@@ -104,7 +104,7 @@ class Robot:
 
                 # Vérification de collision avec les obstacles
                 for obstacle in environnement.obstacles:
-                    if obstacle.detecter_collision((current_x, current_y)):
+                    if obstacle.detecter_collision_point((current_x, current_y)):
                         distance = math.sqrt((current_x - x) ** 2 + (current_y - y) ** 2)
                         distances_detectees.append(distance)
                         break  # Arrêter ce capteur après avoir détecté un obstacle

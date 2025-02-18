@@ -26,13 +26,9 @@ class Cercle(Obstacle):
         self.position=position
         self.rayon=rayon
     
-    def detecter_collision(self, entity):
+    def detecter_collision_point(self, point):
         """
-        Vérifie si une entité entre en collision avec le cercle.
-        L'entité peut être :
-        - Un robot (vérification sur ses points)
-        - Un tuple (x, y) représentant un point.
-
+        Vérifie si un point entre en collision avec le cercle.
         Retourne True si une collision est détectée, sinon False.
         """
         cx, cy = self.position  # Centre du cercle
@@ -42,14 +38,15 @@ class Cercle(Obstacle):
             distance = math.sqrt((px - cx) ** 2 + (py - cy) ** 2)
             return distance < self.rayon
 
-        # Si l'entité est un point (x, y) sous forme de tuple
-        if isinstance(entity, tuple) and len(entity) == 2:
-            return point_dans_cercle(entity[0], entity[1])
-        
-        # Si l'entité est un robot, vérifier tous ses points
-        else:
-            for px, py in entity.points():
-                if point_dans_cercle(px, py):
+        return point_dans_cercle(point[0], point[1])
+    
+    def detecter_collision(self, robot):
+        """
+        Vérifie si un robot entre en collision avec le rectangle.
+        Retourne True si une collision est détectée, sinon False.
+        """
+        for  p in robot.points():
+                if self.detecter_collision_point(p):
                     return True
 
         return False
@@ -65,13 +62,9 @@ class Rectangle(Obstacle):
         self.position=position
         self.dimensions=dimensions
     
-    def detecter_collision(self, entity):
+    def detecter_collision_point(self, point):
         """
-        Vérifie si une entité entre en collision avec le rectangle.
-        L'entité peut être :
-        - Un robot (vérification sur ses points)
-        - Un tuple (x, y) représentant un point.
-
+        Vérifie si un point entre en collision avec le rectangle.
         Retourne True si une collision est détectée, sinon False.
         """
         rx, ry = self.position
@@ -81,19 +74,22 @@ class Rectangle(Obstacle):
             """Vérifie si un point (px, py) est dans le rectangle."""
             return rx <= px <= rx + largeur and ry <= py <= ry + hauteur
 
-        # Si l'entité est un point (x, y) sous forme de tuple
-        if isinstance(entity, tuple) and len(entity) == 2:
-            return point_dans_rectangle(entity[0], entity[1])
+        px, py=point
+
         
-        # Si l'entité est un robot, vérifier tous ses points
-        else:
-            for px, py in entity.points():
-                if point_dans_rectangle(px, py):
+        return point_dans_rectangle(px, py)
+            
+    
+    def detecter_collision(self, robot):
+        """
+        Vérifie si un robot entre en collision avec le rectangle.
+        Retourne True si une collision est détectée, sinon False.
+        """
+        for  p in robot.points():
+                if self.detecter_collision_point(p):
                     return True
 
-        
-
-            return False
+        return False
         
 class Ligne:
     def __init__(self, point1, point2, largeur):
