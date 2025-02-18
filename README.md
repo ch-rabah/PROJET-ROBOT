@@ -1,31 +1,30 @@
-# Projet Robot
+### Compte Rendu 4  
+- **Date :** 18/02/2025  
+- **Résumé :**  
 
-## Description du Projet
+#### Amélioration de la détection de distance  
+- Modification de la fonction `capteur_distance()` dans `Robot.py` :  
+  - Optimisation de l’algorithme pour une meilleure précision des mesures.  
+  - Correction d’un bug qui faussait les distances détectées lorsque plusieurs obstacles étaient proches.  
 
-Ce projet consiste à développer un mini-robot équipé de capteurs et contrôleur, capable de se déplacer et d'éviter des obstacles. Le but principal est de tester les fonctionnalités du robot sur un simulateur avant de le mettre en mouvement réel.
+#### Correction des collisions du robot  
+- Ajustement des conditions de détection de collision :  
+  - Prise en compte des nouvelles formes d’obstacles (`Ligne` et `Triangle`).  
+  - Affinement du modèle de collision pour éviter les faux positifs.  
 
-### Objectifs principaux :
-- Tracer un carré
-- S'approcher le plus vite possible et le plus près d'un mur sans le toucher
-- Suivre une balise 
+#### Implémentation du dessin automatique  
+- Ajout de la fonctionnalité permettant au robot d’effectuer un tracé en carré :  
+  - Le robot suit un chemin prédéfini en quatre segments égaux.  
+  - Possibilité d’activer/désactiver cette fonctionnalité avec une touche spécifique.  
 
-### Composition du robot :
-- Un Raspberry Pi
-- Une carte contrôleur (arduino)
-- Deux moteurs encodeurs pour le contrôle des roues
-- 3 senseurs : une caméra, un capteur de distance et un accéléromètre
+#### Ajout d’une fonction d’évitement des obstacles  
+- Création de la fonction `éviter()` dans `Control.py` :  
+  - Permet au robot de contourner un obstacle lorsqu’il est détecté par ses capteurs.  
+  - Implémente un algorithme de contournement pour revenir à sa trajectoire initiale après évitement.  
 
----
-
-## Bibliographie
-
-1. **pygame** https://pypi.org/project/pygame/
-   - Bibliothèque pygame
-  
-2. **math** https://docs.python.org/3/library/math.html
-   - Bibliothèque math
-
-3. **tkinter** https://docs.python.org/fr/3/library/tkinter.html
-   - Bibliothèque tkinter
-
----
+#### Tests et validations  
+- Ajout de nouveaux tests unitaires pour valider les améliorations :  
+  - Vérification de la précision de `capteur_distance()`.  
+  - Simulation de différents scénarios de collision pour s’assurer que le robot réagit correctement.  
+  - Validation du tracé du carré en comparant les positions du robot à des points attendus.  
+  - Test du bon fonctionnement de l’algorithme d’évitement des obstacles.  
