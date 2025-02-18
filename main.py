@@ -66,7 +66,7 @@ def gerer_mouvement_robot(robot, dt):
 
 def gerer_collisions(robot, environnement, dt):
     """
-    Gère les collisions avec les obstacles et empêche le robot de les traverser.
+    Gère les collisions avec les obstacles et empêche le robot de les traverser ou de quitter l'environnement.
     """
     for obstacle in environnement.obstacles:
         if obstacle.detecter_collision(robot):
@@ -89,9 +89,21 @@ def gerer_collisions(robot, environnement, dt):
                 robot.arreter_robot()
                 touches_actives.discard('down')  # Bloquer la marche arrière
             return  # Stopper après la première collision détectée
-
-    if environnement.detecter_sorties(robot):
-        print("Sortie du Monde détectée!")
+    
+    # Empêcher le robot de sortir des limites de l'environnement
+    min_x, max_x = environnement.dimensions_x
+    min_y, max_y = environnement.dimensions_y
+    if robot.x < min_x:
+        robot.x = min_x
+        robot.arreter_robot()
+    elif robot.x > max_x:
+        robot.x = max_x
+        robot.arreter_robot()
+    if robot.y < min_y:
+        robot.y = min_y
+        robot.arreter_robot()
+    elif robot.y > max_y:
+        robot.y = max_y
         robot.arreter_robot()
 
 def main():
