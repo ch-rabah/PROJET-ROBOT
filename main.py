@@ -66,29 +66,29 @@ def gerer_mouvement_robot(robot, dt):
 
 def gerer_collisions(robot, environnement, dt):
     """
-    Gère les collisions avec les obstacles et la sortie de l'environnement.
+    Gère les collisions avec les obstacles et empêche le robot de les traverser.
     """
     for obstacle in environnement.obstacles:
         if obstacle.detecter_collision(robot):
             print("Collision détectée!")
             robot.arreter_robot()
             
-            # Calcul du recul pour éviter de traverser l'obstacle
-            dx = obstacle.position[0] - robot.x
-            dy = obstacle.position[1] - robot.y
-            angle_robot = robot.direction
-            angle_obstacle = math.atan2(dy, dx)
-            delta_angle = (angle_obstacle - angle_robot + math.pi) % (2 * math.pi) - math.pi
+            # Recul progressif avec plusieurs petites étapes
+            for _ in range(5):  # Essayer de reculer en plusieurs petites étapes
+                dx = math.cos(robot.direction) * -1
+                dy = math.sin(robot.direction) * -1
+                robot.x += dx
+                robot.y += dy
+                
+                # Si le robot n'est plus en collision, on arrête le recul
+                if not obstacle.detecter_collision(robot):
+                    break
             
-            if -math.pi / 2 <= delta_angle <= math.pi / 2:
-                robot.appliquer_vitesse_gauche(-5)
-                robot.appliquer_vitesse_droite(-5)
-            else:
-                robot.appliquer_vitesse_gauche(5)
-                robot.appliquer_vitesse_droite(5)
-            
-            robot.avancer(dt)
-            return  # Empêche le robot de continuer à avancer après une collision
+            # Vérification après recul, si toujours en collision, forcer l'arrêt
+            if obstacle.detecter_collision(robot):
+                robot.arreter_robot()
+                touches_actives.discard('down')  # Bloquer la marche arrière
+            return  # Stopper après la première collision détectée
 
     if environnement.detecter_sorties(robot):
         print("Sortie du Monde détectée!")
