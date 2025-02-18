@@ -10,8 +10,7 @@ class Obstacle:
 
     def detecter_collision(self, robot):
         """
-        Vérifie si l'obstacle entre en collision avec le robot (considéré comme un triangle)
-        Elle retourne un couple de booléen le premier indique si le robot entre en collision avec l'obstacle l'autre indique si la collision est avec la partie arriére de l'obstacle
+        Vérifie si l'obstacle entre en collision avec le robot 
         (doit être implémentée dans les sous-classes)
         """
         pass # Pas de propriété commune par défaut pour les obstacles
@@ -98,21 +97,26 @@ class Ligne:
         self.largeur = largeur
         self.position = ((point1[0] + point2[0]) / 2, (point1[1] + point2[1]) / 2)  # Milieu de la ligne
 
-    def detecter_collision(self, robot):
+    def detecter_collision_point(self, point):
         x1, y1 = self.point1
         x2, y2 = self.point2
-        
+        px, py = point
+        dx, dy = x2 - x1, y2 - y1
+        longueur = math.sqrt(dx**2 + dy**2)
+        if longueur == 0:
+            return math.sqrt((px - x1) ** 2 + (py - y1) ** 2) <= self.largeur / 2
+        t = max(0, min(1, ((px - x1) * dx + (py - y1) * dy) / (longueur ** 2)))
+        proj_x, proj_y = x1 + t * dx, y1 + t * dy
+        distance = math.sqrt((proj_x - px) ** 2 + (proj_y - py) ** 2)
+        return distance <= self.largeur / 2
+    
+    def detecter_collision(self, robot):
         for px, py in robot.points():
-            dx, dy = x2 - x1, y2 - y1
-            longueur = math.sqrt(dx**2 + dy**2)
-            if longueur == 0:
-                continue
-            t = max(0, min(1, ((px - x1) * dx + (py - y1) * dy) / (longueur**2)))
-            proj_x, proj_y = x1 + t * dx, y1 + t * dy
-            distance = math.sqrt((proj_x - px) ** 2 + (proj_y - py) ** 2)
-            if distance <= self.largeur / 2:
+            if self.detecter_collision_point((px, py)):
                 return True
         return False
+
+
 
     
 class Triangle:
@@ -120,20 +124,23 @@ class Triangle:
         self.sommets = [point1, point2, point3]
         self.position = ((point1[0] + point2[0] + point3[0]) / 3, (point1[1] + point2[1] + point3[1]) / 3)
 
-    def detecter_collision(self, robot):
+    def detecter_collision_point(self, point):
         def signe(p1, p2, p3):
             return (p1[0] - p3[0]) * (p2[1] - p3[1]) - (p2[0] - p3[0]) * (p1[1] - p3[1])
-        
+        d1 = signe(point, self.sommets[0], self.sommets[1])
+        d2 = signe(point, self.sommets[1], self.sommets[2])
+        d3 = signe(point, self.sommets[2], self.sommets[0])
+        has_neg = (d1 < 0) or (d2 < 0) or (d3 < 0)
+        has_pos = (d1 > 0) or (d2 > 0) or (d3 > 0)
+        return not (has_neg and has_pos)
+    
+    def detecter_collision(self, robot):
         for px, py in robot.points():
-            d1 = signe((px, py), self.sommets[0], self.sommets[1])
-            d2 = signe((px, py), self.sommets[1], self.sommets[2])
-            d3 = signe((px, py), self.sommets[2], self.sommets[0])
-            has_neg = (d1 < 0) or (d2 < 0) or (d3 < 0)
-            has_pos = (d1 > 0) or (d2 > 0) or (d3 > 0)
-            if not (has_neg and has_pos):
+            if self.detecter_collision_point((px, py)):
                 return True
         return False
 
+  
     def get_sommets(self):
         return self.sommets
 
