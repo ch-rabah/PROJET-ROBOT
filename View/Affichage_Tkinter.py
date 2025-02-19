@@ -1,6 +1,8 @@
 import tkinter as tk
 import math
 from Model.Obstacle import *
+from functools import singledispatchmethod
+
 
 ROBOT_COLOR = "red"
 
@@ -41,24 +43,39 @@ class SimulationView:
         # Dessiner une ligne pour visualiser la direction
         self.canvas.create_line(x, y, point3_x, point3_y, fill="white")
 
-    def afficher_obstacles(self):
-        for obstacle in self.environnement.obstacles:
-            if isinstance(obstacle, Rectangle):
-                x, y = obstacle.position
-                largeur, hauteur = obstacle.dimensions
-                self.canvas.create_rectangle(x, y, x + largeur, y + hauteur, fill=COLOR_OBSTACLE)
-            elif isinstance(obstacle, Cercle):
-                x, y = obstacle.position
-                r = obstacle.rayon
-                self.canvas.create_oval(x - r, y - r, x + r, y + r, fill=COLOR_OBSTACLE)
-            elif isinstance(obstacle, Ligne):
-                x1, y1 = obstacle.point1
-                x2, y2 = obstacle.point2
-                self.canvas.create_line(x1, y1, x2, y2, fill=COLOR_OBSTACLE, width=obstacle.largeur)
-            elif isinstance(obstacle, Triangle):
-                points = obstacle.get_sommets()
-                self.canvas.create_polygon(points, fill=COLOR_OBSTACLE)
+    @singledispatchmethod
+    def afficher_obstacle(self, obstacle):
+        """Fonction générique, à définir pour chaque type d'obstacle"""
+        raise TypeError(f"Type d'obstacle non géré: {type(obstacle)}")
 
+    @afficher_obstacle.register
+    def _(self, obstacle: Rectangle):
+        x, y = obstacle.position
+        largeur, hauteur = obstacle.dimensions
+        self.canvas.create_rectangle(x, y, x + largeur, y + hauteur, fill=COLOR_OBSTACLE)
+
+    @afficher_obstacle.register
+    def _(self, obstacle: Cercle):
+        x, y = obstacle.position
+        r = obstacle.rayon
+        self.canvas.create_oval(x - r, y - r, x + r, y + r, fill=COLOR_OBSTACLE)
+
+    @afficher_obstacle.register
+    def _(self, obstacle: Ligne):
+        x1, y1 = obstacle.point1
+        x2, y2 = obstacle.point2
+        self.canvas.create_line(x1, y1, x2, y2, fill=COLOR_OBSTACLE, width=obstacle.largeur)
+
+    @afficher_obstacle.register
+    def _(self, obstacle: Triangle):
+        points = obstacle.get_sommets()
+        self.canvas.create_polygon(points, fill=COLOR_OBSTACLE)
+
+    def afficher_obstacles(self):
+        """Affiche tous les obstacles de l'environnement"""
+        for obstacle in self.environnement.obstacles:
+            self.afficher_obstacle(obstacle)  # Appel à la fonction dispatchée
+    
     def afficher_infos(self, temps):
         """
         Affiche les informations sur l'écran.
