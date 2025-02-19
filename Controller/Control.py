@@ -28,8 +28,8 @@ def evitemment(environnement, robot,dt):
         robot.appliquer_vitesse_gauche(-robot.vitesse_gauche)
         robot.appliquer_vitesse_droite(-robot.vitesse_droite)
         robot.avancer(dt)
-        robot.appliquer_vitesse_gauche(20)
-        robot.appliquer_vitesse_droite(20)
+        robot.appliquer_vitesse_gauche(40)
+        robot.appliquer_vitesse_droite(40)
 
         EVITER = False
 
