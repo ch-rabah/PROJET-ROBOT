@@ -11,7 +11,7 @@ assert len(env.obstacles) == 0, "Erreur : la liste des obstacles devrait être v
 ### TEST OBSTACLES ###
 rect = Rectangle((100, 100), (200, 50))
 cercle = Cercle((400, 300), 50)
-ligne = Ligne((50, 50), (70, 70))
+ligne = Ligne((50, 50), (70, 70),5)
 triangle = Triangle((500, 100), (600, 150), (550, 250))
 
 env.ajouter_obstacle(rect)
@@ -58,22 +58,22 @@ assert not env.detecter_sorties(robot), "Erreur : le robot ne devrait pas être 
 ### TEST COLLISIONS OBSTACLES ###
 # On place le robot au même endroit qu'un obstacle pour tester la collision
 robot.x, robot.y = 150, 125  # À l'intérieur du rectangle
-assert rect.detecter_collision((robot.x, robot.y)), "Erreur : le robot devrait être en collision avec le rectangle"
+assert rect.detecter_collision_point((robot.x, robot.y)), "Erreur : le robot devrait être en collision avec le rectangle"
 
 robot.x, robot.y = 400, 300  # Au centre du cercle
-assert cercle.detecter_collision((robot.x, robot.y)), "Erreur : le robot devrait être en collision avec le cercle"
+assert cercle.detecter_collision_point((robot.x, robot.y)), "Erreur : le robot devrait être en collision avec le cercle"
 
 robot.x, robot.y = 550, 150  # À l'intérieur du triangle
-assert triangle.detecter_collision((robot.x, robot.y)), "Erreur : le robot devrait être en collision avec le triangle"
+assert triangle.detecter_collision_point((robot.x, robot.y)), "Erreur : le robot devrait être en collision avec le triangle"
 
 robot.x, robot.y = 55, 55  # Sur la ligne
-assert ligne.detecter_collision((robot.x, robot.y)), "Erreur : le robot devrait être en collision avec la ligne"
+assert ligne.detecter_collision_point((robot.x, robot.y)), "Erreur : le robot devrait être en collision avec la ligne"
 
 # Vérification qu'il n'y a PAS de collision en dehors des obstacles
 robot.x, robot.y = 700, 500  # Zone vide
-assert not rect.detecter_collision((robot.x, robot.y)), "Erreur : mauvaise détection de collision avec le rectangle"
-assert not cercle.detecter_collision((robot.x, robot.y)), "Erreur : mauvaise détection de collision avec le cercle"
-assert not triangle.detecter_collision((robot.x, robot.y)), "Erreur : mauvaise détection de collision avec le triangle"
-assert not ligne.detecter_collision((robot.x, robot.y)), "Erreur : mauvaise détection de collision avec la ligne"
+assert not rect.detecter_collision_point((robot.x, robot.y)), "Erreur : mauvaise détection de collision avec le rectangle"
+assert not cercle.detecter_collision_point((robot.x, robot.y)), "Erreur : mauvaise détection de collision avec le cercle"
+assert not triangle.detecter_collision_point((robot.x, robot.y)), "Erreur : mauvaise détection de collision avec le triangle"
+assert not ligne.detecter_collision_point((robot.x, robot.y)), "Erreur : mauvaise détection de collision avec la ligne"
 
 print(" Tous les tests sont passés avec succès ! ")
