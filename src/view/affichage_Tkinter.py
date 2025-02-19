@@ -1,6 +1,6 @@
 import tkinter as tk
 import math
-from Model.Obstacle import *
+from src.model.obstacle import *
 from functools import singledispatchmethod
 
 

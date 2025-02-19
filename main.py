@@ -1,9 +1,8 @@
 from tkinter import Tk
-from View.Affichage_Tkinter import SimulationView
-from Model.Robot import Robot
-from Model.Environnement import Environnement
-from Model.Obstacle import Rectangle, Cercle, Ligne, Triangle
-from Controller.Control import evitemment
+from src.view.affichage_Tkinter import SimulationView
+from src.model.robot import Robot
+from src.model.environnement import Environnement
+from src.model.obstacle import Rectangle, Cercle, Ligne, Triangle
 import time
 import math
 from pynput import keyboard
