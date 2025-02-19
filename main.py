@@ -140,8 +140,6 @@ def main():
         gerer_collisions(robot, environnement, dt)
 
         gerer_mouvement_robot(robot, dt)
-        #eviter les collisions
-        evitemment(environnement,robot,dt)
         robot.avancer(dt)
 
         # Mise à jour de la simulation (affichage, autres logiques)
