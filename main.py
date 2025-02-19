@@ -91,10 +91,21 @@ def gerer_collisions(robot, environnement, dt):
             robot.avancer(dt)
             break
 
-    if environnement.detecter_sorties(robot):
-        print("Sortie du Monde dtectée!")
+# Empêcher le robot de sortir des limites de l'environnement
+    min_x, max_x = environnement.dimensions_x
+    min_y, max_y = environnement.dimensions_y
+    if robot.x < min_x:
+        robot.x = min_x
         robot.arreter_robot()
-
+    elif robot.x > max_x:
+        robot.x = max_x
+        robot.arreter_robot()
+    if robot.y < min_y:
+        robot.y = min_y
+        robot.arreter_robot()
+    elif robot.y > max_y:
+        robot.y = max_y
+        robot.arreter_robot()
 
 
 def main():
