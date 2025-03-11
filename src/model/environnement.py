@@ -86,7 +86,15 @@ class Environnement:
             robot.y = max_y
             robot.arreter_robot()
 
-
+    def update(self, robot, dt):
+        """
+        Met à jour l'état de l'environnement en gérant les collisions et en détectant les sorties.
+        """
+        if self.detecter_sorties(robot):
+            print("Le robot est sorti des limites de l'environnement!")
+            robot.arreter_robot()
+        self.gerer_collisions(robot)
+        robot.mise_a_jour_robot(dt)
 
 
 
