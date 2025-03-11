@@ -9,45 +9,45 @@ from adapter import RobotAdapter
 
 
 def main():
-    # Création de l'environnement avec des obstacles
     environnement = Environnement((0, 800), (0, 600))
-    obstacle1 = Rectangle((100, 100), (200, 50))
-    obstacle2 = Cercle((500, 200), 30)
-    obstacle3 = Ligne((300, 400), (500, 400), 5)
-    obstacle4 = Triangle((600, 300), (650, 350), (700, 300))
-    environnement.ajouter_obstacle(obstacle1)
-    environnement.ajouter_obstacle(obstacle2)
-    environnement.ajouter_obstacle(obstacle3)
-    environnement.ajouter_obstacle(obstacle4)
+    
 
-    # Initialisation du robot
-    robot = Robot(400, 300, direction=180, vitesse_gauche=0, vitesse_droite=0)
-
-    # Création de la vue de simulation
+    robot = Robot(400, 300, environnement=environnement, direction=0, vitesse_gauche=0, vitesse_droite=0)
+    robot_adapter = RobotAdapter(robot)
     simulation = SimulationView(Tk(), environnement, robot)
 
-    # Gestion du temps
+    current_strategy_index = 0
     previous_time = time.time()
     tempsecouler = 0
+    strategies = [
+            StrategyCarre(robot_adapter, 100),
+        ]
+    """
+    strategies = [
+        StrategyAvancer(robot_adapter, 200),
+        StrategyTourner(robot_adapter, 90),
+        StrategyTourner(robot_adapter, -45),
+        StrategyAvancer(robot_adapter, 200),
+        StrategyTourner(robot_adapter, 360),       
+    ]"""
 
-    # Boucle principale
     while True:
         current_time = time.time()
         dt = current_time - previous_time
         previous_time = current_time
         tempsecouler += dt
 
-        # Appeler la fonction pour gérer les collisions
-        gerer_collisions(robot, environnement, dt)
+        # Exécuter la stratégie actuelle
+        if current_strategy_index < len(strategies):
+            current_strategy = strategies[current_strategy_index]
+            if current_strategy(dt):
+                # Passer à la stratégie suivante si la stratégie actuelle est terminée
+                current_strategy_index += 1
 
-        gerer_mouvement_robot(robot, dt)
-        robot.avancer(dt)
-
-        # Mise à jour de la simulation (affichage, autres logiques)
+        environnement.update(robot, dt)
         simulation.mise_a_jour(tempsecouler)
+        time.sleep(1 / 60)
 
-        # Ajouter un délai pour limiter la vitesse de la boucle (par exemple 60 FPS)
-        time.sleep(1 / 60)  # ~60 FPS
 
 if __name__ == "__main__":
     main()
