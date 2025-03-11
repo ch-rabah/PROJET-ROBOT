@@ -23,3 +23,12 @@ class RobotAdapter:
         elif port == RobotAdapter.MOTOR_RIGHT:
             self.robot.appliquer_vitesse_droite(dps)
     
+    def calculer_distance_parcourue(self, vitesse_gauche, vitesse_droite, dt):
+        """
+        Calcule la distance parcourue en fonction des vitesses des moteurs et du temps écoulé.
+        """
+        vitesse_moyenne = (vitesse_gauche + vitesse_droite) / 2
+        # Calcul de la distance parcourue en mm : v = d / t donc d = v * t
+        distance = vitesse_moyenne * dt
+        return distance
+    
