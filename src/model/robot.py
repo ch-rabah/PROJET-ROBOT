@@ -1,7 +1,7 @@
 import math
 
 class Robot:
-    def __init__(self, x, y, direction=0, vitesse_gauche=0, vitesse_droite=0, distance_roues=30,taille_robot=20,vitesse_max=200):
+    def __init__(self, x, y, direction=0, vitesse_gauche=0, vitesse_droite=0, distance_roues=30,taille_robot=20,vitesse_max=200,environnement=None):
         """
         Initialise un robot différentiel avec position, direction, et vitesses de roues.
         
@@ -23,6 +23,7 @@ class Robot:
         self.distance_roues = distance_roues
         self.taille_robot = taille_robot
         self.vitesse_max = vitesse_max
+        self.environnement = environnement
 
     def avancer(self, dt):
         """
