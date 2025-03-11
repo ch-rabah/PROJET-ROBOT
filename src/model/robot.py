@@ -25,7 +25,7 @@ class Robot:
         self.vitesse_max = vitesse_max
         self.environnement = environnement
 
-    def avancer(self, dt):
+    def mise_a_jour_robot(self, dt):
         """
         Met à jour la position et la direction du robot sur une période de temps donnée.
         
@@ -80,7 +80,7 @@ class Robot:
         self.vitesse_gauche = 0
 
     
-    def capteurdistance(self, environnement):
+    def capteurdistance(self):
         """Retourne True et la distance minimale si un obstacle est détecté par un des capteurs avant du robot, False sinon."""
         
         step = 1  # Distance entre chaque échantillon
@@ -104,7 +104,7 @@ class Robot:
                 current_y += step * math.sin(angle)
 
                 # Vérification de collision avec les obstacles
-                for obstacle in environnement.obstacles:
+                for obstacle in self.environnement.obstacles:
                     if obstacle.detecter_collision_point((current_x, current_y)):
                         distance = math.sqrt((current_x - x) ** 2 + (current_y - y) ** 2)
                         distances_detectees.append(distance)
