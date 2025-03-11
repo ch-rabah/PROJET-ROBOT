@@ -1,0 +1,29 @@
+# Compte Rendu - Semaine 5  
+
+**Date :** 11/03/2025  
+
+## Résumé  
+
+### 1. Intégration de l'adaptateur RobotAdapter  
+- Ajout du fichier `adapter.py` contenant la classe `RobotAdapter` :  
+  - Interface pour unifier le contrôle des moteurs et la récupération des distances.  
+  - Méthodes pour convertir et appliquer les vitesses aux moteurs.  
+  - Calcul de la distance parcourue en fonction des vitesses et du temps écoulé.  
+
+### 2. Implémentation de stratégies de déplacement  
+- Ajout du fichier `strategy.py` contenant plusieurs stratégies :  
+  - `StrategyAvancer` : Permet au robot d’avancer d’une distance donnée.  
+  - `StrategyTourner` : Implémente une rotation sur place à un angle défini.  
+  - `StrategyCarre` : Enchaîne des déplacements pour dessiner un carré.  
+
+ 
+### 4. Modification de `main.py`  
+- Suppression de l'ancienne gestion des collisions.  
+- Mise à jour du cycle principal pour inclure l’`update()` de l’environnement. 
+- Suppression de la gestion des collisions dans `main.py`, désormais entièrement gérée via `update()` dans environnement.  
+
+
+### 5. Correction et amélioration des tests unitaires  
+- Utilisation de `unittest` pour tester les composants du dossier `model` :  
+  - `Environnement.py`, `Obstacle.py` et `Robot.py`.  
+  - Ajout de tests pour vérifier la détection des sorties, la gestion des collisions et les déplacements.  
