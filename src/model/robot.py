@@ -54,9 +54,9 @@ class Robot:
         :param delta_vitesse: Variation de la vitesse (positive ou négative)
         """
         v = self.vitesse_gauche
-        if (delta_vitesse > 0 and v + delta_vitesse < self.vitesse_max):
+        if (delta_vitesse >= 0 and delta_vitesse < self.vitesse_max):
             self.vitesse_gauche += delta_vitesse
-        if (delta_vitesse < 0 and v + delta_vitesse > -self.vitesse_max):
+        if (delta_vitesse <= 0 and delta_vitesse > -self.vitesse_max):
             self.vitesse_gauche += delta_vitesse
 
     def appliquer_vitesse_droite(self, delta_vitesse):
@@ -66,9 +66,9 @@ class Robot:
         :param delta_vitesse: Variation de la vitesse (positive ou négative)
         """
         v = self.vitesse_droite
-        if (delta_vitesse > 0 and v + delta_vitesse < self.vitesse_max):
+        if (delta_vitesse >= 0 and delta_vitesse < self.vitesse_max):
             self.vitesse_droite += delta_vitesse
-        if (delta_vitesse < 0 and v + delta_vitesse > -self.vitesse_max):
+        if (delta_vitesse <= 0 and delta_vitesse > -self.vitesse_max):
             self.vitesse_droite += delta_vitesse
 
 
