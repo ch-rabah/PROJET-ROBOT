@@ -62,3 +62,29 @@ class StrategyTourner(Strategy):
             self.robot_adapter.set_motor_dps(RobotAdapter.MOTOR_RIGHT, 0)
             return True  # Stratégie terminée
         return False  # Stratégie en cours
+
+class StrategyCarre(Strategy):
+    def __init__(self, robot_adapter, distance_cote):
+        super().__init__(robot_adapter)
+        self.distance_cote = distance_cote
+        self.strategies = [
+            StrategyAvancer(robot_adapter, distance_cote),
+            StrategyTourner(robot_adapter, 90),
+            StrategyAvancer(robot_adapter, distance_cote),
+            StrategyTourner(robot_adapter, 90),
+            StrategyAvancer(robot_adapter, distance_cote),
+            StrategyTourner(robot_adapter, 90),
+            StrategyAvancer(robot_adapter, distance_cote),
+            StrategyTourner(robot_adapter, 90)
+        ]
+        self.current_strategy_index = 0
+
+    def __call__(self, dt):
+        """Exécute les stratégies pour former un carré."""
+        if self.current_strategy_index < len(self.strategies):
+            current_strategy = self.strategies[self.current_strategy_index]
+            if current_strategy(dt):
+                self.current_strategy_index += 1
+                if self.current_strategy_index >= len(self.strategies):
+                    return True  # Stratégie terminée
+        return False  # Stratégie en cours
