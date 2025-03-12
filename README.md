@@ -26,7 +26,7 @@ Ce projet consiste à développer un mini-robot équipé de capteurs et contrôl
 2. **math** https://docs.python.org/3/library/math.html
    - Bibliothèque math
 
-3. **pynput** https://pynput.readthedocs.io/en/latest/
-   - Bibliothèque pynput
+3. **Vitesse angulaire** https://fr.wikipedia.org/wiki/Vitesse_angulaire
+   - Page wikipedia utilsée pour modéliser le robot
 
 ---
