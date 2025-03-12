@@ -1,7 +1,7 @@
 import math
 
 class Robot:
-    def __init__(self, x, y, direction=0, vitesse_gauche=0, vitesse_droite=0, distance_roues=30,taille_robot=20,vitesse_max=200):
+    def __init__(self, x, y, direction=0, vitesse_gauche=0, vitesse_droite=0, distance_roues=30,taille_robot=20,vitesse_max=200,environnement=None):
         """
         Initialise un robot différentiel avec position, direction, et vitesses de roues.
         
@@ -23,8 +23,9 @@ class Robot:
         self.distance_roues = distance_roues
         self.taille_robot = taille_robot
         self.vitesse_max = vitesse_max
+        self.environnement = environnement
 
-    def avancer(self, dt):
+    def mise_a_jour_robot(self, dt):
         """
         Met à jour la position et la direction du robot sur une période de temps donnée.
         
@@ -52,11 +53,10 @@ class Robot:
         
         :param delta_vitesse: Variation de la vitesse (positive ou négative)
         """
-        v = self.vitesse_gauche
-        if (delta_vitesse > 0 and v + delta_vitesse < self.vitesse_max):
-            self.vitesse_gauche += delta_vitesse
-        if (delta_vitesse < 0 and v + delta_vitesse > -self.vitesse_max):
-            self.vitesse_gauche += delta_vitesse
+        if (delta_vitesse >= 0 and delta_vitesse < self.vitesse_max):
+            self.vitesse_gauche = delta_vitesse
+        if (delta_vitesse <= 0 and delta_vitesse > -self.vitesse_max):
+            self.vitesse_gauche = delta_vitesse
 
     def appliquer_vitesse_droite(self, delta_vitesse):
         """
@@ -64,22 +64,13 @@ class Robot:
         
         :param delta_vitesse: Variation de la vitesse (positive ou négative)
         """
-        v = self.vitesse_droite
-        if (delta_vitesse > 0 and v + delta_vitesse < self.vitesse_max):
-            self.vitesse_droite += delta_vitesse
-        if (delta_vitesse < 0 and v + delta_vitesse > -self.vitesse_max):
-            self.vitesse_droite += delta_vitesse
-
-
-    def arreter_robot(self):
-        """
-        Modifie la vitesse de la roue droite et gauche en ajoutant la mettant à zero
-        """
-        self.vitesse_droite = 0
-        self.vitesse_gauche = 0
+        if (delta_vitesse >= 0 and delta_vitesse < self.vitesse_max):
+            self.vitesse_droite = delta_vitesse
+        if (delta_vitesse <= 0 and delta_vitesse > -self.vitesse_max):
+            self.vitesse_droite = delta_vitesse
 
     
-    def capteurdistance(self, environnement):
+    def capteurdistance(self):
         """Retourne True et la distance minimale si un obstacle est détecté par un des capteurs avant du robot, False sinon."""
         
         step = 1  # Distance entre chaque échantillon
@@ -103,7 +94,7 @@ class Robot:
                 current_y += step * math.sin(angle)
 
                 # Vérification de collision avec les obstacles
-                for obstacle in environnement.obstacles:
+                for obstacle in self.environnement.obstacles:
                     if obstacle.detecter_collision_point((current_x, current_y)):
                         distance = math.sqrt((current_x - x) ** 2 + (current_y - y) ** 2)
                         distances_detectees.append(distance)
