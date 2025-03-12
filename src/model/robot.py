@@ -69,14 +69,6 @@ class Robot:
         if (delta_vitesse <= 0 and delta_vitesse > -self.vitesse_max):
             self.vitesse_droite = delta_vitesse
 
-
-    def arreter_robot(self):
-        """
-        Modifie la vitesse de la roue droite et gauche en ajoutant la mettant à zero
-        """
-        self.vitesse_droite = 0
-        self.vitesse_gauche = 0
-
     
     def capteurdistance(self):
         """Retourne True et la distance minimale si un obstacle est détecté par un des capteurs avant du robot, False sinon."""
