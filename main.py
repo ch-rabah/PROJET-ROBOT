@@ -13,7 +13,7 @@ def main():
     
     robot = Robot(400, 300, environnement=environnement, direction=0, vitesse_gauche=0, vitesse_droite=0)
     environnement.ajouter_obstacle(Rectangle((100, 100), (200, 50)))
-    environnement.ajouter_obstacle( Cercle((500, 200), 30))
+    #environnement.ajouter_obstacle( Cercle((500, 200), 30))
     environnement.ajouter_obstacle(Triangle((600, 300), (650, 350), (700, 300)))
     robot_adapter = RobotAdapter(robot)
     simulation = SimulationView(Tk(), environnement, robot)
