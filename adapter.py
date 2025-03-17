@@ -1,3 +1,5 @@
+from robot2I013 import Robot2I013
+
 class RobotAdapter:
     def set_speed_left(self, dps):
         pass
@@ -8,7 +10,7 @@ class RobotAdapter:
     def get_distance(self):
         pass
 
-    def calculer_distance_parcourue(self, vitesse_gauche, vitesse_droite, dt):
+    def calculer_distance_parcourue(self, dt):
         pass
 
 class RobotAdapterSimulation(RobotAdapter):
@@ -23,9 +25,9 @@ class RobotAdapterSimulation(RobotAdapter):
         # Implémentation pour la simulation
         self.robot.appliquer_vitesse_droite(dps)
 
-    def calculer_distance_parcourue(self, vitesse_gauche, vitesse_droite, dt):
+    def calculer_distance_parcourue(self, dt):
         # Implémentation pour la simulation
-        vitesse_moyenne = (vitesse_gauche + vitesse_droite) / 2
+        vitesse_moyenne = (self.robot.vitesse_gauche + self.robot.vitesse_droite) / 2
         distance = vitesse_moyenne * dt
         return distance
     
@@ -35,20 +37,18 @@ class RobotAdapterSimulation(RobotAdapter):
         return distance if obstacle_detecte else float("inf")
 
 class RobotAdapterReel(RobotAdapter):
-    MOTOR_LEFT = "LEFT"
-    MOTOR_RIGHT = "RIGHT"
 
     def __init__(self, robot):
         self.robot = robot
 
     def set_speed_left(self, dps):
-        set_motor_dps(RobotAdapterReel.MOTOR_LEFT, dps)
+        self.robot.set_motor_dps(self.robot.MOTOR_LEFT, dps)
 
     def set_speed_right(self, dps):
-        self.set_motor_dps(RobotAdapterReel.MOTOR_RIGHT, dps)
+        self.robot.set_motor_dps(self.robot.MOTOR_RIGHT, dps)
 
     def calculer_distance_parcourue(self):
         pass
 
     def get_distance(self):
-        pass
+        return self.robot.get_distance()
