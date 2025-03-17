@@ -1,34 +1,54 @@
 class RobotAdapter:
-    # Constantes pour le contrôle du robot
+    def set_speed_left(self, dps):
+        pass
+
+    def set_speed_right(self, dps):
+        pass
+
+    def get_distance(self):
+        pass
+
+    def calculer_distance_parcourue(self, vitesse_gauche, vitesse_droite, dt):
+        pass
+
+class RobotAdapterSimulation(RobotAdapter):
+    def __init__(self, robot):
+        self.robot = robot
+
+    def set_speed_left(self, dps):
+        # Implémentation pour la simulation
+        self.robot.appliquer_vitesse_gauche(dps)
+
+    def set_speed_right(self, dps):
+        # Implémentation pour la simulation
+        self.robot.appliquer_vitesse_droite(dps)
+
+    def calculer_distance_parcourue(self, vitesse_gauche, vitesse_droite, dt):
+        # Implémentation pour la simulation
+        vitesse_moyenne = (vitesse_gauche + vitesse_droite) / 2
+        distance = vitesse_moyenne * dt
+        return distance
+    
+    def get_distance(self):
+        """Retourne la distance à l'obstacle le plus proche."""
+        obstacle_detecte, distance = self.robot.capteurdistance()
+        return distance if obstacle_detecte else float("inf")
+
+class RobotAdapterReel(RobotAdapter):
     MOTOR_LEFT = "LEFT"
     MOTOR_RIGHT = "RIGHT"
 
     def __init__(self, robot):
         self.robot = robot
 
-    def get_distance(self):
-        """Retourne la distance à l'obstacle le plus proche."""
-        obstacle_detecte, distance = self.robot.capteurdistance()
-        return distance if obstacle_detecte else float("inf")
-    
-    def set_motor_dps(self, port, dps):
-        """
-        Fixe la vitesse d'un moteur en degrés par seconde (DPS).
-        Conversion : DPS -> vitesse linéaire en mm/s -> application via les méthodes du robot.
-        """
-          # Conversion en mm/s
+    def set_speed_left(self, dps):
+        set_motor_dps(RobotAdapterReel.MOTOR_LEFT, dps)
 
-        if port == RobotAdapter.MOTOR_LEFT:
-            self.robot.appliquer_vitesse_gauche(dps)
-        elif port == RobotAdapter.MOTOR_RIGHT:
-            self.robot.appliquer_vitesse_droite(dps)
-    
-    def calculer_distance_parcourue(self, vitesse_gauche, vitesse_droite, dt):
-        """
-        Calcule la distance parcourue en fonction des vitesses des moteurs et du temps écoulé.
-        """
-        vitesse_moyenne = (vitesse_gauche + vitesse_droite) / 2
-        # Calcul de la distance parcourue en mm : v = d / t donc d = v * t
-        distance = vitesse_moyenne * dt
-        return distance
-    
+    def set_speed_right(self, dps):
+        self.set_motor_dps(RobotAdapterReel.MOTOR_RIGHT, dps)
+
+    def calculer_distance_parcourue(self):
+        pass
+
+    def get_distance(self):
+        pass
