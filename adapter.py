@@ -1,4 +1,4 @@
-from robot2I013 import Robot2I013
+#from robot2I013 import Robot2I013
 
 class RobotAdapter:
     def set_speed_left(self, dps):
