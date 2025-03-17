@@ -21,17 +21,18 @@ def main():
     current_strategy_index = 0
     previous_time = time.time()
     tempsecouler = 0
+    """
     strategies = [
             StrategyCarre(robot_adapter, 100),
-    ]
-    """
+    ]"""
+    
     strategies = [
         StrategyAvancer(robot_adapter, 200),
         StrategyTourner(robot_adapter, 90),
         StrategyTourner(robot_adapter, -45),
         StrategyAvancer(robot_adapter, 200),
         StrategyTourner(robot_adapter, 360),       
-    ]"""
+    ]
 
     while True:
         current_time = time.time()

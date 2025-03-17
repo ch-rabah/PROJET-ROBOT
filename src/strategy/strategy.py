@@ -16,8 +16,8 @@ class StrategyAvancer(Strategy):
 
     def __call__(self, dt):
         """Avance jusqu'à atteindre la distance cible."""
-        self.vitesse_gauche = 20
-        self.vitesse_droite = 20
+        self.vitesse_gauche = 50
+        self.vitesse_droite = 50
 
         # Calculer la distance parcourue
         self.distance_parcourue += self.robot_adapter.calculer_distance_parcourue(self.vitesse_gauche, self.vitesse_droite, dt)
