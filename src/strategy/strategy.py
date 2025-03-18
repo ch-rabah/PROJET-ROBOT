@@ -39,34 +39,28 @@ class StrategyAvancer(Strategy):
             return False
 
 class StrategyTourner(Strategy):
-    def __init__(self, robot_adapter, angle_degrees):
+    def __init__(self, robot_adapter, angle_cible, vitesse=50):
         super().__init__(robot_adapter)
-        self.angle_degrees = angle_degrees
+        self.angle_cible = angle_cible
+        self.vitesse = vitesse
         self.angle_parcouru = 0
-        self.base_robot = 30  # Distance entre les roues du robot en mm (à ajuster selon votre robot)
-        self.vitesse = 20 if angle_degrees > 0 else -20
 
     def execute(self, dt):
-        """Tourne jusqu'à atteindre l'angle cible."""
+        if self.angle_cible > 0:
+            self.robot_adapter.set_speed_left(self.vitesse)
+            self.robot_adapter.set_speed_right(-self.vitesse)
+        else:
+            self.robot_adapter.set_speed_left(-self.vitesse)
+            self.robot_adapter.set_speed_right(self.vitesse)
 
-        # Appliquer la vitesse au robot
-        self.robot_adapter.set_motor_dps(RobotAdapter.MOTOR_LEFT, self.vitesse)
-        self.robot_adapter.set_motor_dps(RobotAdapter.MOTOR_RIGHT, -self.vitesse)
-
-        # Calculer la vitesse angulaire (en degrés par seconde)
-        vitesse_angulaire = (self.vitesse + self.vitesse) / self.base_robot * (180 / 3.14159)
-
-        # Calculer l'angle parcouru
-        self.angle_parcouru += vitesse_angulaire * dt
+        self.angle_parcouru = self.robot_adapter.calculer_angle_parcouru(dt)  # Conversion rad → degrés
 
         # Vérifier si l'angle cible est atteint
-        if abs(self.angle_parcouru) >= abs(self.angle_degrees):
-            print(f"Angle cible atteint ({self.angle_parcouru}°)")
-            self.robot_adapter.set_motor_dps(RobotAdapter.MOTOR_LEFT, 0)
-            self.robot_adapter.set_motor_dps(RobotAdapter.MOTOR_RIGHT, 0)
-            return True  # Stratégie terminée
-        return False  # Stratégie en cours
-    
+        if abs(self.angle_parcouru) >= abs(self.angle_cible):
+            print(f"Angle cible atteint ({self.angle_parcouru:.2f}°)")
+            self.robot_adapter.set_speed_left(0)
+            self.robot_adapter.set_speed_right(0)
+
     def est_terminee(self):
         if abs(self.angle_parcouru) >= abs(self.angle_cible):
             self.robot_adapter.reset()
