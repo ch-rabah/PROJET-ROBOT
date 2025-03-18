@@ -21,9 +21,15 @@ def main():
     current_strategy_index = 0
     previous_time = time.time()
     tempsecouler = 0
+
+    avancer = StrategyAvancer(robot_adapter)
+    tourner = StrategyTourner(robot_adapter)
+    carre = StrategyCarre(robot_adapter)
     
-    strategies = [
-        StrategyCarre(robot_adapter, 50),
+    strategies1 = [
+        (carre, 100),
+        (avancer, 50),
+        (tourner, -90),
     ]
 
     while True:
@@ -33,8 +39,9 @@ def main():
         tempsecouler += dt
 
         # Exécuter la stratégie actuelle
-        if current_strategy_index < len(strategies):
-            current_strategy = strategies[current_strategy_index]
+        if current_strategy_index < len(strategies1):
+            current_strategy, param = strategies1[current_strategy_index]
+            current_strategy(param)
             current_strategy.execute(dt)
 
             # Vérifier si la stratégie est terminée
