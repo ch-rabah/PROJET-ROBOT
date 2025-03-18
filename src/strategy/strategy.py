@@ -134,23 +134,36 @@ class StrategyConditionnel(Strategy):
         if self.finished:
             return True  # Stratégie déjà terminée
 
-        if self.current_strategy is None: #"""or self.current_strategy.is_finished()""":
-            if self.condition_tourner():
+        # Vérifier si la stratégie actuelle est terminée avant d'en sélectionner une autre
+        if self.current_strategy is None or self.current_strategy.est_terminee():
+            self.current_strategy = None  # Réinitialisation de la stratégie terminée
+            
+            if self.condition_tourner:
                 print("Condition tourner remplie, passage en mode tourner")
-                self.current_strategy = StrategyTourner(self.robot_adapter, self.angle_degrees)
-            elif self.condition_avancer():
+                self.current_strategy = StrategyTourner(self.robot_adapter)
+                self.current_strategy(self.angle_degrees)
+            
+            elif self.condition_avancer:
                 print("Condition avancer remplie, passage en mode avancer")
-                self.current_strategy = StrategyAvancer(self.robot_adapter, self.distance_cible)
-            elif self.condition_carre():
-                print("Condition carre remplie, passage en mode carré")
-                self.current_strategy = StrategyCarre(self.robot_adapter, self.distance_cote)
+                self.current_strategy = StrategyAvancer(self.robot_adapter)
+                self.current_strategy(self.distance_cible)
+            
+            elif self.condition_carre:
+                print("Condition carré remplie, passage en mode carré")
+                self.current_strategy = StrategyCarre(self.robot_adapter)
+                self.current_strategy(self.distance_cote)
+            
             else:
                 print("Aucune condition remplie, arrêt de la stratégie")
                 self.finished = True
                 return True  # Arrêt définitif de la stratégie
 
+        # Exécuter la stratégie actuelle si elle existe
+        if self.current_strategy:
+            self.current_strategy.execute(dt)
+
         return False  # La stratégie continue tant qu'il y a une action à exécuter
 
     def est_terminee(self):
         """Retourne True si la stratégie est terminée."""
-        return self.finished #"""or (self.current_strategy is not None and self.current_strategy.is_finished())"""
+        return self.finished or (self.current_strategy is not None and self.current_strategy.est_terminee())

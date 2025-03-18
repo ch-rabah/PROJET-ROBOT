@@ -4,7 +4,7 @@ from src.view.affichage_Tkinter import SimulationView
 from src.model.robot import Robot
 from src.model.environnement import Environnement
 from src.model.obstacle import Rectangle, Cercle, Ligne, Triangle
-from src.strategy.strategy import StrategyAvancer, StrategyTourner, StrategyCarre
+from src.strategy.strategy import StrategyAvancer, StrategyTourner, StrategyCarre, StrategyConditionnel
 from adapter import RobotAdapterSimulation
 
 
@@ -25,12 +25,33 @@ def main():
     avancer = StrategyAvancer(robot_adapter)
     tourner = StrategyTourner(robot_adapter)
     carre = StrategyCarre(robot_adapter)
+
+    def condition_tourner():
+        """Condition pour activer la stratégie de rotation"""
+        return robot.direction % 180 == 0  # Exemple : tourne si le robot est aligné avec les axes
+
+    def condition_avancer():
+        """Condition pour activer la stratégie d'avancer"""
+        return robot.x < 500  # Exemple : avance tant qu'il est à gauche de x = 500
+
+    def condition_carre():
+        """Condition pour activer la stratégie du carré"""
+        return robot.y > 400  # Exemple : fait un carré si y > 400
     
     strategies1 = [
-        (carre, 100),
         (avancer, 50),
         (tourner, -90),
     ]
+
+    strategy_conditionnel = StrategyConditionnel(
+        robot_adapter,
+        distance_cible=100,
+        angle_degrees=90,
+        distance_cote=50,
+        condition_tourner=False,
+        condition_avancer=False,
+        condition_carre=True,
+    )
 
     while True:
         current_time = time.time()
@@ -47,6 +68,10 @@ def main():
             # Vérifier si la stratégie est terminée
             if current_strategy.est_terminee():
                 current_strategy_index += 1
+
+        # Exécuter la stratégie conditionnelle une fois que les stratégies fixes sont terminées
+        elif not strategy_conditionnel.est_terminee():
+            strategy_conditionnel.execute(dt)
 
         environnement.update(robot, dt)
         simulation.mise_a_jour(tempsecouler)
