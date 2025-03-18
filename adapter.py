@@ -55,6 +55,9 @@ class RobotAdapterSimulation(RobotAdapter):
         """Retourne la distance à l'obstacle le plus proche."""
         obstacle_detecte, distance = self.robot.capteurdistance()
         return distance if obstacle_detecte else float("inf")
+    
+    def reset(self):
+        super().reset()
 
 class RobotAdapterReel(RobotAdapter):
 
