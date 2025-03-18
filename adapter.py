@@ -84,6 +84,19 @@ class RobotAdapterReel(RobotAdapter):
         self.pos_initiale = (l_pos_actuelle, r_pos_actuelle)  
         return self.distance_parcourue
 
+    def calculer_angle_parcouru(self, dt):
+        """Calcul de l’angle parcouru basé sur les encodeurs."""
+        l_pos_actuelle, r_pos_actuelle = self.robot.get_motor_position()
+
+        distance_gauche = (l_pos_actuelle - self.pos_initiale[0]) * (self.robot.WHEEL_DIAMETER * 3.14159 / 360)
+        distance_droite = (r_pos_actuelle - self.pos_initiale[1]) * (self.robot.WHEEL_DIAMETER * 3.14159 / 360)
+
+        angle = (distance_droite - distance_gauche) / self.robot.WHEEL_BASE_WIDTH  # En radians
+        self.angle_parcouru += angle
+        self.angle_parcouru = round(self.angle_parcouru, 4)
+
+        self.pos_initiale = (l_pos_actuelle, r_pos_actuelle)  # Mise à jour de la position initiale
+        return self.angle_parcouru * (180 / pi)
 
     def get_distance(self):
         return self.robot.get_distance()
