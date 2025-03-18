@@ -28,7 +28,7 @@ class RobotAdapter:
 class RobotAdapterSimulation(RobotAdapter):
     def __init__(self, robot):
         super().__init__()
-        self.robot = robot  # Pas de position initiale ici
+        self.robot = robot  
 
     def set_speed_left(self, dps):
         self.robot.appliquer_vitesse_gauche(dps)
@@ -46,7 +46,7 @@ class RobotAdapterSimulation(RobotAdapter):
     def calculer_angle_parcouru(self, dt):
         """Simulation : calcul de l’angle basé sur la différence de vitesse."""
         delta_vitesse = self.robot.vitesse_droite - self.robot.vitesse_gauche
-        angle = (delta_vitesse / self.robot.distance_roues) * dt  # En radians
+        angle = (delta_vitesse / self.robot.distance_roues) * dt  
         self.angle_parcouru += angle
         self.angle_parcouru = round(self.angle_parcouru, 4)
         return self.angle_parcouru * (180 / pi)
@@ -63,7 +63,7 @@ class RobotAdapterReel(RobotAdapter):
     def __init__(self, robot):
         super().__init__()
         self.robot = robot
-        self.pos_initiale = self.robot.get_motor_position()  # Position initiale des roues
+        self.pos_initiale = self.robot.get_motor_position() 
 
     def set_speed_left(self, dps):
         self.robot.set_motor_dps(self.robot.MOTOR_LEFT, dps)
@@ -91,11 +91,11 @@ class RobotAdapterReel(RobotAdapter):
         distance_gauche = (l_pos_actuelle - self.pos_initiale[0]) * (self.robot.WHEEL_DIAMETER * 3.14159 / 360)
         distance_droite = (r_pos_actuelle - self.pos_initiale[1]) * (self.robot.WHEEL_DIAMETER * 3.14159 / 360)
 
-        angle = (distance_droite - distance_gauche) / self.robot.WHEEL_BASE_WIDTH  # En radians
+        angle = (distance_droite - distance_gauche) / self.robot.WHEEL_BASE_WIDTH  
         self.angle_parcouru += angle
         self.angle_parcouru = round(self.angle_parcouru, 4)
 
-        self.pos_initiale = (l_pos_actuelle, r_pos_actuelle)  # Mise à jour de la position initiale
+        self.pos_initiale = (l_pos_actuelle, r_pos_actuelle)  
         return self.angle_parcouru * (180 / pi)
 
     def get_distance(self):
@@ -103,4 +103,4 @@ class RobotAdapterReel(RobotAdapter):
     
     def reset(self):
         super().reset()
-        self.pos_initiale = self.robot.get_motor_position()  # Réinitialisation de la position initiale
+        self.pos_initiale = self.robot.get_motor_position()  
