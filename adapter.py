@@ -1,6 +1,11 @@
 #from robot2I013 import Robot2I013
+from math import *
 
 class RobotAdapter:
+    def __init__(self):
+        self.angle_parcouru = 0
+        self.distance_parcourue = 0
+
     def set_speed_left(self, dps):
         pass
 
@@ -12,6 +17,13 @@ class RobotAdapter:
 
     def calculer_distance_parcourue(self, dt):
         pass
+
+    def calculer_angle_parcouru(self, dt):
+        pass
+
+    def reset(self):
+        self.angle_parcouru = 0
+        self.distance_parcourue = 0
 
 class RobotAdapterSimulation(RobotAdapter):
     def __init__(self, robot):
