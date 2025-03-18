@@ -45,7 +45,7 @@ class StrategyAvancer(Strategy):
             return False
 
 class StrategyTourner(Strategy):
-    def __init__(self, robot_adapter, vitesse=50):
+    def __init__(self, robot_adapter):
         super().__init__(robot_adapter)
         self.angle_parcouru = 0
 
@@ -65,7 +65,7 @@ class StrategyTourner(Strategy):
             self.robot_adapter.set_speed_left(0)
             self.robot_adapter.set_speed_right(0)
 
-    def __call__(self, angle_cible, vitesse=50):
+    def __call__(self, angle_cible, vitesse=3):
         self.angle_cible = angle_cible
         self.vitesse = vitesse
         self.angle_parcouru = 0
