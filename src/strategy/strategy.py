@@ -86,16 +86,21 @@ class StrategyCarre(Strategy):
 
     def execute(self, dt):
         """Exécute les stratégies pour former un carré."""
+
+        # Exécuter la stratégie actuelle
         if self.current_strategy_index < len(self.strategies):
             current_strategy = self.strategies[self.current_strategy_index]
-            if current_strategy(dt):
+            current_strategy.execute(dt)
+
+            # Vérifier si la stratégie est terminée
+            if current_strategy.est_terminee():
                 self.current_strategy_index += 1
-                if self.current_strategy_index >= len(self.strategies):
-                    return True  # Stratégie terminée
-        return False  # Stratégie en cours
-    
-    def est_terminee():
-        pass
+
+    def est_terminee(self):
+        if self.current_strategy_index >= len(self.strategies):
+            return True
+        else:
+            return False
     
 class StrategyConditionnel(Strategy):
     def __init__(self, robot_adapter, distance_cible, angle_degrees, distance_cote, condition_tourner, condition_avancer, condition_carre):
