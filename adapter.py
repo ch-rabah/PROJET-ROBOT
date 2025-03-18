@@ -27,14 +27,13 @@ class RobotAdapter:
 
 class RobotAdapterSimulation(RobotAdapter):
     def __init__(self, robot):
-        self.robot = robot
+        super().__init__()
+        self.robot = robot  # Pas de position initiale ici
 
     def set_speed_left(self, dps):
-        # Implémentation pour la simulation
         self.robot.appliquer_vitesse_gauche(dps)
 
     def set_speed_right(self, dps):
-        # Implémentation pour la simulation
         self.robot.appliquer_vitesse_droite(dps)
 
     def calculer_distance_parcourue(self, dt):
