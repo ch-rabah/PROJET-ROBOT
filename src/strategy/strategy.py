@@ -5,18 +5,19 @@ class Strategy:
         self.robot_adapter = robot_adapter
         self.distance_parcourue = 0
 
-    def __call__(self, dt):
+    def execute(self, dt):
         """Méthode à implémenter pour exécuter la stratégie."""
+        pass
+
+    def __call__(self):
         pass
 
     def est_terminee():
         pass
 
 class StrategyAvancer(Strategy):
-    def __init__(self, robot_adapter, distance_cible, vitesse=50):
+    def __init__(self, robot_adapter):
         super().__init__(robot_adapter)
-        self.distance_cible = distance_cible
-        self.vitesse = vitesse
         self.distance_parcourue = 0
 
     def execute(self, dt):
@@ -31,6 +32,11 @@ class StrategyAvancer(Strategy):
             self.robot_adapter.set_speed_left(0)
             self.robot_adapter.set_speed_right(0)
 
+    def __call__(self, distance_cible, vitesse=50):
+        self.distance_cible = distance_cible
+        self.vitesse = vitesse
+        self.distance_parcourue = 0
+
     def est_terminee(self):
         if self.distance_parcourue >= self.distance_cible:  # Retourne True si l'objectif est atteint
             self.robot_adapter.reset()
@@ -39,10 +45,8 @@ class StrategyAvancer(Strategy):
             return False
 
 class StrategyTourner(Strategy):
-    def __init__(self, robot_adapter, angle_cible, vitesse=3):
+    def __init__(self, robot_adapter, vitesse=50):
         super().__init__(robot_adapter)
-        self.angle_cible = angle_cible
-        self.vitesse = vitesse
         self.angle_parcouru = 0
 
     def execute(self, dt):
@@ -61,6 +65,11 @@ class StrategyTourner(Strategy):
             self.robot_adapter.set_speed_left(0)
             self.robot_adapter.set_speed_right(0)
 
+    def __call__(self, angle_cible, vitesse=50):
+        self.angle_cible = angle_cible
+        self.vitesse = vitesse
+        self.angle_parcouru = 0
+
     def est_terminee(self):
         if abs(self.angle_parcouru) >= abs(self.angle_cible):
             self.robot_adapter.reset()
@@ -69,19 +78,10 @@ class StrategyTourner(Strategy):
             return False
 
 class StrategyCarre(Strategy):
-    def __init__(self, robot_adapter, distance_cote):
+    def __init__(self, robot_adapter):
         super().__init__(robot_adapter)
-        self.distance_cote = distance_cote
-        self.strategies = [
-            StrategyAvancer(robot_adapter, distance_cote),
-            StrategyTourner(robot_adapter, 90),
-            StrategyAvancer(robot_adapter, distance_cote),
-            StrategyTourner(robot_adapter, 90),
-            StrategyAvancer(robot_adapter, distance_cote),
-            StrategyTourner(robot_adapter, 90),
-            StrategyAvancer(robot_adapter, distance_cote),
-            StrategyTourner(robot_adapter, 90)
-        ]
+        self.avancer = StrategyAvancer(robot_adapter)
+        self.tourner = StrategyTourner(robot_adapter)
         self.current_strategy_index = 0
 
     def execute(self, dt):
@@ -89,12 +89,27 @@ class StrategyCarre(Strategy):
 
         # Exécuter la stratégie actuelle
         if self.current_strategy_index < len(self.strategies):
-            current_strategy = self.strategies[self.current_strategy_index]
+            current_strategy, param = self.strategies[self.current_strategy_index]
+            current_strategy(param)
             current_strategy.execute(dt)
 
             # Vérifier si la stratégie est terminée
             if current_strategy.est_terminee():
                 self.current_strategy_index += 1
+
+    def __call__(self, distance_cote):
+        self.distance_cote = distance_cote
+        self.current_step = 0
+        self.strategies = [
+            (self.avancer, self.distance_cote),
+            (self.tourner, 90),
+            (self.avancer, self.distance_cote),
+            (self.tourner, 90),
+            (self.avancer, self.distance_cote),
+            (self.tourner, 90),
+            (self.avancer, self.distance_cote),
+            (self.tourner, 90),
+        ]
 
     def est_terminee(self):
         if self.current_strategy_index >= len(self.strategies):
