@@ -60,16 +60,17 @@ class RobotAdapterSimulation(RobotAdapter):
         super().reset()
 
 class RobotAdapterReel(RobotAdapter):
-
     def __init__(self, robot):
+        super().__init__()
         self.robot = robot
+        self.pos_initiale = self.robot.get_motor_position()  # Position initiale des roues
 
     def set_speed_left(self, dps):
         self.robot.set_motor_dps(self.robot.MOTOR_LEFT, dps)
 
     def set_speed_right(self, dps):
         self.robot.set_motor_dps(self.robot.MOTOR_RIGHT, dps)
-
+        
     def calculer_distance_parcourue(self):
         pass
 
