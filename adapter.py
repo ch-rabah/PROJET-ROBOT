@@ -37,11 +37,20 @@ class RobotAdapterSimulation(RobotAdapter):
         self.robot.appliquer_vitesse_droite(dps)
 
     def calculer_distance_parcourue(self, dt):
-        # Implémentation pour la simulation
+        """Simulation : calcul basé sur la vitesse moyenne et le temps écoulé."""
         vitesse_moyenne = (self.robot.vitesse_gauche + self.robot.vitesse_droite) / 2
         distance = vitesse_moyenne * dt
-        return distance
-    
+        self.distance_parcourue += distance
+        return self.distance_parcourue
+
+    def calculer_angle_parcouru(self, dt):
+        """Simulation : calcul de l’angle basé sur la différence de vitesse."""
+        delta_vitesse = self.robot.vitesse_droite - self.robot.vitesse_gauche
+        angle = (delta_vitesse / self.robot.distance_roues) * dt  # En radians
+        self.angle_parcouru += angle
+        self.angle_parcouru = round(self.angle_parcouru, 4)
+        return self.angle_parcouru * (180 / pi)
+
     def get_distance(self):
         """Retourne la distance à l'obstacle le plus proche."""
         obstacle_detecte, distance = self.robot.capteurdistance()
