@@ -13,30 +13,24 @@ class Strategy:
         pass
 
 class StrategyAvancer(Strategy):
-    def execute(self, robot, distance_cible):
-        super().__init__(robot)
+    def __init__(self, robot_adapter, distance_cible, vitesse=50):
+        super().__init__(robot_adapter)
         self.distance_cible = distance_cible
+        self.vitesse = vitesse
+        self.distance_parcourue = 0
 
-    def __call__(self, dt):
-        """Avance jusqu'à atteindre la distance cible."""
-        self.vitesse_gauche = 20
-        self.vitesse_droite = 20
+    def execute(self, dt):
+        self.robot_adapter.set_speed_left(self.vitesse)
+        self.robot_adapter.set_speed_right(self.vitesse)
 
-        # Calculer la distance parcourue
-        self.distance_parcourue += self.robot_adapter.calculer_distance_parcourue(self.vitesse_gauche, self.vitesse_droite, dt)
-
-        # Appliquer la vitesse au robot
-        self.robot_adapter.set_motor_dps(RobotAdapter.MOTOR_LEFT, self.vitesse_gauche)
-        self.robot_adapter.set_motor_dps(RobotAdapter.MOTOR_RIGHT, self.vitesse_droite)
+        self.distance_parcourue = self.robot_adapter.calculer_distance_parcourue(dt)
 
         # Vérifier si la distance cible est atteinte
         if self.distance_parcourue >= self.distance_cible:
-            print(f"Distance cible atteinte ({self.distance_parcourue} mm)")
-            self.robot_adapter.set_motor_dps(RobotAdapter.MOTOR_LEFT, 0)
-            self.robot_adapter.set_motor_dps(RobotAdapter.MOTOR_RIGHT, 0)
-            return True  # Stratégie terminée
-        return False  # Stratégie en cours
-    
+            print(f"Distance cible atteinte ({self.distance_parcourue:.2f} mm)")
+            self.robot_adapter.set_speed_left(0)
+            self.robot_adapter.set_speed_right(0)
+
     def est_terminee(self):
         if self.distance_parcourue >= self.distance_cible:  # Retourne True si l'objectif est atteint
             self.robot_adapter.reset()
