@@ -100,3 +100,7 @@ class RobotAdapterReel(RobotAdapter):
 
     def get_distance(self):
         return self.robot.get_distance()
+    
+    def reset(self):
+        super().reset()
+        self.pos_initiale = self.robot.get_motor_position()  # Réinitialisation de la position initiale
