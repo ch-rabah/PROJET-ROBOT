@@ -7,12 +7,8 @@
 
 
 ### 1. Implémentation du fichier main.py :
-    -Initialisation de l’environnement de simulation avec des dimensions (800x600).
-    -Ajout d’un robot avec des paramètres de position et de vitesse.
-    -Ajout d’obstacles (rectangle et triangle) pour tester la navigation.
     -Création et exécution de stratégies de déplacement pour le robot.
     -Utilisation d’un adaptateur RobotAdapterSimulation pour lier le robot au simulateur.
-    -Intégration d'une boucle principale pour gérer le temps et l'exécution des stratégies.
 
 ### 2. Développement de strategy.py :
     -Création de plusieurs stratégies de déplacement pour le robot :
