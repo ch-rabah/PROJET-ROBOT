@@ -1,4 +1,4 @@
-from adapter import RobotAdapter
+from adapter.adapter import RobotAdapter
 
 class Strategy:
     def __init__(self, robot_adapter):

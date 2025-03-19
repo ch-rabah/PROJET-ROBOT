@@ -1,11 +1,11 @@
 import time
 from tkinter import Tk
-from src.view.affichage_Tkinter import SimulationView
-from src.model.robot import Robot
-from src.model.environnement import Environnement
-from src.model.obstacle import Rectangle, Cercle, Ligne, Triangle
-from src.strategy.strategy import StrategyAvancer, StrategyTourner, StrategyCarre, StrategyConditionnelle, StrategySequentielle
-from adapter import RobotAdapterSimulation
+from view.affichage_Tkinter import SimulationView
+from model.robot import Robot
+from model.environnement import Environnement
+from model.obstacle import Rectangle, Cercle, Ligne, Triangle
+from strategy.strategy import StrategyAvancer, StrategyTourner, StrategyCarre, StrategyConditionnelle, StrategySequentielle
+from adapter.adapter import RobotAdapterSimulation
 
 
 def main():
