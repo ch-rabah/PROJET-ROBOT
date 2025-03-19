@@ -53,7 +53,8 @@ class Environnement:
             collision = obstacle.detecter_collision(robot)
             if collision:
                 print("Collision détectée!")
-                robot.arreter_robot()
+                robot.appliquer_vitesse_gauche(0)
+                robot.appliquer_vitesse_droite(0)
 
                 dx = obstacle.position[0] - robot.x
                 dy = obstacle.position[1] - robot.y
@@ -75,16 +76,20 @@ class Environnement:
         min_y, max_y = self.dimensions_y
         if robot.x < min_x:
             robot.x = min_x
-            robot.arreter_robot()
+            robot.appliquer_vitesse_gauche(0)
+            robot.appliquer_vitesse_droite(0)
         elif robot.x > max_x:
             robot.x = max_x
-            robot.arreter_robot()
+            robot.appliquer_vitesse_gauche(0)
+            robot.appliquer_vitesse_droite(0)
         if robot.y < min_y:
             robot.y = min_y
-            robot.arreter_robot()
+            robot.appliquer_vitesse_gauche(0)
+            robot.appliquer_vitesse_droite(0)
         elif robot.y > max_y:
             robot.y = max_y
-            robot.arreter_robot()
+            robot.appliquer_vitesse_gauche(0)
+            robot.appliquer_vitesse_droite(0)
 
     def update(self, robot, dt):
         """
@@ -92,7 +97,8 @@ class Environnement:
         """
         if self.detecter_sorties(robot):
             print("Le robot est sorti des limites de l'environnement!")
-            robot.arreter_robot()
+            robot.appliquer_vitesse_gauche(0)
+            robot.appliquer_vitesse_droite(0)
         self.gerer_collisions(robot)
         robot.mise_a_jour_robot(dt)
 
