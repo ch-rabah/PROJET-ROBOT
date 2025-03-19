@@ -1,0 +1,31 @@
+# Compte Rendu - Semaine 6 
+
+**Date :** 18/03/2025  
+
+## Résumé  
+
+
+
+### 1. Implémentation du fichier main.py :
+    -Initialisation de l’environnement de simulation avec des dimensions (800x600).
+    -Ajout d’un robot avec des paramètres de position et de vitesse.
+    -Ajout d’obstacles (rectangle et triangle) pour tester la navigation.
+    -Création et exécution de stratégies de déplacement pour le robot.
+    -Utilisation d’un adaptateur RobotAdapterSimulation pour lier le robot au simulateur.
+    -Intégration d'une boucle principale pour gérer le temps et l'exécution des stratégies.
+
+### 2. Développement de strategy.py :
+    -Création de plusieurs stratégies de déplacement pour le robot :
+    -Avancer (StrategyAvancer) : Déplacement en ligne droite sur une distance donnée.
+    -Tourner (StrategyTourner) : Rotation du robot d’un angle spécifique.
+    -Faire un carré (StrategyCarre) : Séquence de mouvements permettant de dessiner un carré.
+    -Stratégie conditionnelle (StrategyConditionnelle) : Exécution de mouvements en fonction de certaines conditions.
+    -Stratégie séquentielle (StrategySequentielle) : Exécution de plusieurs stratégies dans un ordre prédéfini.
+
+### 3. Développement et adaptation de adapter.py :
+    -Mise en place d'un adaptateur RobotAdapterSimulation permettant au robot de fonctionner en simulation.
+    -Ajout d’un RobotAdapterReel pour une future implémentation sur un robot réel.
+    -Gestion des mouvements du robot à travers des méthodes adaptées à la simulation et au réel.
+    -Ajout du calcul des distances parcourues et des angles tournés basés sur la vitesse et le temps.
+    -Intégration de capteurs pour détecter la distance aux obstacles.
+    -Amélioration de la gestion des vitesses et de la remise à zéro des paramètres après l'exécution d'une stratégie.
