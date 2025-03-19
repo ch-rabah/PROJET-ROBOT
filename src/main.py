@@ -18,10 +18,10 @@ def main():
     environnement.ajouter_obstacle(Triangle((600, 300), (650, 350), (700, 300)))
 
     # Création du robot réel (mock-up dans ce cas)
-    robot = Robot2I013()
+    robot2 = Robot2I013()
 
     # Création de l'adaptateur pour interagir avec le robot réel
-    robot_reel = RobotAdapterReel(robot)
+    robot_reel = RobotAdapterReel(robot2)
 
     robot_adapter = RobotAdapterSimulation(robot)  # Utilisation de l'adaptateur simulation
 
