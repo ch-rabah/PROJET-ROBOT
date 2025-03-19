@@ -117,7 +117,7 @@ class StrategyCarre(Strategy):
         else:
             return False
     
-class StrategyConditionnel(Strategy):
+class StrategyConditionnelle(Strategy):
     def __init__(self, robot_adapter, distance_cible, angle_degrees, distance_cote, condition_tourner, condition_avancer, condition_carre):
         super().__init__(robot_adapter)
         self.distance_cible = distance_cible
@@ -167,3 +167,43 @@ class StrategyConditionnel(Strategy):
     def est_terminee(self):
         """Retourne True si la stratégie est terminée."""
         return self.finished or (self.current_strategy is not None and self.current_strategy.est_terminee())
+
+
+class StrategySequentielle(Strategy):
+    def __init__(self, robot_adapter, strategies):
+        """
+        Initialise une séquence de stratégies.
+        
+        :param robot_adapter: L'adaptateur du robot
+        :param strategies: Liste de tuples (strategy, param)
+        """
+        super().__init__(robot_adapter)
+        self.strategies = strategies
+        self.current_strategy_index = 0
+        self.current_strategy = None
+
+    def execute(self, dt):
+        """Exécute la stratégie actuelle et passe à la suivante quand elle est terminée."""
+        if self.current_strategy_index >= len(self.strategies):
+            return  # Toutes les stratégies sont terminées
+
+        # Sélection de la stratégie actuelle si elle n'est pas déjà définie
+        if self.current_strategy is None:
+            strategy_class, param = self.strategies[self.current_strategy_index]
+            self.current_strategy = strategy_class(self.robot_adapter)
+            self.current_strategy(param)
+
+        # Exécuter la stratégie actuelle
+        self.current_strategy.execute(dt)
+
+        # Vérifier si elle est terminée
+        if self.current_strategy.est_terminee():
+            self.current_strategy_index += 1
+            self.current_strategy = None  # Réinitialiser pour passer à la suivante
+
+
+        
+
+    def est_terminee(self):
+        """Retourne True si toutes les stratégies ont été exécutées."""
+        return self.current_strategy_index >= len(self.strategies)

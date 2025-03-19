@@ -4,7 +4,7 @@ from src.view.affichage_Tkinter import SimulationView
 from src.model.robot import Robot
 from src.model.environnement import Environnement
 from src.model.obstacle import Rectangle, Cercle, Ligne, Triangle
-from src.strategy.strategy import StrategyAvancer, StrategyTourner, StrategyCarre, StrategyConditionnel
+from src.strategy.strategy import StrategyAvancer, StrategyTourner, StrategyCarre, StrategyConditionnelle, StrategySequentielle
 from adapter import RobotAdapterSimulation
 
 
@@ -24,33 +24,33 @@ def main():
 
     avancer = StrategyAvancer(robot_adapter)
     tourner = StrategyTourner(robot_adapter)
-    carre = StrategyCarre(robot_adapter)
+    carre = StrategyCarre(robot_adapter) 
 
-    def condition_tourner():
-        """Condition pour activer la stratégie de rotation"""
-        return robot.direction % 180 == 0  # Exemple : tourne si le robot est aligné avec les axes
-
-    def condition_avancer():
-        """Condition pour activer la stratégie d'avancer"""
-        return robot.x < 500  # Exemple : avance tant qu'il est à gauche de x = 500
-
-    def condition_carre():
-        """Condition pour activer la stratégie du carré"""
-        return robot.y > 400  # Exemple : fait un carré si y > 400
-    
     strategies1 = [
-        (avancer, 50),
-        (tourner, -90),
+        (avancer, 40),
+        (tourner, -45),
+        (carre, 50)
+       
     ]
 
-    strategy_conditionnel = StrategyConditionnel(
+    strategy_conditionnelle = StrategyConditionnelle(
         robot_adapter,
-        distance_cible=100,
+        distance_cible=200,
         angle_degrees=90,
-        distance_cote=50,
+        distance_cote=40,
         condition_tourner=False,
-        condition_avancer=False,
-        condition_carre=True,
+        condition_avancer=True,
+        condition_carre=False,
+    )
+
+    # Création d'une séquence de stratégies
+    strategy_sequence = StrategySequentielle(
+        robot_adapter, 
+        [
+        (StrategyAvancer, 30),
+        (StrategyTourner, 30),
+        (StrategyCarre, 50),
+        ]
     )
 
     while True:
@@ -58,9 +58,10 @@ def main():
         dt = current_time - previous_time
         previous_time = current_time
         tempsecouler += dt
-
+        
         # Exécuter la stratégie actuelle
         if current_strategy_index < len(strategies1):
+            print("Liste strategie 1")
             current_strategy, param = strategies1[current_strategy_index]
             current_strategy(param)
             current_strategy.execute(dt)
@@ -70,8 +71,17 @@ def main():
                 current_strategy_index += 1
 
         # Exécuter la stratégie conditionnelle une fois que les stratégies fixes sont terminées
-        elif not strategy_conditionnel.est_terminee():
-            strategy_conditionnel.execute(dt)
+        elif not strategy_sequence.est_terminee():
+            print("strategie sequentielle")
+            strategy_sequence.execute(dt)
+        
+        
+        elif not strategy_conditionnelle.est_terminee():
+            print("strategie conditionnelle")
+            strategy_conditionnelle.execute(dt)
+        
+
+        
 
         environnement.update(robot, dt)
         simulation.mise_a_jour(tempsecouler)
