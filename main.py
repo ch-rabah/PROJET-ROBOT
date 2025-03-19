@@ -9,6 +9,7 @@ from adapter import RobotAdapterSimulation
 
 
 def main():
+    # Initialisation de l'environnement et du robot
     environnement = Environnement((0, 800), (0, 600))
 
     robot = Robot(400, 300, environnement=environnement, direction=0, vitesse_gauche=0, vitesse_droite=0)
@@ -18,6 +19,7 @@ def main():
     robot_adapter = RobotAdapterSimulation(robot)  # Utilisation de l'adaptateur simulation
     simulation = SimulationView(Tk(), environnement, robot)
 
+    # Variables de gestion des stratégies
     current_strategy_index = 0
     previous_time = time.time()
     tempsecouler = 0
@@ -26,13 +28,15 @@ def main():
     tourner = StrategyTourner(robot_adapter)
     carre = StrategyCarre(robot_adapter) 
 
+    # Liste des stratégies
     strategies1 = [
-        (avancer, 40),
-        (tourner, -45),
-        (carre, 50)
+        (carre, 50),
+        (avancer, 25),
+        (tourner, -90)
        
     ]
 
+    # Stratégie conditionnelle
     strategy_conditionnelle = StrategyConditionnelle(
         robot_adapter,
         distance_cible=200,
@@ -53,6 +57,7 @@ def main():
         ]
     )
 
+    # Boucle principale
     while True:
         current_time = time.time()
         dt = current_time - previous_time
@@ -61,7 +66,6 @@ def main():
         
         # Exécuter la stratégie actuelle
         if current_strategy_index < len(strategies1):
-            print("Liste strategie 1")
             current_strategy, param = strategies1[current_strategy_index]
             current_strategy(param)
             current_strategy.execute(dt)
@@ -82,7 +86,7 @@ def main():
         
 
         
-
+        # Mettre à jour l'environnement et l'affichage
         environnement.update(robot, dt)
         simulation.mise_a_jour(tempsecouler)
         time.sleep(1 / 60)
