@@ -3,7 +3,6 @@ from adapter.adapter import RobotAdapter
 class Strategy:
     def __init__(self, robot_adapter):
         self.robot_adapter = robot_adapter
-        self.distance_parcourue = 0
 
     def execute(self, dt):
         """Méthode à implémenter pour exécuter la stratégie."""
@@ -18,7 +17,6 @@ class Strategy:
 class StrategyAvancer(Strategy):
     def __init__(self, robot_adapter):
         super().__init__(robot_adapter)
-        self.distance_parcourue = 0
 
     def execute(self, dt):
         self.robot_adapter.set_speed_left(self.vitesse)
@@ -47,7 +45,6 @@ class StrategyAvancer(Strategy):
 class StrategyTourner(Strategy):
     def __init__(self, robot_adapter):
         super().__init__(robot_adapter)
-        self.angle_parcouru = 0
 
     def execute(self, dt):
         if self.angle_cible > 0:
