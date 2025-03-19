@@ -74,96 +74,57 @@ class StrategyTourner(Strategy):
         else:
             return False
 
-class StrategyCarre(Strategy):
-    def __init__(self, robot_adapter):
-        super().__init__(robot_adapter)
-        self.avancer = StrategyAvancer(robot_adapter)
-        self.tourner = StrategyTourner(robot_adapter)
-        self.current_strategy_index = 0
 
-    def execute(self, dt):
-        """Exécute les stratégies pour former un carré."""
-
-        # Exécuter la stratégie actuelle
-        if self.current_strategy_index < len(self.strategies):
-            current_strategy, param = self.strategies[self.current_strategy_index]
-            current_strategy(param)
-            current_strategy.execute(dt)
-
-            # Vérifier si la stratégie est terminée
-            if current_strategy.est_terminee():
-                self.current_strategy_index += 1
-
-    def __call__(self, distance_cote):
-        self.distance_cote = distance_cote
-        self.current_step = 0
-        self.strategies = [
-            (self.avancer, self.distance_cote),
-            (self.tourner, 90),
-            (self.avancer, self.distance_cote),
-            (self.tourner, 90),
-            (self.avancer, self.distance_cote),
-            (self.tourner, 90),
-            (self.avancer, self.distance_cote),
-            (self.tourner, 90),
-        ]
-
-    def est_terminee(self):
-        if self.current_strategy_index >= len(self.strategies):
-            return True
-        else:
-            return False
     
 class StrategyConditionnelle(Strategy):
-    def __init__(self, robot_adapter, distance_cible, angle_degrees, distance_cote, condition_tourner, condition_avancer, condition_carre):
+    def __init__(self, robot_adapter, strategy1, strategy2, condition):
+        """
+        Initialise la stratégie conditionnelle avec deux stratégies et une condition.
+        
+        :param robot_adapter: L'adaptateur du robot
+        :param strategy1: Première stratégie sous forme d'un Tuple (Strategie, parametre) (si condition est vraie)
+        :param strategy2: Deuxième stratégie sous forme d'un Tuple (Strategie, parametre) (si condition est fausse)
+        :param condition: un booléen (expression)
+        """
         super().__init__(robot_adapter)
-        self.distance_cible = distance_cible
-        self.angle_degrees = angle_degrees
-        self.distance_cote = distance_cote
-        self.condition_tourner = condition_tourner
-        self.condition_avancer = condition_avancer
-        self.condition_carre = condition_carre
+        strat1 , self.param1=strategy1
+        strat2 , self.param2=strategy2
+        self.strategy1 = strat1(robot_adapter)
+        self.strategy2 = strat2(robot_adapter)
+        self.condition = condition
         self.current_strategy = None
         self.finished = False
 
     def execute(self, dt):
-        """Exécute la stratégie en fonction des conditions."""
+        """Exécute la stratégie en fonction de la condition."""
         if self.finished:
             return True  # Stratégie déjà terminée
 
-        # Vérifier si la stratégie actuelle est terminée avant d'en sélectionner une autre
-        if self.current_strategy is None or self.current_strategy.est_terminee():
-            self.current_strategy = None  # Réinitialisation de la stratégie terminée
-            
-            if self.condition_tourner:
-                print("Condition tourner remplie, passage en mode tourner")
-                self.current_strategy = StrategyTourner(self.robot_adapter)
-                self.current_strategy(self.angle_degrees)
-            
-            elif self.condition_avancer:
-                print("Condition avancer remplie, passage en mode avancer")
-                self.current_strategy = StrategyAvancer(self.robot_adapter)
-                self.current_strategy(self.distance_cible)
-            
-            elif self.condition_carre:
-                print("Condition carré remplie, passage en mode carré")
-                self.current_strategy = StrategyCarre(self.robot_adapter)
-                self.current_strategy(self.distance_cote)
-            
+        # Déterminer la stratégie à exécuter
+        if self.current_strategy is None:
+            if self.condition:
+                print("Condition remplie, exécution de la première stratégie")
+                self.current_strategy = self.strategy1
+                self.param = self.param1
             else:
-                print("Aucune condition remplie, arrêt de la stratégie")
-                self.finished = True
-                return True  # Arrêt définitif de la stratégie
+                print("Condition non remplie, exécution de la deuxième stratégie")
+                self.current_strategy = self.strategy2
+                self.param = self.param2
+            self.current_strategy(self.param)
 
-        # Exécuter la stratégie actuelle si elle existe
-        if self.current_strategy:
-            self.current_strategy.execute(dt)
+        # Exécuter la stratégie actuelle
+        self.current_strategy.execute(dt)
 
-        return False  # La stratégie continue tant qu'il y a une action à exécuter
+        # Vérifier si elle est terminée
+        if self.current_strategy.est_terminee():
+            self.finished = True
+            return True
+
+        return False  # La stratégie continue
 
     def est_terminee(self):
         """Retourne True si la stratégie est terminée."""
-        return self.finished or (self.current_strategy is not None and self.current_strategy.est_terminee())
+        return self.finished
 
 
 class StrategySequentielle(Strategy):
