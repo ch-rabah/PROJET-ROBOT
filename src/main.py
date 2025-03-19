@@ -5,7 +5,8 @@ from model.robot import Robot
 from model.environnement import Environnement
 from model.obstacle import Rectangle, Cercle, Ligne, Triangle
 from strategy.strategy import StrategyAvancer, StrategyTourner, StrategyCarre, StrategyConditionnelle, StrategySequentielle
-from adapter.adapter import RobotAdapterSimulation
+from adapter.adapter import RobotAdapterSimulation , RobotAdapterReel
+from RobotReel.Robot2I013 import Robot2I013
 
 
 def main():
@@ -16,7 +17,14 @@ def main():
     environnement.ajouter_obstacle(Rectangle((100, 100), (200, 50)))
     environnement.ajouter_obstacle(Triangle((600, 300), (650, 350), (700, 300)))
 
+    # Création du robot réel (mock-up dans ce cas)
+    robot = Robot2I013()
+
+    # Création de l'adaptateur pour interagir avec le robot réel
+    robot_reel = RobotAdapterReel(robot)
+
     robot_adapter = RobotAdapterSimulation(robot)  # Utilisation de l'adaptateur simulation
+
     simulation = SimulationView(Tk(), environnement, robot)
 
     # Variables de gestion des stratégies
