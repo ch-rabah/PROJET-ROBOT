@@ -75,8 +75,8 @@ class RobotAdapterReel(RobotAdapter):
         """Calcul basé sur les encodeurs du robot réel."""
         l_pos_actuelle, r_pos_actuelle = self.robot.get_motor_position()
 
-        distance_gauche = (l_pos_actuelle - self.pos_initiale[0]) * (self.robot.WHEEL_DIAMETER * 3.14159 / 360)
-        distance_droite = (r_pos_actuelle - self.pos_initiale[1]) * (self.robot.WHEEL_DIAMETER * 3.14159 / 360)
+        distance_gauche = (l_pos_actuelle - self.pos_initiale[0]) * (self.robot.WHEEL_DIAMETER * pi / 360)
+        distance_droite = (r_pos_actuelle - self.pos_initiale[1]) * (self.robot.WHEEL_DIAMETER * pi / 360)
 
         distance_moyenne = (distance_gauche + distance_droite) / 2
         self.distance_parcourue += distance_moyenne
@@ -88,8 +88,8 @@ class RobotAdapterReel(RobotAdapter):
         """Calcul de l’angle parcouru basé sur les encodeurs."""
         l_pos_actuelle, r_pos_actuelle = self.robot.get_motor_position()
 
-        distance_gauche = (l_pos_actuelle - self.pos_initiale[0]) * (self.robot.WHEEL_DIAMETER * 3.14159 / 360)
-        distance_droite = (r_pos_actuelle - self.pos_initiale[1]) * (self.robot.WHEEL_DIAMETER * 3.14159 / 360)
+        distance_gauche = (l_pos_actuelle - self.pos_initiale[0]) * (self.robot.WHEEL_DIAMETER * pi / 360)
+        distance_droite = (r_pos_actuelle - self.pos_initiale[1]) * (self.robot.WHEEL_DIAMETER * pi / 360)
 
         angle = (distance_droite - distance_gauche) / self.robot.WHEEL_BASE_WIDTH  
         self.angle_parcouru += angle
