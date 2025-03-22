@@ -1,6 +1,6 @@
 import tkinter as tk
 import math
-from src.model.obstacle import *
+from model.obstacle import Rectangle, Cercle, Ligne, Triangle
 from functools import singledispatchmethod
 
 
