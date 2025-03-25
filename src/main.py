@@ -1,7 +1,7 @@
 import time
 from tkinter import Tk
 from view.affichage_Tkinter import SimulationView
-from model.robot import Robot
+from model.robot_3D import Robot
 from model.environnement import Environnement
 from model.obstacle import Rectangle, Cercle, Ligne, Triangle
 from strategy.strategy import StrategyAvancer, StrategyTourner, StrategyConditionnelle, StrategySequentielle
