@@ -1,6 +1,6 @@
 import time
 from model.environnement import Environnement
-from model.robot import Robot
+from model.robot_3D import Robot
 from view.affichage_3D import SimulationView3D
 
 
