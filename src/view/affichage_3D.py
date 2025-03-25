@@ -16,11 +16,20 @@ class SimulationView3D:
 
         # Texte d'information (temporaire)
         self.info_label = label(pos=vector(0, 10, 0), text='', xoffset=0, yoffset=0, space=30, height=16, border=4, font='sans')
+    
+    def afficher_robot(self):
+        """ Crée et affiche le robot sous forme d'un cube. """
+        self.objet_robot = box(
+            pos=vector(self.robot.x, self.robot.taille_robot / 2, self.robot.z),  # Centré sur le sol
+            size=vector(self.robot.taille_robot, self.robot.taille_robot, self.robot.taille_robot),
+            color=color.blue
+        )
 
     def mise_a_jour(self, temps):
         # Mise à jour du texte à l'écran
         self.info_label.text = f"Temps écoulé : {temps:.2f} s"
         self.camera_orbitale.update()
+        self.afficher_robot()
 
     def run(self):
         t0 = time.time()
