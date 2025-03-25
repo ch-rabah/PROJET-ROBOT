@@ -1,51 +1,30 @@
-from ursina import *
+from vpython import *
+from view.camera_orbitale import CameraOrbitale
+import time
 
 class SimulationView3D:
     def __init__(self, environnement, robot):
-        self.app = Ursina()
-
         self.environnement = environnement
         self.robot = robot
+        self.scene = canvas(title="Simulation 3D Robot", width=800, height=600, center=vector(0, 0, 0), background=color.gray(0.2))
 
-        # Créer un sol visible (gris avec quadrillage)
-        self.ground = Entity(
-            model='plane',
-            scale=(100, 1, 100),
-            color=color.gray,
-            texture='white_cube',
-            texture_scale=(50, 50),
-            collider='box'
-        )
+        # Créer un sol quadrillé
+        self.sol = box(pos=vector(0, -0.1, 0), size=vector(100, 0.1, 100), color=color.white, opacity=0.5)
 
-        # Caméra en vue plongeante
-        camera.position = (0, 60, -60)
-        camera.look_at((0, 0, 0))
+        # Initialisation de la caméra orbitale
+        self.camera_orbitale = CameraOrbitale(scene=self.scene, target=vector(0, 0, 0))
 
-        # Lumière directionnelle
-        DirectionalLight().look_at(Vec3(1, -1, -1))
+        # Texte d'information (temporaire)
+        self.info_label = label(pos=vector(0, 10, 0), text='', xoffset=0, yoffset=0, space=30, height=16, border=4, font='sans')
 
-        # Liste des entités à gérer plus tard
-        self.robot_entity = None
-        self.obstacle_entities = []
-        self.trajet_entities = []
-
-        # Pour afficher des infos à l'écran plus tard
-        self.text_entity = None
+    def mise_a_jour(self, temps):
+        # Mise à jour du texte à l'écran
+        self.info_label.text = f"Temps écoulé : {temps:.2f} s"
+        self.camera_orbitale.update()
 
     def run(self):
-        """Lancer l'application Ursina"""
-        self.app.run()
-
-    def mise_a_jour(self, dt):
-        """Méthode à appeler pour rafraîchir l'affichage"""
-        # Pour l'instant, on affiche juste le temps à l'écran
-        if self.text_entity:
-            destroy(self.text_entity)
-
-        self.text_entity = Text(
-            text=f"Temps écoulé : {dt:.2f} s",
-            position=(-0.85, 0.45),
-            origin=(0, 0),
-            scale=1.2,
-            color=color.white
-        )
+        t0 = time.time()
+        while True:
+            rate(60)
+            t = time.time() - t0
+            self.mise_a_jour(t)
