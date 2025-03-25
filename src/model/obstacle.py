@@ -26,40 +26,39 @@ class Obstacle:
 
 
 
-class Cercle(Obstacle):
+class Sphere(Obstacle):
     def __init__(self, position, rayon):
         """
-		Initialise un cercle avec sa position et son rayon.
-		:param position: Position en (X, Y) du centre.		
-		:param rayon: Rayon du cercle.
-		"""
-        self.position=position
-        self.rayon=rayon
-    
+        Initialise un cercle avec sa position et son rayon.
+        :param position: Position en (X, Y, Z) du centre.
+        :param rayon: Rayon du cercle.
+        """
+        self.position = position  # (x, y, z)
+        self.rayon = rayon
+
     def detecter_collision_point(self, point):
         """
-        Vérifie si un point entre en collision avec le cercle.
+        Vérifie si un point (x, y, z) entre en collision avec le cercle.
         Retourne True si une collision est détectée, sinon False.
         """
-        cx, cy = self.position  # Centre du cercle
+        cx, cy, cz = self.position  # Centre du cercle
 
-        def point_dans_cercle(px, py):
-            """Vérifie si un point (px, py) est à l'intérieur du cercle."""
-            distance = math.sqrt((px - cx) ** 2 + (py - cy) ** 2)
-            return distance < self.rayon
+        def point_dans_sphere(px, py, pz):
+            """Vérifie si un point (px, py, pz) est à l'intérieur de la sphère."""
+            distance = math.sqrt((px - cx) ** 2 + (py - cy) ** 2 + (pz - cz) ** 2)
+            return distance < self.rayon  # Vérification en 3D
 
-        return point_dans_cercle(point[0], point[1])
+        return point_dans_sphere(*point)  # Déstructure `point` en (x, y, z)
     
     def detecter_collision(self, robot):
         """
-        Vérifie si un robot entre en collision avec le cercle.
-        Retourne True si une collision est détectée, sinon False.
+        Vérifie si un robot entre en collision avec la sphère.
         """
-        for  p in robot.points():
-                if self.detecter_collision_point(p):
-                    return True
-
+        for p in robot.points():
+            if self.detecter_collision_point(p):
+                return True
         return False
+
     
 
 class Rectangle(Obstacle):
