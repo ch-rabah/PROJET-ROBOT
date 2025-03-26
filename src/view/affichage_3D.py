@@ -3,6 +3,7 @@ import time
 from view.camera_orbitale import CameraOrbitale
 from model.obstacle import Rectangle, Sphere, Triangle, Ligne
 from functools import singledispatchmethod
+import math
 
 class SimulationView3D:
     def __init__(self, environnement, robot):
@@ -40,10 +41,19 @@ class SimulationView3D:
     def afficher_robot(self):
         if hasattr(self, 'objet_robot'):
             self.objet_robot.visible = False
-        self.objet_robot = box(
-            pos=vector(self.robot.x, self.robot.taille_robot / 2, self.robot.y),
-            size=vector(self.robot.taille_robot, self.robot.taille_robot, self.robot.taille_robot),
-            color=color.blue
+
+        taille = self.robot.taille_robot * 0.3
+        angle = self.robot.direction
+
+        # Définir les 3 sommets du triangle
+        p1 = vector(self.robot.x + taille * math.cos(angle), 0.2, self.robot.y + taille * math.sin(angle))
+        p2 = vector(self.robot.x + taille * math.cos(angle + 2.5), 0.2, self.robot.y + taille * math.sin(angle + 2.5))
+        p3 = vector(self.robot.x + taille * math.cos(angle - 2.5), 0.2, self.robot.y + taille * math.sin(angle - 2.5))
+
+        self.objet_robot = triangle(
+            v0=vertex(pos=p1, color=color.blue),
+            v1=vertex(pos=p2, color=color.blue),
+            v2=vertex(pos=p3, color=color.blue)
         )
 
     @singledispatchmethod
