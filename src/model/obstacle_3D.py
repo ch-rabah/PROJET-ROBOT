@@ -7,6 +7,8 @@ class Obstacle3D:
 
     def detecter_collision(self, robot):
         for p in robot.points():
+            if isinstance(p, tuple):
+                p = vector(*p)
             if self.detecter_collision_point(p):
                 return True
         return False
