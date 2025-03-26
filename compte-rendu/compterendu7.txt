@@ -1,0 +1,27 @@
+# Compte Rendu - Semaine 7
+
+**Date :** 25/03/2025  
+
+## Résumé 
+
+### 1. Développement et Intégration de la Vue 3D
+    -Implémentation de la classe SimulationView3D pour l'affichage en 3D avec VPython.
+    -Ajout d'une caméra orbitale pour permettre une navigation fluide autour de la simulation.
+    -Affichage des obstacles (rectangle, sphère, ligne, triangle) en utilisant le pattern singledispatchmethod pour une gestion efficace des types.
+    -Ajout d'un sol quadrillé pour mieux visualiser l'environnement.
+    -Intégration d'un affichage des informations du robot (temps écoulé, vitesse des roues).
+
+### 2. Gestion des Objets du Monde
+    -Création de l'environnement avec des dimensions définies.
+    -Ajout dynamique d'obstacles variés.
+    -Génération et mise à jour de la position du robot sous forme de triangle.
+
+### 3. Développement du Système d'Exécution
+    -Mise en place de la boucle principale (run) qui met à jour la simulation en temps réel (60 FPS).
+    -Calcul du temps écoulé pour une synchronisation précise.
+    -Gestion de la mise à jour du robot et de la caméra à chaque itération.
+
+### 4. Développement du main.py
+    -Initialisation de l’environnement avec des obstacles spécifiques.
+    -Création et gestion d'un robot mobile dans cet environnement.
+    -Lancement de l'affichage avec SimulationView3D.
