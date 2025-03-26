@@ -1,7 +1,7 @@
 from vpython import *
 import time
 from view.camera_orbitale import CameraOrbitale
-from model.obstacle import Rectangle, Sphere, Triangle, Ligne
+from model.obstacle_3D import Rectangle3D, Sphere3D, Triangle3D, Ligne3D
 from functools import singledispatchmethod
 import math
 
@@ -61,33 +61,40 @@ class SimulationView3D:
         raise TypeError(f"Type d'obstacle non géré: {type(obstacle)}")
 
     @afficher_obstacle.register
-    def _(self, obstacle: Rectangle):
-        x, y = obstacle.position
-        l, h = obstacle.dimensions
+    def _(self, obstacle: Rectangle3D):
+        x = obstacle.position.x
+        y = obstacle.position.z
+        l = obstacle.dimensions.x
+        h = obstacle.dimensions.z
         obj = box(pos=vector(x + l/2, 0.5, y + h/2), size=vector(l, 1, h), color=color.magenta)
         self.obstacle_entities.append(obj)
 
     @afficher_obstacle.register
-    def _(self, obstacle: Sphere):
-        x, y = obstacle.position
+    def _(self, obstacle: Sphere3D):
+        x = obstacle.position.x
+        y = obstacle.position.z
         r = obstacle.rayon
         obj = sphere(pos=vector(x, r, y), radius=r, color=color.magenta)
         self.obstacle_entities.append(obj)
 
     @afficher_obstacle.register
-    def _(self, obstacle: Ligne):
-        x1, y1 = obstacle.point1
-        x2, y2 = obstacle.point2
+    def _(self, obstacle: Ligne3D):
+        x1 = obstacle.p1.x
+        y1 = obstacle.p1.z
+        x2 = obstacle.p2.x
+        y2 = obstacle.p2.z
         dx, dz = x2 - x1, y2 - y1
         obj = cylinder(pos=vector(x1, 0.5, y1), axis=vector(dx, 0, dz), radius=obstacle.largeur / 2, color=color.magenta)
         self.obstacle_entities.append(obj)
 
     @afficher_obstacle.register
-    def _(self, obstacle: Triangle):
-        p1, p2, p3 = [vector(x, 0.01, y) for x, y in obstacle.get_sommets()]
-        tri = triangle(v0=vertex(pos=p1, color=color.magenta),
-                       v1=vertex(pos=p2, color=color.magenta),
-                       v2=vertex(pos=p3, color=color.magenta))
+    def _(self, obstacle: Triangle3D):
+        points = [vector(p.x, 0.01, p.z) for p in obstacle.get_sommets()]
+        tri = triangle(
+            v0=vertex(pos=points[0], color=color.magenta),
+            v1=vertex(pos=points[1], color=color.magenta),
+            v2=vertex(pos=points[2], color=color.magenta)
+        )
         self.obstacle_entities.append(tri)
 
     def afficher_obstacles(self):
