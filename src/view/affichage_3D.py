@@ -1,6 +1,6 @@
 from vpython import *
-from view.camera_orbitale import CameraOrbitale
 import time
+from view.camera_orbitale import CameraOrbitale
 
 class SimulationView3D:
     def __init__(self, environnement, robot):
@@ -14,20 +14,27 @@ class SimulationView3D:
         # Initialisation de la caméra orbitale
         self.camera_orbitale = CameraOrbitale(scene=self.scene, target=vector(0, 0, 0))
 
-        # Texte d'information (temporaire)
-        self.info_label = label(pos=vector(0, 10, 0), text='', xoffset=0, yoffset=0, space=30, height=16, border=4, font='sans')
-    
+        # Texte d'information (en haut à gauche de l'écran)
+        self.info_label = label(pos=vector(0, 0, 0), text='', xoffset=-self.scene.width//2 + 60, yoffset=self.scene.height//2 - 40,
+                                height=14, border=4, font='sans', box=False, color=color.white, line=False, space=30, screen=True)
+
+    def afficher_infos(self, temps):
+        texte = f"Temps écoulé : {temps:.2f} s\n"
+        texte += f"Vitesse gauche : {self.robot.vitesse_gauche:.2f}\n"
+        texte += f"Vitesse droite : {self.robot.vitesse_droite:.2f}"
+        self.info_label.text = texte
+
     def afficher_robot(self):
-        """ Crée et affiche le robot sous forme d'un cube. """
+        if hasattr(self, 'objet_robot'):
+            self.objet_robot.visible = False
         self.objet_robot = box(
-            pos=vector(self.robot.x, self.robot.taille_robot / 2, self.robot.z),  # Centré sur le sol
+            pos=vector(self.robot.x, self.robot.taille_robot / 2, self.robot.z),
             size=vector(self.robot.taille_robot, self.robot.taille_robot, self.robot.taille_robot),
             color=color.blue
         )
 
     def mise_a_jour(self, temps):
-        # Mise à jour du texte à l'écran
-        self.info_label.text = f"Temps écoulé : {temps:.2f} s"
+        self.afficher_infos(temps)
         self.camera_orbitale.update()
         self.afficher_robot()
 
