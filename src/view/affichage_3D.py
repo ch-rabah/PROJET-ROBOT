@@ -106,9 +106,9 @@ class SimulationView3D:
         self.camera_orbitale.update()
         self.afficher_robot()
 
-    def run(self):
+    def run(self, update_fn):
         t0 = time.time()
         while True:
             rate(60)
             t = time.time() - t0
-            self.mise_a_jour(t)
+            update_fn(t)
