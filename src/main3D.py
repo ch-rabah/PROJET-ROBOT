@@ -17,27 +17,25 @@ def main():
     env.ajouter_obstacle(Ligne((10, 80), (90, 80), largeur=1))
     env.ajouter_obstacle(Triangle((20, 70), (30, 90), (40, 70)))
 
-    # Création du robot simulé
+    # Créer le robot simulé
     robot = Robot(x=50, y=50, environnement=env, direction=0)
     robot_adapter = RobotAdapterSimulation(robot)
 
-    # Affichage 3D
+    # Créer la vue 3D
     simulation = SimulationView3D(env, robot)
 
-    # Séquence de stratégies (ex : faire un carré)
-    strategy_sequence = StrategySequentielle(
-        robot_adapter,
-        [
-            (StrategyAvancer, 40),
-            (StrategyTourner, 90),
-            (StrategyAvancer, 40),
-            (StrategyTourner, 90),
-            (StrategyAvancer, 40),
-            (StrategyTourner, 90),
-            (StrategyAvancer, 40),
-            (StrategyTourner, 90),
-        ]
-    )
+    # Définir une séquence de stratégies (ex: faire un carré)
+    sequence = StrategySequentielle(robot_adapter, [
+        (StrategyAvancer, 30),
+        (StrategyTourner, 90),
+        (StrategyAvancer, 30),
+        (StrategyTourner, 90),
+        (StrategyAvancer, 30),
+        (StrategyTourner, 90),
+        (StrategyAvancer, 30),
+        (StrategyTourner, 90),
+    ])
+
 
     # Optionnel : stratégie conditionnelle ensuite
     strategy_conditionnelle = StrategyConditionnelle(
