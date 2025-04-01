@@ -1,8 +1,8 @@
 import time
 from model.environnement import Environnement
-from model.robot_3D import Robot
-from model.obstacle_3D import Rectangle3D, Sphere3D, Ligne3D, Triangle3D
-from strategy.strategy import StrategyAvancer, StrategyTourner, StrategyConditionnelle, StrategySequentielle
+from model.robot import Robot
+from model.obstacle import Rectangle, Triangle, Ligne, Cercle
+from strategy.strategy import StrategyAvancer, StrategyTourner, StrategySequentielle
 from adapter.adapter import RobotAdapterSimulation
 from view.affichage_3D import SimulationView3D
 
