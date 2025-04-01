@@ -4,19 +4,22 @@ class Strategy:
     def __init__(self, robot_adapter):
         self.robot_adapter = robot_adapter
 
-    def execute(self, dt):
+    def execute(self):
         """Méthode à implémenter pour exécuter la stratégie."""
         pass
 
     def __call__(self):
         pass
 
-    def est_terminee():
+    def est_terminee(self):
         pass
 
 class StrategyAvancer(Strategy):
     def __init__(self, robot_adapter):
         super().__init__(robot_adapter)
+        self.distance_parcourue = 0
+        self.distance_cible = 0
+        self.vitesse = 30
 
     def execute(self):
         self.robot_adapter.set_speed_left(self.vitesse)
@@ -39,12 +42,14 @@ class StrategyAvancer(Strategy):
         if self.distance_parcourue >= self.distance_cible:  # Retourne True si l'objectif est atteint
             self.robot_adapter.reset()
             return True
-        else:
-            return False
+        return False
 
 class StrategyTourner(Strategy):
     def __init__(self, robot_adapter):
         super().__init__(robot_adapter)
+        self.angle_parcouru = 0
+        self.angle_cible = 0
+        self.vitesse = 2
 
     def execute(self):
         if self.angle_cible > 0:
@@ -71,11 +76,8 @@ class StrategyTourner(Strategy):
         if abs(self.angle_parcouru) >= abs(self.angle_cible):
             self.robot_adapter.reset()
             return True
-        else:
-            return False
+        return False
 
-
-    
 class StrategyConditionnelle(Strategy):
     def __init__(self, robot_adapter, strategy1, strategy2, condition):
         """
@@ -87,8 +89,8 @@ class StrategyConditionnelle(Strategy):
         :param condition: un booléen (expression)
         """
         super().__init__(robot_adapter)
-        strat1 , self.param1=strategy1
-        strat2 , self.param2=strategy2
+        strat1, self.param1 = strategy1
+        strat2, self.param2 = strategy2
         self.strategy1 = strat1(robot_adapter)
         self.strategy2 = strat2(robot_adapter)
         self.condition = condition
@@ -126,7 +128,6 @@ class StrategyConditionnelle(Strategy):
         """Retourne True si la stratégie est terminée."""
         return self.finished
 
-
 class StrategySequentielle(Strategy):
     def __init__(self, robot_adapter, strategies):
         """
@@ -159,9 +160,7 @@ class StrategySequentielle(Strategy):
             self.current_strategy_index += 1
             self.current_strategy = None  # Réinitialiser pour passer à la suivante
 
-
-        
-
     def est_terminee(self):
         """Retourne True si toutes les stratégies ont été exécutées."""
         return self.current_strategy_index >= len(self.strategies)
+
