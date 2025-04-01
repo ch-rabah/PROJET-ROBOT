@@ -46,14 +46,14 @@ def main():
     strategy_sequence = StrategySequentielle(
         robot_adapter, 
         [
-            (StrategyAvancer,40),
+            (StrategyAvancer,100),
             (StrategyTourner, 90),
-            (StrategyAvancer,40),
+            (StrategyAvancer,100),
             (StrategyTourner, 90),
-            (StrategyAvancer,40),
+            (StrategyAvancer,100),
             (StrategyTourner, 90),
-            (StrategyAvancer,40),
-            (StrategyTourner, 90),
+            (StrategyAvancer,100),
+            (StrategyTourner, 90)
         ]
     )
 

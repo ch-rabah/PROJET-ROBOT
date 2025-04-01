@@ -30,7 +30,7 @@ class StrategyAvancer(Strategy):
             self.robot_adapter.set_speed_left(0)
             self.robot_adapter.set_speed_right(0)
 
-    def __call__(self, distance_cible, vitesse=50):
+    def __call__(self, distance_cible, vitesse=30):
         self.distance_cible = distance_cible
         self.vitesse = vitesse
         self.distance_parcourue = 0
@@ -62,7 +62,7 @@ class StrategyTourner(Strategy):
             self.robot_adapter.set_speed_left(0)
             self.robot_adapter.set_speed_right(0)
 
-    def __call__(self, angle_cible, vitesse=3):
+    def __call__(self, angle_cible, vitesse=2):
         self.angle_cible = angle_cible
         self.vitesse = vitesse
         self.angle_parcouru = 0
