@@ -1,7 +1,7 @@
 import time
 from tkinter import Tk
 from view.affichage_Tkinter import SimulationView
-from model.robot_3D import Robot
+from model.robot import Robot
 from model.environnement import Environnement
 from model.obstacle import Rectangle, Cercle, Ligne, Triangle
 from strategy.strategy import StrategyAvancer, StrategyTourner, StrategyConditionnelle, StrategySequentielle
@@ -85,12 +85,10 @@ def main():
 
         # Exécuter la stratégie conditionnelle une fois que les stratégies fixes sont terminées
         elif not strategy_sequence.est_terminee():
-            print("strategie sequentielle")
             strategy_sequence.execute(dt)
         
         
         elif not strategy_conditionnelle.est_terminee():
-            print("strategie conditionnelle")
             strategy_conditionnelle.execute(dt)
         
 

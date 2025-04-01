@@ -57,7 +57,7 @@ class SimulationView:
         self.canvas.create_rectangle(x, y, x + largeur, y + hauteur, fill=COLOR_OBSTACLE)
 
     @afficher_obstacle.register
-    def _(self, obstacle: Sphere):
+    def _(self, obstacle: Cercle):
         x, y = obstacle.position
         r = obstacle.rayon
         self.canvas.create_oval(x - r, y - r, x + r, y + r, fill=COLOR_OBSTACLE)
