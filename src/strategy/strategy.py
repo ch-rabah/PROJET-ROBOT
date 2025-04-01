@@ -18,11 +18,11 @@ class StrategyAvancer(Strategy):
     def __init__(self, robot_adapter):
         super().__init__(robot_adapter)
 
-    def execute(self, dt):
+    def execute(self):
         self.robot_adapter.set_speed_left(self.vitesse)
         self.robot_adapter.set_speed_right(self.vitesse)
 
-        self.distance_parcourue = self.robot_adapter.calculer_distance_parcourue(dt)
+        self.distance_parcourue = self.robot_adapter.calculer_distance_parcourue()
 
         # Vérifier si la distance cible est atteinte
         if self.distance_parcourue >= self.distance_cible:
@@ -46,7 +46,7 @@ class StrategyTourner(Strategy):
     def __init__(self, robot_adapter):
         super().__init__(robot_adapter)
 
-    def execute(self, dt):
+    def execute(self):
         if self.angle_cible > 0:
             self.robot_adapter.set_speed_left(self.vitesse)
             self.robot_adapter.set_speed_right(-self.vitesse)
@@ -54,7 +54,7 @@ class StrategyTourner(Strategy):
             self.robot_adapter.set_speed_left(-self.vitesse)
             self.robot_adapter.set_speed_right(self.vitesse)
 
-        self.angle_parcouru = self.robot_adapter.calculer_angle_parcouru(dt)  # Conversion rad → degrés
+        self.angle_parcouru = self.robot_adapter.calculer_angle_parcouru()  # Conversion rad → degrés
 
         # Vérifier si l'angle cible est atteint
         if abs(self.angle_parcouru) >= abs(self.angle_cible):
@@ -95,7 +95,7 @@ class StrategyConditionnelle(Strategy):
         self.current_strategy = None
         self.finished = False
 
-    def execute(self, dt):
+    def execute(self):
         """Exécute la stratégie en fonction de la condition."""
         if self.finished:
             return True  # Stratégie déjà terminée
@@ -113,7 +113,7 @@ class StrategyConditionnelle(Strategy):
             self.current_strategy(self.param)
 
         # Exécuter la stratégie actuelle
-        self.current_strategy.execute(dt)
+        self.current_strategy.execute()
 
         # Vérifier si elle est terminée
         if self.current_strategy.est_terminee():
@@ -140,7 +140,7 @@ class StrategySequentielle(Strategy):
         self.current_strategy_index = 0
         self.current_strategy = None
 
-    def execute(self, dt):
+    def execute(self):
         """Exécute la stratégie actuelle et passe à la suivante quand elle est terminée."""
         if self.current_strategy_index >= len(self.strategies):
             return  # Toutes les stratégies sont terminées
@@ -152,7 +152,7 @@ class StrategySequentielle(Strategy):
             self.current_strategy(param)
 
         # Exécuter la stratégie actuelle
-        self.current_strategy.execute(dt)
+        self.current_strategy.execute()
 
         # Vérifier si elle est terminée
         if self.current_strategy.est_terminee():

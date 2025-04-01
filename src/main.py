@@ -28,19 +28,10 @@ def main():
     simulation = SimulationView(Tk(), environnement, robot)
 
     # Variables de gestion des stratégies
-    current_strategy_index = 0
     previous_time = time.time()
     tempsecouler = 0
 
-    avancer = StrategyAvancer(robot_adapter)
-    tourner = StrategyTourner(robot_adapter)
-
-    # Liste des stratégies
-    strategies1 = [
-        (avancer, 25),
-        (tourner, -90)
-       
-    ]
+ 
 
     # Stratégie conditionnelle
     strategy_conditionnelle = StrategyConditionnelle(
@@ -73,25 +64,14 @@ def main():
         previous_time = current_time
         tempsecouler += dt
         
-        # Exécuter la stratégie actuelle
-        if current_strategy_index < len(strategies1):
-            current_strategy, param = strategies1[current_strategy_index]
-            current_strategy(param)
-            current_strategy.execute(dt)
-
-            # Vérifier si la stratégie est terminée
-            if current_strategy.est_terminee():
-                current_strategy_index += 1
 
         # Exécuter la stratégie conditionnelle une fois que les stratégies fixes sont terminées
-        elif not strategy_sequence.est_terminee():
-            print("strategie sequentielle")
-            strategy_sequence.execute(dt)
+        if not strategy_sequence.est_terminee():
+            strategy_sequence.execute()
         
         
         elif not strategy_conditionnelle.est_terminee():
-            print("strategie conditionnelle")
-            strategy_conditionnelle.execute(dt)
+            strategy_conditionnelle.execute()
         
 
         

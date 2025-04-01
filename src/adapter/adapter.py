@@ -1,5 +1,7 @@
 from RobotReel.Robot2I013 import Robot2I013
 from math import *
+import time
+
 
 class RobotAdapter:
     def __init__(self):
@@ -15,10 +17,10 @@ class RobotAdapter:
     def get_distance(self):
         pass
 
-    def calculer_distance_parcourue(self, dt):
+    def calculer_distance_parcourue(self):
         pass
 
-    def calculer_angle_parcouru(self, dt):
+    def calculer_angle_parcouru(self):
         pass
 
     def reset(self):
@@ -29,6 +31,7 @@ class RobotAdapterSimulation(RobotAdapter):
     def __init__(self, robot):
         super().__init__()
         self.robot = robot  
+        self.previous_time = time.time()
 
     def set_speed_left(self, dps):
         self.robot.appliquer_vitesse_gauche(dps)
@@ -36,15 +39,17 @@ class RobotAdapterSimulation(RobotAdapter):
     def set_speed_right(self, dps):
         self.robot.appliquer_vitesse_droite(dps)
 
-    def calculer_distance_parcourue(self, dt):
+    def calculer_distance_parcourue(self):
         """Simulation : calcul basé sur la vitesse moyenne et le temps écoulé."""
+        dt=self.get_dt()
         vitesse_moyenne = (self.robot.vitesse_gauche + self.robot.vitesse_droite) / 2
         distance = vitesse_moyenne * dt
         self.distance_parcourue += distance
         return self.distance_parcourue
 
-    def calculer_angle_parcouru(self, dt):
+    def calculer_angle_parcouru(self):
         """Simulation : calcul de l’angle basé sur la différence de vitesse."""
+        dt=self.get_dt()
         delta_vitesse = self.robot.vitesse_droite - self.robot.vitesse_gauche
         angle = (delta_vitesse / self.robot.distance_roues) * dt  
         self.angle_parcouru += angle
@@ -55,6 +60,12 @@ class RobotAdapterSimulation(RobotAdapter):
         """Retourne la distance à l'obstacle le plus proche."""
         obstacle_detecte, distance = self.robot.capteurdistance()
         return distance if obstacle_detecte else float("inf")
+    
+    def get_dt(self):
+        current_time = time.time()
+        dt = current_time - self.previous_time
+        self.previous_time = current_time
+        return dt
     
     def reset(self):
         super().reset()
@@ -71,7 +82,7 @@ class RobotAdapterReel(RobotAdapter):
     def set_speed_right(self, dps):
         self.robot.set_motor_dps(self.robot.MOTOR_RIGHT, dps)
 
-    def calculer_distance_parcourue(self, dt):
+    def calculer_distance_parcourue(self):
         """Calcul basé sur les encodeurs du robot réel."""
         l_pos_actuelle, r_pos_actuelle = self.robot.get_motor_position()
 
@@ -84,7 +95,7 @@ class RobotAdapterReel(RobotAdapter):
         self.pos_initiale = (l_pos_actuelle, r_pos_actuelle)  
         return self.distance_parcourue
 
-    def calculer_angle_parcouru(self, dt):
+    def calculer_angle_parcouru(self):
         """Calcul de l’angle parcouru basé sur les encodeurs."""
         l_pos_actuelle, r_pos_actuelle = self.robot.get_motor_position()
 
