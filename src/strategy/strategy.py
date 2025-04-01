@@ -17,7 +17,6 @@ class Strategy:
 class StrategyAvancer(Strategy):
     def __init__(self, robot_adapter):
         super().__init__(robot_adapter)
-        self.distance_parcourue = 0
         self.distance_cible = 0
         self.vitesse = 30
 
@@ -25,21 +24,20 @@ class StrategyAvancer(Strategy):
         self.robot_adapter.set_speed_left(self.vitesse)
         self.robot_adapter.set_speed_right(self.vitesse)
 
-        self.distance_parcourue = self.robot_adapter.calculer_distance_parcourue()
+        
 
         # Vérifier si la distance cible est atteinte
-        if self.distance_parcourue >= self.distance_cible:
-            print(f"Distance cible atteinte ({self.distance_parcourue:.2f} mm)")
+        if self.robot_adapter.calculer_distance_parcourue() >= self.distance_cible:
+            print(f"Distance cible atteinte ({self.robot_adapter.calculer_distance_parcourue():.2f} mm)")
             self.robot_adapter.set_speed_left(0)
             self.robot_adapter.set_speed_right(0)
 
     def __call__(self, distance_cible, vitesse=30):
         self.distance_cible = distance_cible
         self.vitesse = vitesse
-        self.distance_parcourue = 0
 
     def est_terminee(self):
-        if self.distance_parcourue >= self.distance_cible:  # Retourne True si l'objectif est atteint
+        if self.robot_adapter.calculer_distance_parcourue() >= self.distance_cible:  # Retourne True si l'objectif est atteint
             self.robot_adapter.reset()
             return True
         return False
@@ -47,7 +45,6 @@ class StrategyAvancer(Strategy):
 class StrategyTourner(Strategy):
     def __init__(self, robot_adapter):
         super().__init__(robot_adapter)
-        self.angle_parcouru = 0
         self.angle_cible = 0
         self.vitesse = 2
 
@@ -57,23 +54,20 @@ class StrategyTourner(Strategy):
             self.robot_adapter.set_speed_right(-self.vitesse)
         else:
             self.robot_adapter.set_speed_left(-self.vitesse)
-            self.robot_adapter.set_speed_right(self.vitesse)
-
-        self.angle_parcouru = self.robot_adapter.calculer_angle_parcouru()  # Conversion rad → degrés
+            self.robot_adapter.set_speed_right(self.vitesse) 
 
         # Vérifier si l'angle cible est atteint
-        if abs(self.angle_parcouru) >= abs(self.angle_cible):
-            print(f"Angle cible atteint ({self.angle_parcouru:.2f}°)")
+        if abs(self.robot_adapter.calculer_angle_parcouru()) >= abs(self.angle_cible):
+            print(f"Angle cible atteint ({self.robot_adapter.calculer_angle_parcouru():.2f}°)")
             self.robot_adapter.set_speed_left(0)
             self.robot_adapter.set_speed_right(0)
 
     def __call__(self, angle_cible, vitesse=2):
         self.angle_cible = angle_cible
         self.vitesse = vitesse
-        self.angle_parcouru = 0
 
     def est_terminee(self):
-        if abs(self.angle_parcouru) >= abs(self.angle_cible):
+        if abs(self.robot_adapter.calculer_angle_parcouru()) >= abs(self.angle_cible):
             self.robot_adapter.reset()
             return True
         return False
