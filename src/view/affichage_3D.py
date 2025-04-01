@@ -1,9 +1,12 @@
 from vpython import *
 import time
-import math
-from functools import singledispatchmethod
+from view.camera_orbitale import CameraOrbitale
 from model.obstacle import Rectangle, Cercle, Triangle, Ligne
+from functools import singledispatchmethod
+import math
 
+HAUTEUR_OBSTACLE = 1
+HAUTEUR_ROBOT = 0.5
 
 class SimulationView3D:
     def __init__(self, environnement, robot):
@@ -22,13 +25,15 @@ class SimulationView3D:
         # Créer un sol
         self.sol = box(pos=vector(center_x, -0.1, center_z), size=vector(size_x, 0.1, size_z), color=color.white, opacity=0.5)
 
+        # Caméra orbitale centrée sur la scène
+        self.camera_orbitale = CameraOrbitale(scene=self.scene, target=vector(center_x, 0, center_z))
+
         # Texte d'information
         self.info_label = wtext(text='', style={'font-family': 'sans-serif', 'color': 'white', 'font-size': '14px'})
         self.scene.append_to_caption("\n")
 
         self.obstacle_entities = []
         self.afficher_obstacles()
-        self.objet_robot = None
 
     def afficher_infos(self, temps):
         texte = f"Temps écoulé : {temps:.2f} s\n"
@@ -40,13 +45,12 @@ class SimulationView3D:
         if hasattr(self, 'objet_robot'):
             self.objet_robot.visible = False
 
-        taille = self.robot.taille_robot * 0.5
+        taille = self.robot.taille_robot * 0.3
         angle = self.robot.direction
 
-        # Définir les 3 sommets du triangle
-        p1 = vector(self.robot.x + taille * math.cos(angle), 0.2, self.robot.y + taille * math.sin(angle))
-        p2 = vector(self.robot.x + taille * math.cos(angle + 2.5), 0.2, self.robot.y + taille * math.sin(angle + 2.5))
-        p3 = vector(self.robot.x + taille * math.cos(angle - 2.5), 0.2, self.robot.y + taille * math.sin(angle - 2.5))
+        p1 = vector(self.robot.x + taille * math.cos(angle), HAUTEUR_ROBOT, self.robot.y + taille * math.sin(angle))
+        p2 = vector(self.robot.x + taille * math.cos(angle + 2.5), HAUTEUR_ROBOT, self.robot.y + taille * math.sin(angle + 2.5))
+        p3 = vector(self.robot.x + taille * math.cos(angle - 2.5), HAUTEUR_ROBOT, self.robot.y + taille * math.sin(angle - 2.5))
 
         self.objet_robot = triangle(
             v0=vertex(pos=p1, color=color.blue),
@@ -60,39 +64,32 @@ class SimulationView3D:
 
     @afficher_obstacle.register
     def _(self, obstacle: Rectangle):
-        x = obstacle.position.x
-        y = obstacle.position.z
-        l = obstacle.dimensions.x
-        h = obstacle.dimensions.z
-        obj = box(pos=vector(x + l/2, 0.5, y + h/2), size=vector(l, 1, h), color=color.magenta)
+        x, y = obstacle.position
+        l, h = obstacle.dimensions
+        obj = box(pos=vector(x + l/2, HAUTEUR_OBSTACLE/2, y + h/2), size=vector(l, HAUTEUR_OBSTACLE, h), color=color.magenta)
         self.obstacle_entities.append(obj)
 
     @afficher_obstacle.register
     def _(self, obstacle: Cercle):
-        x = obstacle.position.x
-        y = obstacle.position.z
+        x, y = obstacle.position
         r = obstacle.rayon
         obj = sphere(pos=vector(x, r, y), radius=r, color=color.magenta)
         self.obstacle_entities.append(obj)
 
     @afficher_obstacle.register
     def _(self, obstacle: Ligne):
-        x1 = obstacle.p1.x
-        y1 = obstacle.p1.z
-        x2 = obstacle.p2.x
-        y2 = obstacle.p2.z
+        x1, y1 = obstacle.point1
+        x2, y2 = obstacle.point2
         dx, dz = x2 - x1, y2 - y1
-        obj = cylinder(pos=vector(x1, 0.5, y1), axis=vector(dx, 0, dz), radius=obstacle.largeur / 2, color=color.magenta)
+        obj = cylinder(pos=vector(x1, HAUTEUR_OBSTACLE/2, y1), axis=vector(dx, 0, dz), radius=obstacle.largeur / 2, color=color.magenta)
         self.obstacle_entities.append(obj)
 
     @afficher_obstacle.register
     def _(self, obstacle: Triangle):
-        points = [vector(p.x, 0.01, p.z) for p in obstacle.get_sommets()]
-        tri = triangle(
-            v0=vertex(pos=points[0], color=color.magenta),
-            v1=vertex(pos=points[1], color=color.magenta),
-            v2=vertex(pos=points[2], color=color.magenta)
-        )
+        p1, p2, p3 = [vector(x, 0.01, y) for x, y in obstacle.get_sommets()]
+        tri = triangle(v0=vertex(pos=p1, color=color.magenta),
+                       v1=vertex(pos=p2, color=color.magenta),
+                       v2=vertex(pos=p3, color=color.magenta))
         self.obstacle_entities.append(tri)
 
     def afficher_obstacles(self):
@@ -101,6 +98,7 @@ class SimulationView3D:
 
     def mise_a_jour(self, temps):
         self.afficher_infos(temps)
+        self.camera_orbitale.update()
         self.afficher_robot()
 
     def run(self, update_fn):
