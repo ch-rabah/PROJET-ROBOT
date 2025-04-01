@@ -36,37 +36,23 @@ def main():
         (StrategyTourner, 90),
     ])
 
-
-    # Optionnel : stratégie conditionnelle ensuite
-    strategy_conditionnelle = StrategyConditionnelle(
-        robot_adapter,
-        (StrategyAvancer, 20),
-        (StrategyTourner, 90),
-        False
-    )
-
-    # Temps pour animation
     previous_time = time.time()
     elapsed_time = 0
 
     def update(t):
         nonlocal previous_time, elapsed_time
-
         now = time.time()
         dt = now - previous_time
         previous_time = now
         elapsed_time += dt
 
-        if not strategy_sequence.est_terminee():
-            strategy_sequence.execute(dt)
-        elif not strategy_conditionnelle.est_terminee():
-            strategy_conditionnelle.execute(dt)
+        if not sequence.est_terminee():
+            sequence.execute(dt)
 
         env.update(robot, dt)
         simulation.mise_a_jour(elapsed_time)
 
     simulation.run(update)
 
-
-if __name__ == "__main__":
+if __name__ == "main":
     main()
