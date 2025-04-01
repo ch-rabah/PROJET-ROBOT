@@ -26,6 +26,7 @@ class RobotAdapter:
     def reset(self):
         self.angle_parcouru = 0
         self.distance_parcourue = 0
+        # Ne pas toucher aux autres variables ici
 
 class RobotAdapterSimulation(RobotAdapter):
     def __init__(self, robot):
@@ -40,16 +41,14 @@ class RobotAdapterSimulation(RobotAdapter):
         self.robot.appliquer_vitesse_droite(dps)
 
     def calculer_distance_parcourue(self):
-        """Simulation : calcul basé sur la vitesse moyenne et le temps écoulé."""
-        dt=self.get_dt()
+        dt = self.get_dt()
         vitesse_moyenne = (self.robot.vitesse_gauche + self.robot.vitesse_droite) / 2
         distance = vitesse_moyenne * dt
         self.distance_parcourue += distance
         return self.distance_parcourue
 
     def calculer_angle_parcouru(self):
-        """Simulation : calcul de l’angle basé sur la différence de vitesse."""
-        dt=self.get_dt()
+        dt = self.get_dt()
         delta_vitesse = self.robot.vitesse_droite - self.robot.vitesse_gauche
         angle = (delta_vitesse / self.robot.distance_roues) * dt  
         self.angle_parcouru += angle
@@ -57,24 +56,20 @@ class RobotAdapterSimulation(RobotAdapter):
         return self.angle_parcouru * (180 / pi)
 
     def get_distance(self):
-        """Retourne la distance à l'obstacle le plus proche."""
         obstacle_detecte, distance = self.robot.capteurdistance()
         return distance if obstacle_detecte else float("inf")
-    
+
     def get_dt(self):
         current_time = time.time()
         dt = current_time - self.previous_time
         self.previous_time = current_time
         return dt
-    
-    def reset(self):
-        super().reset()
 
 class RobotAdapterReel(RobotAdapter):
     def __init__(self, robot):
         super().__init__()
         self.robot = robot
-        self.pos_initiale = self.robot.get_motor_position() 
+        self.pos_initiale = self.robot.get_motor_position()  # Initialisation de la position des moteurs
 
     def set_speed_left(self, dps):
         self.robot.set_motor_dps(self.robot.MOTOR_LEFT, dps)
@@ -83,7 +78,6 @@ class RobotAdapterReel(RobotAdapter):
         self.robot.set_motor_dps(self.robot.MOTOR_RIGHT, dps)
 
     def calculer_distance_parcourue(self):
-        """Calcul basé sur les encodeurs du robot réel."""
         l_pos_actuelle, r_pos_actuelle = self.robot.get_motor_position()
 
         distance_gauche = (l_pos_actuelle - self.pos_initiale[0]) * (self.robot.WHEEL_DIAMETER * 3.14159 / 360)
@@ -92,11 +86,10 @@ class RobotAdapterReel(RobotAdapter):
         distance_moyenne = (distance_gauche + distance_droite) / 2
         self.distance_parcourue += distance_moyenne
 
-        self.pos_initiale = (l_pos_actuelle, r_pos_actuelle)  
+        self.pos_initiale = (l_pos_actuelle, r_pos_actuelle)  # Mettre à jour la position initiale après chaque calcul
         return self.distance_parcourue
 
     def calculer_angle_parcouru(self):
-        """Calcul de l’angle parcouru basé sur les encodeurs."""
         l_pos_actuelle, r_pos_actuelle = self.robot.get_motor_position()
 
         distance_gauche = (l_pos_actuelle - self.pos_initiale[0]) * (self.robot.WHEEL_DIAMETER * 3.14159 / 360)
@@ -106,12 +99,13 @@ class RobotAdapterReel(RobotAdapter):
         self.angle_parcouru += angle
         self.angle_parcouru = round(self.angle_parcouru, 4)
 
-        self.pos_initiale = (l_pos_actuelle, r_pos_actuelle)  
+        self.pos_initiale = (l_pos_actuelle, r_pos_actuelle)  # Mettre à jour la position initiale après chaque calcul
         return self.angle_parcouru * (180 / pi)
 
     def get_distance(self):
         return self.robot.get_distance()
-    
+
     def reset(self):
         super().reset()
-        self.pos_initiale = self.robot.get_motor_position()  
+        self.pos_initiale = self.robot.get_motor_position()  # Réinitialisation spécifique au robot réel
+
