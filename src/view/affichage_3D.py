@@ -1,9 +1,9 @@
 from vpython import *
 import time
-from view.camera_orbitale import CameraOrbitale
-from model.obstacle_3D import Rectangle3D, Sphere3D, Triangle3D, Ligne3D
-from functools import singledispatchmethod
 import math
+from functools import singledispatchmethod
+from model.obstacle import Rectangle, Cercle, Triangle, Ligne
+
 
 class SimulationView3D:
     def __init__(self, environnement, robot):
@@ -19,18 +19,16 @@ class SimulationView3D:
         center_x = (x_max + x_min) / 2
         center_z = (y_max + y_min) / 2
 
-        # Créer un sol quadrillé qui correspond à la taille de l'environnement
+        # Créer un sol
         self.sol = box(pos=vector(center_x, -0.1, center_z), size=vector(size_x, 0.1, size_z), color=color.white, opacity=0.5)
 
-        # Initialisation de la caméra orbitale centrée sur le sol
-        self.camera_orbitale = CameraOrbitale(scene=self.scene, target=vector(center_x, 0, center_z))
-
-        # Texte d'information (en haut à gauche de l'écran, en dehors de la scène 3D)
+        # Texte d'information
         self.info_label = wtext(text='', style={'font-family': 'sans-serif', 'color': 'white', 'font-size': '14px'})
         self.scene.append_to_caption("\n")
 
         self.obstacle_entities = []
         self.afficher_obstacles()
+        self.objet_robot = None
 
     def afficher_infos(self, temps):
         texte = f"Temps écoulé : {temps:.2f} s\n"
@@ -42,7 +40,7 @@ class SimulationView3D:
         if hasattr(self, 'objet_robot'):
             self.objet_robot.visible = False
 
-        taille = self.robot.taille_robot * 0.3
+        taille = self.robot.taille_robot * 0.5
         angle = self.robot.direction
 
         # Définir les 3 sommets du triangle
@@ -61,7 +59,7 @@ class SimulationView3D:
         raise TypeError(f"Type d'obstacle non géré: {type(obstacle)}")
 
     @afficher_obstacle.register
-    def _(self, obstacle: Rectangle3D):
+    def _(self, obstacle: Rectangle):
         x = obstacle.position.x
         y = obstacle.position.z
         l = obstacle.dimensions.x
@@ -70,7 +68,7 @@ class SimulationView3D:
         self.obstacle_entities.append(obj)
 
     @afficher_obstacle.register
-    def _(self, obstacle: Sphere3D):
+    def _(self, obstacle: Cercle):
         x = obstacle.position.x
         y = obstacle.position.z
         r = obstacle.rayon
@@ -78,7 +76,7 @@ class SimulationView3D:
         self.obstacle_entities.append(obj)
 
     @afficher_obstacle.register
-    def _(self, obstacle: Ligne3D):
+    def _(self, obstacle: Ligne):
         x1 = obstacle.p1.x
         y1 = obstacle.p1.z
         x2 = obstacle.p2.x
@@ -88,7 +86,7 @@ class SimulationView3D:
         self.obstacle_entities.append(obj)
 
     @afficher_obstacle.register
-    def _(self, obstacle: Triangle3D):
+    def _(self, obstacle: Triangle):
         points = [vector(p.x, 0.01, p.z) for p in obstacle.get_sommets()]
         tri = triangle(
             v0=vertex(pos=points[0], color=color.magenta),
@@ -103,7 +101,6 @@ class SimulationView3D:
 
     def mise_a_jour(self, temps):
         self.afficher_infos(temps)
-        self.camera_orbitale.update()
         self.afficher_robot()
 
     def run(self, update_fn):
