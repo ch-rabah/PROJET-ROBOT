@@ -77,7 +77,7 @@ def main():
         if current_strategy_index < len(strategies1):
             current_strategy, param = strategies1[current_strategy_index]
             current_strategy(param)
-            current_strategy.execute(dt)
+            current_strategy.execute()
 
             # Vérifier si la stratégie est terminée
             if current_strategy.est_terminee():
@@ -85,11 +85,11 @@ def main():
 
         # Exécuter la stratégie conditionnelle une fois que les stratégies fixes sont terminées
         elif not strategy_sequence.est_terminee():
-            strategy_sequence.execute(dt)
+            strategy_sequence.execute()
         
         
         elif not strategy_conditionnelle.est_terminee():
-            strategy_conditionnelle.execute(dt)
+            strategy_conditionnelle.execute()
         
 
         
