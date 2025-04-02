@@ -1,12 +1,13 @@
 
 import time
 from tkinter import Tk
-from affichage_Tkinter import SimulationView
+from view.affichage_Tkinter import SimulationView
 from model.robot import Robot
 from model.environnement import Environnement
 from model.obstacle import Rectangle, Cercle, Ligne, Triangle
-from strategy.strategy import StrategyAvancer, StrategyTourner, StrategyCarre, StrategyConditionnelle, StrategySequentielle
-from adapter import RobotAdapterSimulation
+from strategy.strategy import StrategyAvancer, StrategyTourner, StrategyConditionnelle, StrategySequentielle
+from adapter.adapter import RobotAdapterSimulation , RobotAdapterReel
+from RobotReel.Robot2I013 import Robot2I013
 
 
 
@@ -18,7 +19,14 @@ def main():
     environnement.ajouter_obstacle(Rectangle((100, 100), (200, 50)))
     environnement.ajouter_obstacle(Triangle((600, 300), (650, 350), (700, 300)))
 
+    # Création du robot réel (mock-up dans ce cas)
+    robot2 = Robot2I013()
+
+    # Création de l'adaptateur pour interagir avec le robot réel
+    robot_reel = RobotAdapterReel(robot2)
+
     robot_adapter = RobotAdapterSimulation(robot)  # Utilisation de l'adaptateur simulation
+
     simulation = SimulationView(Tk(), environnement, robot)
 
     # Variables de gestion des stratégies
@@ -28,11 +36,9 @@ def main():
 
     avancer = StrategyAvancer(robot_adapter)
     tourner = StrategyTourner(robot_adapter)
-    carre = StrategyCarre(robot_adapter) 
 
     # Liste des stratégies
     strategies1 = [
-        (carre, 50),
         (avancer, 25),
         (tourner, -90)
        
@@ -41,21 +47,24 @@ def main():
     # Stratégie conditionnelle
     strategy_conditionnelle = StrategyConditionnelle(
         robot_adapter,
-        distance_cible=200,
-        angle_degrees=90,
-        distance_cote=40,
-        condition_tourner=False,
-        condition_avancer=True,
-        condition_carre=False,
+        (StrategyAvancer,20), 
+        (StrategyTourner,90),
+        False
     )
 
-    # Création d'une séquence de stratégies
+
+    # Création d'une séquence de stratégies pour dessiner le carré
     strategy_sequence = StrategySequentielle(
         robot_adapter, 
         [
-        (StrategyAvancer, 30),
-        (StrategyTourner, 30),
-        (StrategyCarre, 50),
+            (StrategyAvancer,40),
+            (StrategyTourner, 90),
+            (StrategyAvancer,40),
+            (StrategyTourner, 90),
+            (StrategyAvancer,40),
+            (StrategyTourner, 90),
+            (StrategyAvancer,40),
+            (StrategyTourner, 90),
         ]
     )
 
@@ -70,7 +79,7 @@ def main():
         if current_strategy_index < len(strategies1):
             current_strategy, param = strategies1[current_strategy_index]
             current_strategy(param)
-            current_strategy.execute(dt)
+            current_strategy.execute()
 
             # Vérifier si la stratégie est terminée
             if current_strategy.est_terminee():
@@ -78,13 +87,11 @@ def main():
 
         # Exécuter la stratégie conditionnelle une fois que les stratégies fixes sont terminées
         elif not strategy_sequence.est_terminee():
-            print("strategie sequentielle")
-            strategy_sequence.execute(dt)
+            strategy_sequence.execute()
         
         
         elif not strategy_conditionnelle.est_terminee():
-            print("strategie conditionnelle")
-            strategy_conditionnelle.execute(dt)
+            strategy_conditionnelle.execute()
         
 
         
