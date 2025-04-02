@@ -9,16 +9,16 @@ from view.affichage_3D import SimulationView3D
 
 def main():
     # Créer l'environnement
-    env = Environnement((0, 100), (0, 100))
+    env = Environnement((0, 200), (0, 200))
 
     # Ajouter des obstacles
-    env.ajouter_obstacle(Rectangle((20, 20), (20, 10)))
-    env.ajouter_obstacle(Cercle((60, 60), 5))
-    env.ajouter_obstacle(Ligne((10, 80), (90, 80), largeur=1))
+    env.ajouter_obstacle(Rectangle((40, 40), (40, 20)))
+    env.ajouter_obstacle(Cercle((60, 120), 5))
+    env.ajouter_obstacle(Ligne((20, 160), (180, 160), largeur=1))
     env.ajouter_obstacle(Triangle((20, 70), (30, 90), (40, 70)))
 
     # Créer le robot simulé
-    robot = Robot(x=50, y=50, environnement=env, direction=0)
+    robot = Robot(x=100, y=100, environnement=env, direction=0)
     robot_adapter = RobotAdapterSimulation(robot)
 
     # Créer la vue 3D
