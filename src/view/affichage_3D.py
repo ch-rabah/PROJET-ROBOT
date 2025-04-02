@@ -73,7 +73,10 @@ class SimulationView3D:
     def _(self, obstacle: Cercle):
         x, y = obstacle.position
         r = obstacle.rayon
-        obj = sphere(pos=vector(x, r, y), radius=r, color=color.magenta)
+        obj = cylinder(pos=vector(x, 0, y),
+                    axis=vector(0, 1, 0),
+                    radius=r,
+                    color=color.magenta)
         self.obstacle_entities.append(obj)
 
     @afficher_obstacle.register
@@ -100,7 +103,6 @@ class SimulationView3D:
             triangle(v0=base[2], v1=base[0], v2=top[0]),
             triangle(v0=base[2], v1=top[0], v2=top[2]),
         ])
-
 
     def afficher_obstacles(self):
         for obs in self.environnement.obstacles:
