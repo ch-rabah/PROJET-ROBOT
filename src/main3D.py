@@ -12,7 +12,7 @@ def main():
     env = Environnement((0, 200), (0, 200))
 
     # Ajouter des obstacles
-    env.ajouter_obstacle(Rectangle((40, 40), (40, 20)))
+    env.ajouter_obstacle(Rectangle((20, 20), (20, 10)))
     env.ajouter_obstacle(Cercle((60, 120), 5))
     env.ajouter_obstacle(Ligne((20, 160), (180, 160), largeur=1))
     env.ajouter_obstacle(Triangle((20, 70), (30, 90), (40, 70)))
@@ -47,7 +47,7 @@ def main():
         elapsed_time += dt
 
         if not sequence.est_terminee():
-            sequence.execute(dt)
+            sequence.execute()
 
         env.update(robot, dt)
         simulation.mise_a_jour(elapsed_time)
