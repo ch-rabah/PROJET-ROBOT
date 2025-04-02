@@ -29,4 +29,16 @@ Ce projet consiste à développer un mini-robot équipé de capteurs et contrôl
 3. **Vitesse angulaire** https://fr.wikipedia.org/wiki/Vitesse_angulaire
    - Page wikipedia utilsée pour modéliser le robot
 
+4. **vpython** https://glowscript.org/
+   - Bibliothèque vpython
+
+5. **time** https://docs.python.org/3/library/time.html
+   - Bibliothèque time
+
+6. **functools** https://docs.python.org/3/library/functools.html
+   - Bibliothèque functools
+
+7. **unittest** https://docs.python.org/3/library/unittest.html
+   - Bibliothèque unittest
+
 ---
