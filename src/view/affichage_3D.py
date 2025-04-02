@@ -86,11 +86,21 @@ class SimulationView3D:
 
     @afficher_obstacle.register
     def _(self, obstacle: Triangle):
-        p1, p2, p3 = [vector(x, 0.01, y) for x, y in obstacle.get_sommets()]
-        tri = triangle(v0=vertex(pos=p1, color=color.magenta),
-                       v1=vertex(pos=p2, color=color.magenta),
-                       v2=vertex(pos=p3, color=color.magenta))
-        self.obstacle_entities.append(tri)
+        points = [vector(x, 0, y) for x, y in obstacle.get_sommets()]
+        base = [vertex(pos=p, color=color.magenta) for p in points]
+        top = [vertex(pos=vector(p.x, 1, p.z), color=color.magenta) for p in points]
+
+        self.obstacle_entities.extend([
+            triangle(v0=base[0], v1=base[1], v2=base[2]),
+            triangle(v0=top[0], v1=top[1], v2=top[2]),
+            triangle(v0=base[0], v1=base[1], v2=top[1]),
+            triangle(v0=base[0], v1=top[1], v2=top[0]),
+            triangle(v0=base[1], v1=base[2], v2=top[2]),
+            triangle(v0=base[1], v1=top[2], v2=top[1]),
+            triangle(v0=base[2], v1=base[0], v2=top[0]),
+            triangle(v0=base[2], v1=top[0], v2=top[2]),
+        ])
+
 
     def afficher_obstacles(self):
         for obs in self.environnement.obstacles:
