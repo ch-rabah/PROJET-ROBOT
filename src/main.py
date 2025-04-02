@@ -1,5 +1,5 @@
 import time
-from appel import initialiser_simulation, time_update, execution, up_env_simu_sleep
+from simulation_manager import initialiser_simulation, time_update, execution, up_env_simu_sleep
 
 
 def main():
