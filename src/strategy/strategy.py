@@ -157,4 +157,47 @@ class StrategySequentielle(Strategy):
     def est_terminee(self):
         """Retourne True si toutes les stratégies ont été exécutées."""
         return self.current_strategy_index >= len(self.strategies)
+    
+class StrategyZigZagObstacle(Strategy):
+    def __init__(self, robot_adapter, env):
+        super().__init__(robot_adapter)
+        self.avancer = StrategyAvancer(robot_adapter)
+        self.tourner = StrategyTourner(robot_adapter)
+        self.etape = 0  # 0 = avancer, 1 = demi-tour
+        self.compteur = 0
+        self.max_tours = 10
+        self.en_cours = True
+        self.env=env
+
+    def execute(self):
+        if not self.en_cours:
+            return
+
+        # Étape 0 : avancer jusqu'à obstacle
+        if self.etape == 0:
+            obstacle_detecte, distance = self.robot_adapter.robot.capteurdistance()
+            if (obstacle_detecte and distance < 30) :  # seuil de détection
+                self.robot_adapter.set_speed_left(0)
+                self.robot_adapter.set_speed_right(0)
+                self.etape = 1
+                self.tourner(180)  # Préparer la rotation
+            else:
+                self.avancer(1000, vitesse=50)  # avancer indéfiniment, sera interrompu par détection
+                self.avancer.execute()
+
+        # Étape 1 : faire demi-tour
+        elif self.etape == 1:
+            self.tourner.execute()
+            if self.tourner.est_terminee():
+                self.compteur += 1
+                if self.compteur >= self.max_tours:
+                    self.en_cours = False
+                    self.robot_adapter.set_speed_left(0)
+                    self.robot_adapter.set_speed_right(0)
+                    return
+                self.etape = 0  # Reprendre l'avance
+
+    def est_terminee(self):
+        return not self.en_cours
+
 

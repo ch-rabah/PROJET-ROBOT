@@ -4,18 +4,23 @@ from view.affichage_Tkinter import SimulationView
 from model.robot import Robot
 from model.environnement import Environnement
 from model.obstacle import Rectangle, Cercle, Ligne, Triangle
-from strategy.strategy import StrategyAvancer, StrategyTourner, StrategyConditionnelle, StrategySequentielle
+from strategy.strategy import StrategyAvancer, StrategyTourner, StrategyConditionnelle, StrategySequentielle, StrategyZigZagObstacle
 from adapter.adapter import RobotAdapterSimulation , RobotAdapterReel
 from RobotReel.Robot2I013 import Robot2I013
 
 
 def main():
     # Initialisation de l'environnement et du robot
-    environnement = Environnement((0, 800), (0, 600))
+    environnement = Environnement((0, 800), (0, 800))
 
-    robot = Robot(400, 300, environnement=environnement, direction=0, vitesse_gauche=0, vitesse_droite=0)
-    environnement.ajouter_obstacle(Rectangle((100, 100), (200, 50)))
-    environnement.ajouter_obstacle(Triangle((600, 300), (650, 350), (700, 300)))
+    robot = Robot(30, 770, environnement=environnement, direction=0, vitesse_gauche=0, vitesse_droite=0)
+    environnement.ajouter_obstacle(Rectangle((400-200/2, 400-50/2), (200, 50))) #au centre
+    environnement.ajouter_obstacle(Cercle((400,100),50))
+    environnement.ajouter_obstacle(Cercle((400,780),50))
+    environnement.ajouter_obstacle(Ligne((0,0),(0,800),5))
+    environnement.ajouter_obstacle(Ligne((0,0),(800,0),5))
+    environnement.ajouter_obstacle(Ligne((800,0),(800,800),5))
+    environnement.ajouter_obstacle(Ligne((0,800),(800,800),5))
 
     # Création du robot réel (mock-up dans ce cas)
     robot2 = Robot2I013()
@@ -34,6 +39,8 @@ def main():
 
     avancer = StrategyAvancer(robot_adapter)
     tourner = StrategyTourner(robot_adapter)
+
+
 
     # Liste des stratégies
     strategies1 = [
@@ -66,6 +73,10 @@ def main():
         ]
     )
 
+    strategie = StrategyZigZagObstacle(robot_adapter,environnement)
+
+
+
     # Boucle principale
     while True:
         current_time = time.time()
@@ -73,6 +84,19 @@ def main():
         previous_time = current_time
         tempsecouler += dt
         
+        
+        if not strategie.est_terminee():
+            strategie.execute()
+        
+        # Mettre à jour l'environnement et l'affichage
+        environnement.update(robot, dt)
+        simulation.mise_a_jour(tempsecouler)
+        time.sleep(1 / 60)
+
+
+if __name__ == "__main__":
+    main()
+    """
         # Exécuter la stratégie actuelle
         if current_strategy_index < len(strategies1):
             current_strategy, param = strategies1[current_strategy_index]
@@ -92,14 +116,4 @@ def main():
         elif not strategy_conditionnelle.est_terminee():
             print("strategie conditionnelle")
             strategy_conditionnelle.execute()
-        
-
-        
-        # Mettre à jour l'environnement et l'affichage
-        environnement.update(robot, dt)
-        simulation.mise_a_jour(tempsecouler)
-        time.sleep(1 / 60)
-
-
-if __name__ == "__main__":
-    main()
+        """
