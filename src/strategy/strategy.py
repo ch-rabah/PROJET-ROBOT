@@ -159,7 +159,7 @@ class StrategySequentielle(Strategy):
         return self.current_strategy_index >= len(self.strategies)
     
 class StrategyZigZagObstacle(Strategy):
-    def __init__(self, robot_adapter, env):
+    def __init__(self, robot_adapter, env, simulation):
         super().__init__(robot_adapter)
         self.avancer = StrategyAvancer(robot_adapter)
         self.tourner = StrategyTourner(robot_adapter)
@@ -168,10 +168,15 @@ class StrategyZigZagObstacle(Strategy):
         self.max_tours = 10
         self.en_cours = True
         self.env=env
+        self.simulation=simulation
 
     def execute(self):
         if not self.en_cours:
             return
+
+        #strategieB=StrategieBleu(self.robot_adapter,self.simulation)
+        #strategieR=StrategieBleu(self.robot_adapter,self.simulation)
+
 
         # Étape 0 : avancer jusqu'à obstacle
         if self.etape == 0:
@@ -182,6 +187,11 @@ class StrategyZigZagObstacle(Strategy):
                 self.etape = 1
                 self.tourner(180)  # Préparer la rotation
             else:
+                #if self.compteur%2==0:
+                    #strategieB.execute()
+                #else:
+                    #strategieR.execute()
+
                 self.avancer(1000, vitesse=50)  # avancer indéfiniment, sera interrompu par détection
                 self.avancer.execute()
 
@@ -210,7 +220,7 @@ class StrategieBleu(Strategy):
         if not self.en_cours:
             return
         self.simulation.b=True
-        RobotAdapter.bleu()
+        self.robot_adapter.bleu()
         self.en_cours = False
 
     def est_terminee(self):
@@ -226,7 +236,7 @@ class StrategieRouge(Strategy):
         if not self.en_cours:
             return
         self.simulation.b=True
-        RobotAdapter.rouge()
+        self.robot_adapter.rouge()
         self.en_cours = False
 
     def est_terminee(self):

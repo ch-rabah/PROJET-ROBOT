@@ -73,7 +73,7 @@ def main():
         ]
     )
 
-    strategie = StrategyZigZagObstacle(robot_adapter,environnement)
+    strategie = StrategyZigZagObstacle(robot_adapter,environnement,simulation)
 
 
     tmp=0
