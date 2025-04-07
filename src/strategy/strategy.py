@@ -163,55 +163,40 @@ class StrategySequentielle(Strategy):
 
 class StrategieBleu(Strategy):
     def __init__(self, robot_adapter):
-        """
-        Stratégie pour activer la trace bleue.
-        :param robot_adapter: L'adaptateur du robot
-        :param set_dessine: Fonction pour activer/désactiver le traçage
-        :param set_couleur: Fonction pour changer la couleur de la trace
-        """
+
         super().__init__(robot_adapter)
 
 
     def execute(self):
-        self.set_dessine(True)  # Activer le traçage
-        self.set_couleur("blue")  # Changer la couleur en bleu
+        self.set_dessine(True)  
+        self.set_couleur("blue") 
 
     def est_terminee(self):
-        return True  # La stratégie est instantanée
+        return True 
 
 
 class StrategieRouge(Strategy):
     def __init__(self, robot_adapter):
-        """
-        Stratégie pour activer la trace rouge.
-        :param robot_adapter: L'adaptateur du robot
-        :param set_dessine: Fonction pour activer/désactiver le traçage
-        :param set_couleur: Fonction pour changer la couleur de la trace
-        """
+
         super().__init__(robot_adapter)
 
 
     def execute(self):
-        self.set_dessine(True)  # Activer le traçage
-        self.set_couleur("red")  # Changer la couleur en rouge
+        self.set_dessine(True)  
+        self.set_couleur("red")  
 
     def est_terminee(self):
-        return True  # La stratégie est instantanée
+        return True  
 
 
 class StrategieInvisible(Strategy):
     def __init__(self, robot_adapter):
-        """
-        Stratégie pour désactiver la trace.
-        :param robot_adapter: L'adaptateur du robot
-        :param set_dessine: Fonction pour activer/désactiver le traçage
-        :param set_couleur: Fonction pour changer la couleur de la trace
-        """
+
         super().__init__(robot_adapter)
 
     def execute(self):
-        self.set_dessine(False)  # Désactiver le traçage
-        self.set_couleur("")  # Pas de couleur pour la trace invisible
+        self.set_dessine(False)  
+        self.set_couleur("")  
 
     def est_terminee(self):
-        return True  # La stratégie est instantanée
+        return True  

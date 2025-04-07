@@ -9,10 +9,10 @@ COLOR_OBSTACLE = "magenta"
 
 
 class SimulationView:
-    def __init__(self, root, environnement, robot):
+    def __init__(self, root, environnement, liste):
         self.root = root
         self.environnement = environnement
-        self.robot = robot
+        self.liste_robot = liste
 
         self.canvas = tk.Canvas(self.root, width=environnement.dimensions_x[1], height=environnement.dimensions_y[1], bg="lightgrey")
         self.canvas.pack()
@@ -107,6 +107,7 @@ class SimulationView:
         self.afficher_obstacles()
 
         self.dessine(var,couleur)  # Dessiner la trajectoire du robot
-        self.afficher_robot()
+        for robot in self.liste_robot:
+            self.afficher_robot()
         self.root.update()
 

@@ -15,7 +15,11 @@ def main():
 
     # Positionnement du robot dans le coin inférieur gauche
     robot = Robot(50, 550, environnement=environnement, direction=0, vitesse_gauche=0, vitesse_droite=0)
+    souris = Robot(200, 550, environnement=environnement, direction=0, vitesse_gauche=0, vitesse_droite=0)
 
+    environnement.ajouter_robot(robot)
+    environnement.ajouter_robot(souris)
+    
     # Ajout des obstacles alignés
     environnement.ajouter_obstacle(Rectangle((350, 300), (100, 50)))  # Rectangle au centre
     environnement.ajouter_obstacle(Cercle((400, 100), 50))            # Cercle en haut au milieu
@@ -82,12 +86,11 @@ def main():
         if not strategy_sequence.est_terminee():
             strategy_sequence.execute()
         
-        set_dessine(True)
-        bleu()
-
 
         # Mettre à jour l'environnement et l'affichage
         environnement.update(robot, dt)
+        environnement.update(souris, dt)
+
         simulation.mise_a_jour(tempsecouler,dessine,couleur)
         time.sleep(1 / 60)
 

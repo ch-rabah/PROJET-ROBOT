@@ -5,10 +5,14 @@ class Environnement:
         self.obstacles = []  # Liste d'objets Obstacle stockés dans l'environnement
         self.dimensions_x = dimX  # Largeur totale du monde
         self.dimensions_y = dimY  # Hauteur totale du monde
+        self.liste_robots = []  # Liste de robots dans l'environnement
     
     def ajouter_obstacle(self, obstacle):
         """Ajoute un obstacle à l'environnement"""
         self.obstacles.append(obstacle)
+    
+    def ajouter_robot(self, robot):
+        self.liste_robots.append(robot)
 
     def detecter_sorties(self, robot):
         """
@@ -95,12 +99,13 @@ class Environnement:
         """
         Met à jour l'état de l'environnement en gérant les collisions et en détectant les sorties.
         """
-        if self.detecter_sorties(robot):
-            print("Le robot est sorti des limites de l'environnement!")
-            robot.appliquer_vitesse_gauche(0)
-            robot.appliquer_vitesse_droite(0)
-        self.gerer_collisions(robot)
-        robot.mise_a_jour_robot(dt)
+        for robot in self.liste_robots:
+            if self.detecter_sorties(robot):
+                print("Le robot est sorti des limites de l'environnement!")
+                robot.appliquer_vitesse_gauche(0)
+                robot.appliquer_vitesse_droite(0)
+            self.gerer_collisions(robot)
+            robot.mise_a_jour_robot(dt)
 
 
 
