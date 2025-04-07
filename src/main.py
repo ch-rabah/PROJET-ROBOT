@@ -15,7 +15,8 @@ def main():
     # Initialisation de l'environnement et du robot
     environnement = Environnement((0, 800), (0, 600))
 
-    robot = Robot(50, 550, environnement=environnement, direction=0, vitesse_gauche=0, vitesse_droite=0)
+    souris = Robot(50, 550, environnement=environnement, direction=0, vitesse_gauche=0, vitesse_droite=0)
+    chat = Robot(100, 500, environnement=environnement, direction=0, vitesse_gauche=0, vitesse_droite=0)
     environnement.ajouter_obstacle(Rectangle((0, 0), (200, 50)))
     environnement.ajouter_obstacle(Rectangle((350, 250), (200, 50)))
     environnement.ajouter_obstacle(Rectangle((600, 500), (200, 50)))
@@ -26,17 +27,18 @@ def main():
     # Création de l'adaptateur pour interagir avec le robot réel
     robot_reel = RobotAdapterReel(robot2)
 
-    robot_adapter = RobotAdapterSimulation(robot)  # Utilisation de l'adaptateur simulation
+    robot_adapter_souris = RobotAdapterSimulation(souris)  # Utilisation de l'adaptateur simulation
+    robot_adapter_chat = RobotAdapterSimulation(chat)
 
-    simulation = SimulationView(Tk(), environnement, robot)
+    simulation = SimulationView(Tk(), environnement, souris, chat)
 
     # Variables de gestion des stratégies
     current_strategy_index = 0
     previous_time = time.time()
     tempsecouler = 0
 
-    avancer = StrategyAvancer(robot_adapter)
-    tourner = StrategyTourner(robot_adapter)
+    avancer = StrategyAvancer(robot_adapter_souris)
+    tourner = StrategyTourner(robot_adapter_souris)
 
     # Liste des stratégies
     strategies1 = [
@@ -46,17 +48,17 @@ def main():
 
     # Stratégie conditionnelle
     strategy_conditionnelle = StrategyConditionnelle(
-        robot_adapter,
+        robot_adapter_souris,
         
         (StrategyTourner,180),
         (StrategyAvancer,600), 
-        robot_adapter.get_distance()
+        robot_adapter_souris.get_distance()
     )
 
 
     # Création d'une séquence de stratégies pour dessiner le carré
     strategy_sequence = StrategySequentielle(
-        robot_adapter, 
+        robot_adapter_souris, 
         [
             
         ]
@@ -90,7 +92,7 @@ def main():
 
         
         # Mettre à jour l'environnement et l'affichage
-        environnement.update(robot, dt)
+        environnement.update(souris,chat, dt)
         simulation.mise_a_jour(tempsecouler)
         time.sleep(1 / 60)
 

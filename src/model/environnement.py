@@ -91,7 +91,7 @@ class Environnement:
             robot.appliquer_vitesse_gauche(0)
             robot.appliquer_vitesse_droite(0)
 
-    def update(self, robot, dt):
+    def update(self, robot, robot2, dt):
         """
         Met à jour l'état de l'environnement en gérant les collisions et en détectant les sorties.
         """
@@ -102,5 +102,12 @@ class Environnement:
         self.gerer_collisions(robot)
         robot.mise_a_jour_robot(dt)
 
+
+        if self.detecter_sorties(robot2):
+            print("Le robot est sorti des limites de l'environnement!")
+            robot2.appliquer_vitesse_gauche(0)
+            robot2.appliquer_vitesse_droite(0)
+        self.gerer_collisions(robot2)
+        robot2.mise_a_jour_robot(dt)
 
 

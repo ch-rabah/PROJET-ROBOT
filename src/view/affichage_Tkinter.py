@@ -9,23 +9,24 @@ COLOR_OBSTACLE = "magenta"
 
 
 class SimulationView:
-    def __init__(self, root, environnement, robot):
+    def __init__(self, root, environnement, robot, robot2 = None):
         self.root = root
         self.environnement = environnement
         self.robot = robot
+        self.robot2 = robot2
 
         self.canvas = tk.Canvas(self.root, width=environnement.dimensions_x[1], height=environnement.dimensions_y[1], bg="lightgrey")
         self.canvas.pack()
 
         self.trajet = []  # Liste pour stocker les positions du robot
 
-    def afficher_robot(self):
+    def afficher_robot(self, robot):
         """
         Dessine le robot sous forme d'un triangle avec deux roues.
         """
-        x, y = self.robot.x, self.robot.y
-        direction = self.robot.direction
-        taille_triangle = self.robot.taille_robot
+        x, y = robot.x, robot.y
+        direction = robot.direction
+        taille_triangle = robot.taille_robot
 
         # Calcul des sommets du triangle
         point1_x = x + taille_triangle * math.cos(direction - math.pi / 2)
@@ -94,7 +95,8 @@ class SimulationView:
 
         self.dessine(True, self.bleu())
 
-        self.afficher_robot()
+        self.afficher_robot(self.robot)
+        self.afficher_robot(self.robot2)
         self.root.update()
 
     def dessine(self, b, couleur):
