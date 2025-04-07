@@ -1,3 +1,15 @@
+import time
+from tkinter import Tk
+from view.affichage_Tkinter import SimulationView
+from model.robot import Robot
+from model.environnement import Environnement
+from model.obstacle import Rectangle, Cercle, Ligne, Triangle
+from strategy.strategy import StrategyAvancer, StrategyTourner, StrategyConditionnelle, StrategySequentielle
+from adapter.adapter import RobotAdapterSimulation , RobotAdapterReel
+from RobotReel.Robot2I013 import Robot2I013
+
+
+
 def main():
         # Initialisation de l'environnement et du robot
         environnement = Environnement((0, 800), (0, 600))
