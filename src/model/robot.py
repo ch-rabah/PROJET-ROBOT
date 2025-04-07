@@ -24,6 +24,7 @@ class Robot:
         self.taille_robot = taille_robot
         self.vitesse_max = vitesse_max
         self.environnement = environnement
+        self.couleur="blue"
 
     def mise_a_jour_robot(self, dt):
         """
@@ -121,6 +122,12 @@ class Robot:
             x2, y2=p2
             x3, y3=p3
             return [p1, p2, p3, (self.x,self.y),((x2+x3)/2,((y2+y3)/2)),((x1+x3)/2,((y1+y3)/2))]
+    
+    def rouge(self):
+        self.couleur="red"
+
+    def bleu(self):
+        self.couleur="blue"
 
 
 

@@ -76,7 +76,7 @@ def main():
     strategie = StrategyZigZagObstacle(robot_adapter,environnement)
 
 
-
+    tmp=0
     # Boucle principale
     while True:
         current_time = time.time()
@@ -90,8 +90,12 @@ def main():
         
         # Mettre à jour l'environnement et l'affichage
         environnement.update(robot, dt)
-        simulation.mise_a_jour(tempsecouler)
+        simulation.mise_a_jour(tempsecouler, True)
         time.sleep(1 / 60)
+        if tmp==100:
+            robot.rouge()
+        tmp+=1
+
 
 
 if __name__ == "__main__":

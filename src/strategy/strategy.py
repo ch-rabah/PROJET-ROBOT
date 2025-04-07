@@ -190,7 +190,7 @@ class StrategyZigZagObstacle(Strategy):
             self.tourner.execute()
             if self.tourner.est_terminee():
                 self.compteur += 1
-                if self.compteur >= self.max_tours:
+                if self.compteur > self.max_tours:
                     self.en_cours = False
                     self.robot_adapter.set_speed_left(0)
                     self.robot_adapter.set_speed_right(0)
@@ -199,5 +199,55 @@ class StrategyZigZagObstacle(Strategy):
 
     def est_terminee(self):
         return not self.en_cours
+
+class StrategieBleu(Strategy):
+    def __init__(self, robot_adapter, simulation):
+        super().__init__(robot_adapter)
+        self.en_cours = True
+        self.simulation=simulation
+
+    def execute(self):
+        if not self.en_cours:
+            return
+        self.simulation.b=True
+        RobotAdapter.bleu()
+        self.en_cours = False
+
+    def est_terminee(self):
+        return not self.en_cours
+    
+class StrategieRouge(Strategy):
+    def __init__(self, robot_adapter,simulation):
+        super().__init__(robot_adapter)
+        self.en_cours = True
+        self.simulation=simulation
+
+    def execute(self):
+        if not self.en_cours:
+            return
+        self.simulation.b=True
+        RobotAdapter.rouge()
+        self.en_cours = False
+
+    def est_terminee(self):
+        return not self.en_cours
+    
+class StrategieInvisible(Strategy):
+    def __init__(self, robot_adapter,simulation):
+        super().__init__(robot_adapter)
+        self.en_cours = True
+        self.simulation=simulation
+
+    def execute(self):
+        if not self.en_cours:
+            return
+        self.simulation.b=False
+        self.en_cours = False
+
+    def est_terminee(self):
+        return not self.en_cours
+
+
+
 
 

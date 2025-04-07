@@ -18,6 +18,7 @@ class SimulationView:
         self.canvas.pack()
 
         self.trajet = []  # Liste pour stocker les positions du robot
+        self.b=False #pour la trace
 
     def afficher_robot(self):
         """
@@ -87,7 +88,16 @@ class SimulationView:
                 f"Vitesse Droite: {self.robot.vitesse_droite:.2f}"
         self.canvas.create_text(10, 10, text=texte, anchor="nw", fill="white")
 
-    def mise_a_jour(self, dt):
+    def dessine(self, b):
+        self.b=b
+        if b :
+            # Dessiner la trace du robot (ligne bleu)
+            for i in range(1, len(self.trajet)):
+                x1, y1 = self.trajet[i - 1]
+                x2, y2 = self.trajet[i]
+                self.canvas.create_line(x1, y1, x2, y2, fill=self.robot.couleur, width=2)
+
+    def mise_a_jour(self, dt, b):
         self.canvas.delete("all")  # Effacer l'écran avant de redessiner
         self.afficher_infos(dt)
         self.afficher_obstacles()
@@ -95,12 +105,10 @@ class SimulationView:
         # Ajouter la position actuelle du robot à la trace
         self.trajet.append((self.robot.x, self.robot.y))
 
-        # Dessiner la trace du robot (lignes rouges)
-        for i in range(1, len(self.trajet)):
-            x1, y1 = self.trajet[i - 1]
-            x2, y2 = self.trajet[i]
-            self.canvas.create_line(x1, y1, x2, y2, fill="red", width=2)
+        # Dessiner la trace du robot (ligne bleu) si b est vrai
+        self.dessine(b)
 
         self.afficher_robot()
         self.root.update()
+
 
