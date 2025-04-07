@@ -14,6 +14,9 @@ class Strategy:
     def est_terminee(self):
         pass
 
+
+
+
 class StrategyAvancer(Strategy):
     def __init__(self, robot_adapter):
         super().__init__(robot_adapter)
@@ -157,4 +160,48 @@ class StrategySequentielle(Strategy):
     def est_terminee(self):
         """Retourne True si toutes les stratégies ont été exécutées."""
         return self.current_strategy_index >= len(self.strategies)
+    
+
+
+
+class StrategyBoucleAllerRetour:
+    def __init__(self, robot_adapter, distance_max=100, seuil_proximite=50):
+        self.robot_adapter = robot_adapter
+        self.distance_max = distance_max
+        self.seuil_proximite = seuil_proximite
+        self.boucles_effectuees = 0
+        self.avancer = StrategyAvancer(robot_adapter)
+        self.tourner = StrategyTourner(robot_adapter)
+        self.etat = "avancer"
+        self.en_marche_arriere = False
+
+    def execute(self):
+        obstacle_detecte, distance = self.robot_adapter.robot.capteurdistance()
+
+        if self.etat == "avancer":
+            if obstacle_detecte and distance is not None and distance < self.seuil_proximite:
+                # il sarrete puis fait un demi tour 
+                print("Obstacle détecté, demi-tour")
+                self.robot_adapter.set_speed_left(0)
+                self.robot_adapter.set_speed_right(0)
+                self.etat = "tourner"
+                self.tourner(180)
+            else:
+                # avance jusqua ce quil detecte 
+                self.avancer(self.distance_max)
+                self.avancer.execute()
+                if self.avancer.est_terminee():
+                    self.etat = "tourner"
+                    self.tourner(180)
+
+        elif self.etat == "tourner":
+            self.tourner.execute()
+            if self.tourner.est_terminee():
+                self.boucles_effectuees += 1
+                print(f"Demi-tour n°{self.boucles_effectuees} terminé")
+                self.etat = "avancer"
+                self.avancer(self.distance_max)
+
+    def est_terminee(self):
+        return self.boucles_effectuees >= 10
 
