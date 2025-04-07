@@ -9,22 +9,25 @@ from adapter.adapter import RobotAdapterSimulation , RobotAdapterReel
 from RobotReel.Robot2I013 import Robot2I013
 
 
+
+def q1_1(environnement, robot):
+      
+    robot = Robot(50, 550, environnement=environnement, direction=0, vitesse_gauche=0, vitesse_droite=0)
+
+    environnement.ajouter_obstacle(Rectangle((370, 80), (60, 40)))   
+    environnement.ajouter_obstacle(Cercle((400, 300), 30))           
+    environnement.ajouter_obstacle(Rectangle((370, 480), (60, 40)))
+
+
+
+
+
 def main():
     # Initialisation de l'environnement et du robot
     environnement = Environnement((0, 800), (0, 600))
-
-
-
-    # Robot dans le coin inférieur gauche
     robot = Robot(50, 550, environnement=environnement, direction=0, vitesse_gauche=0, vitesse_droite=0)
 
-    # Trois obstacles alignés verticalement au centre horizontal
-    environnement.ajouter_obstacle(Rectangle((370, 80), (60, 40)))   # Haut
-    environnement.ajouter_obstacle(Cercle((400, 300), 30))           # Centre
-    environnement.ajouter_obstacle(Rectangle((370, 480), (60, 40)))  # Bas
-
-
-
+    q1_1(environnement, robot)
 
     # Création du robot réel (mock-up dans ce cas)
     robot2 = Robot2I013()
@@ -112,3 +115,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
