@@ -92,8 +92,9 @@ class SimulationView:
         self.afficher_infos(dt)
         self.afficher_obstacles()
 
-        # Ajouter la position actuelle du robot à la trace
-        self.trajet.append((self.robot.x, self.robot.y))
+        # Si le robot est en mode de dessin de trajectoire, ajouter la position actuelle à la trace
+        if self.robot.est_dessine:
+            self.trajet.append((self.robot.x, self.robot.y))
 
         # Dessiner la trace du robot (lignes rouges)
         for i in range(1, len(self.trajet)):

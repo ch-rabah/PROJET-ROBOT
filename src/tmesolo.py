@@ -25,6 +25,26 @@ def q1_1():
 
     root.mainloop()
 
+
+def q1_3():
+    root = tk.Tk()
+    env = Environnement((0, 800), (0, 600))
+
+   
+    env.ajouter_obstacle(Rectangle((375, 100), (50, 50)))  # Haut
+    env.ajouter_obstacle(Rectangle((375, 275), (50, 50)))  # Centre
+    env.ajouter_obstacle(Rectangle((375, 450), (50, 50)))  # Bas
+
+    
+    robot = Robot(x=50, y=550, environnement=env, direction=0)
+
+   
+    view = SimulationView(root, env, robot)
+    view.mise_a_jour(0)
+
+   
+    robot.dessine(True)
+
+    root.mainloop()
 if __name__ == "__main__":
-    q1_1()
- 
+    q1_3()

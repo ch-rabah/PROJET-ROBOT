@@ -1,7 +1,7 @@
 import math
 
 class Robot:
-    def __init__(self, x, y, direction=0, vitesse_gauche=0, vitesse_droite=0, distance_roues=30,taille_robot=20,vitesse_max=200,environnement=None):
+    def __init__(self, x, y, direction=0, vitesse_gauche=0, vitesse_droite=0, distance_roues=30, taille_robot=20, vitesse_max=200, environnement=None):
         """
         Initialise un robot différentiel avec position, direction, et vitesses de roues.
         
@@ -13,7 +13,7 @@ class Robot:
         :param distance_roues: Distance entre les roues (en unités)
         :param taille_robot: Taille du robot (utilisé pour les collisions)
         :param vitesse_max: Vitesse maximale que peut atteindre le robot
-
+        :param environnement: L'environnement dans lequel le robot évolue
         """
         self.x = x
         self.y = y
@@ -24,6 +24,12 @@ class Robot:
         self.taille_robot = taille_robot
         self.vitesse_max = vitesse_max
         self.environnement = environnement
+
+        # Initialisation pour le dessin de la trajectoire
+        self.est_dessine = False  # Par défaut, ne dessine pas
+
+        # Liste pour stocker la trajectoire du robot
+        self.trajet = []
 
     def mise_a_jour_robot(self, dt):
         """
@@ -45,6 +51,19 @@ class Robot:
         # Mise à jour de la position
         self.x += dx
         self.y += dy
+
+       
+        if self.est_dessine:
+            self.trajet.append((self.x, self.y))
+
+    def dessine(self, b):
+        """
+        Active ou désactive le dessin de la trajectoire du robot.
+        
+        :param b: Si True, active le dessin, sinon le désactive
+        """
+        self.est_dessine = b
+
 
 
     def appliquer_vitesse_gauche(self, delta_vitesse):
