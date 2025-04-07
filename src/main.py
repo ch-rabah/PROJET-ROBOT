@@ -16,7 +16,7 @@ def main():
     environnement = Environnement((0, 800), (0, 600))
 
     souris = Robot(50, 550, environnement=environnement, direction=0, vitesse_gauche=0, vitesse_droite=0)
-    chat = Robot(100, 500, environnement=environnement, direction=0, vitesse_gauche=0, vitesse_droite=0)
+    chat = Robot(200, 400, environnement=environnement, direction=0, vitesse_gauche=0, vitesse_droite=0)
     environnement.ajouter_obstacle(Rectangle((0, 0), (200, 50)))
     environnement.ajouter_obstacle(Rectangle((350, 250), (200, 50)))
     environnement.ajouter_obstacle(Rectangle((600, 500), (200, 50)))
@@ -34,15 +34,34 @@ def main():
 
     # Variables de gestion des stratégies
     current_strategy_index = 0
+    current_strategy_index_chat = 0
     previous_time = time.time()
     tempsecouler = 0
 
     avancer = StrategyAvancer(robot_adapter_souris)
     tourner = StrategyTourner(robot_adapter_souris)
 
+    avancer_chat = StrategyAvancer(robot_adapter_chat)
+    tourner_chat = StrategyTourner(robot_adapter_chat)
+
     # Liste des stratégies
     strategies1 = [
-        
+        (avancer, 30),
+        (tourner, 90),
+        (avancer, 30),
+        (tourner, 90),
+        (avancer, 30),
+        (tourner, 90),
+        (avancer, 30),
+        (tourner, 90)
+       
+    ]
+
+    strategies_chat = [
+        (tourner_chat, 90),
+        (avancer_chat, 30),
+        (tourner_chat, 180),
+        (avancer_chat, 30),
        
     ]
 
@@ -80,6 +99,16 @@ def main():
             # Vérifier si la stratégie est terminée
             if current_strategy.est_terminee():
                 current_strategy_index += 1
+
+        # Exécuter la stratégie actuelle
+        if current_strategy_index_chat < len(strategies_chat):
+            current_strategy_chat, param_chat = strategies_chat[current_strategy_index_chat]
+            current_strategy_chat(param_chat)
+            current_strategy_chat.execute()
+
+            # Vérifier si la stratégie est terminée
+            if current_strategy_chat.est_terminee():
+                current_strategy_index_chat += 1
 
         # Exécuter la stratégie conditionnelle une fois que les stratégies fixes sont terminées
         elif not strategy_sequence.est_terminee():

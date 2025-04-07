@@ -106,7 +106,7 @@ class Robot:
                         distances_detectees.append(distance)
                         break  # Arrêter ce capteur après avoir détecté un obstacle
 
-        if min(distances_detectees) <= 100:
+        if min(distances_detectees) <= 25:
             return True  # Retourne la plus petite distance trouvée
         else:
             return False  # Aucun obstacle détecté

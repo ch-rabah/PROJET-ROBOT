@@ -63,7 +63,7 @@ class StrategyTourner(Strategy):
             self.robot_adapter.set_speed_left(0)
             self.robot_adapter.set_speed_right(0)
 
-    def __call__(self, angle_cible, vitesse=2):
+    def __call__(self, angle_cible, vitesse=10):
         self.angle_cible = angle_cible
         self.vitesse = vitesse
 
