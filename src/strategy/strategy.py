@@ -71,6 +71,8 @@ class StrategyTourner(Strategy):
             self.robot_adapter.reset()
             return True
         return False
+    
+
 
 class StrategyConditionnelle(Strategy):
     def __init__(self, robot_adapter, strategy1, strategy2, condition):
@@ -98,7 +100,7 @@ class StrategyConditionnelle(Strategy):
 
         # Déterminer la stratégie à exécuter
         if self.current_strategy is None:
-            if self.condition:
+            if self.condition():
                 print("Condition remplie, exécution de la première stratégie")
                 self.current_strategy = self.strategy1
                 self.param = self.param1
@@ -158,3 +160,51 @@ class StrategySequentielle(Strategy):
         """Retourne True si toutes les stratégies ont été exécutées."""
         return self.current_strategy_index >= len(self.strategies)
 
+class StrategyConditionnelledistance(Strategy):
+    def __init__(self, robot_adapter, strategy1, strategy2):
+        """
+        Initialise la stratégie conditionnelle avec deux stratégies et une condition.
+        
+        :param robot_adapter: L'adaptateur du robot
+        :param strategy1: Première stratégie sous forme d'un Tuple (Strategie, parametre) (si condition est vraie)
+        :param strategy2: Deuxième stratégie sous forme d'un Tuple (Strategie, parametre) (si condition est fausse)
+        :param condition: un booléen (expression)
+        """
+        super().__init__(robot_adapter)
+        strat1, self.param1 = strategy1
+        strat2, self.param2 = strategy2
+        self.strategy1 = strat1(robot_adapter)
+        self.strategy2 = strat2(robot_adapter)
+        self.current_strategy = None
+        self.finished = False
+
+    def execute(self):
+        """Exécute la stratégie en fonction de la condition."""
+        if self.finished:
+            return True  # Stratégie déjà terminée
+
+        # Déterminer la stratégie à exécuter
+        if self.current_strategy is None:
+            if self.robot_adapter.robot.get_distance() < 50:  # Condition d'obstacle à moins de 100 mm
+                print("Condition remplie, exécution de la première stratégie")
+                self.current_strategy = self.strategy1
+                self.param = self.param1
+            else:
+                print("Condition non remplie, exécution de la deuxième stratégie")
+                self.current_strategy = self.strategy2
+                self.param = self.param2
+            self.current_strategy(self.param)
+
+        # Exécuter la stratégie actuelle
+        self.current_strategy.execute()
+
+        # Vérifier si elle est terminée
+        if self.current_strategy.est_terminee():
+            self.finished = True
+            return True
+
+        return False  # La stratégie continue
+
+    def est_terminee(self):
+        """Retourne True si la stratégie est terminée."""
+        return self.finished
