@@ -162,7 +162,7 @@ class StrategySequentielle(Strategy):
 
 
 class StrategieBleu(Strategy):
-    def __init__(self, robot_adapter, set_dessine, set_couleur):
+    def __init__(self, robot_adapter):
         """
         Stratégie pour activer la trace bleue.
         :param robot_adapter: L'adaptateur du robot
@@ -170,8 +170,7 @@ class StrategieBleu(Strategy):
         :param set_couleur: Fonction pour changer la couleur de la trace
         """
         super().__init__(robot_adapter)
-        self.set_dessine = set_dessine
-        self.set_couleur = set_couleur
+
 
     def execute(self):
         self.set_dessine(True)  # Activer le traçage
@@ -182,7 +181,7 @@ class StrategieBleu(Strategy):
 
 
 class StrategieRouge(Strategy):
-    def __init__(self, robot_adapter, set_dessine, set_couleur):
+    def __init__(self, robot_adapter):
         """
         Stratégie pour activer la trace rouge.
         :param robot_adapter: L'adaptateur du robot
@@ -190,8 +189,7 @@ class StrategieRouge(Strategy):
         :param set_couleur: Fonction pour changer la couleur de la trace
         """
         super().__init__(robot_adapter)
-        self.set_dessine = set_dessine
-        self.set_couleur = set_couleur
+
 
     def execute(self):
         self.set_dessine(True)  # Activer le traçage
@@ -202,7 +200,7 @@ class StrategieRouge(Strategy):
 
 
 class StrategieInvisible(Strategy):
-    def __init__(self, robot_adapter, set_dessine, set_couleur):
+    def __init__(self, robot_adapter):
         """
         Stratégie pour désactiver la trace.
         :param robot_adapter: L'adaptateur du robot
@@ -210,8 +208,6 @@ class StrategieInvisible(Strategy):
         :param set_couleur: Fonction pour changer la couleur de la trace
         """
         super().__init__(robot_adapter)
-        self.set_dessine = set_dessine
-        self.set_couleur = set_couleur
 
     def execute(self):
         self.set_dessine(False)  # Désactiver le traçage

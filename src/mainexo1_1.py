@@ -53,21 +53,19 @@ def main():
     previous_time = time.time()
     tempsecouler = 0
 
-    avancer = StrategyAvancer(robot_adapter)
-    tourner = StrategyTourner(robot_adapter)
 
-    strategy_conditionnelle = StrategyConditionnelle(
+    """strategy_conditionnelle = StrategyConditionnelle(
         robot_adapter,
         (StrategyTourner,90)
         (StrategyAvancer,20), 
         robot_adapter.get_distance()
-    )
+    )"""
 
 
     # Création d'une séquence de stratégies pour dessiner le carré
     strategy_sequence = StrategySequentielle(
         robot_adapter, 
-        [
+        [   
             (StrategyAvancer,40),
             (StrategyTourner, 90),
         ]
@@ -85,13 +83,9 @@ def main():
             print("strategie sequentielle")
             strategy_sequence.execute()
         
-        
-        elif not strategy_conditionnelle.est_terminee():
-            print("strategie conditionnelle")
-            strategy_conditionnelle.execute()
-        
-        set_dessine(False)
+        set_dessine(True)
         bleu()
+
 
         # Mettre à jour l'environnement et l'affichage
         environnement.update(robot, dt)
