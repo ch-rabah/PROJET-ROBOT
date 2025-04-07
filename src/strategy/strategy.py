@@ -158,3 +158,7 @@ class StrategySequentielle(Strategy):
     def est_terminee(self):
         """Retourne True si toutes les stratégies ont été exécutées."""
         return self.current_strategy_index >= len(self.strategies)
+
+class StrategieBleu(Strategy):
+    def __init__(robot_adapter):
+        return

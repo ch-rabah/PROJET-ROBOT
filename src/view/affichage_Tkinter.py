@@ -92,12 +92,12 @@ class SimulationView:
         self.afficher_infos(dt)
         self.afficher_obstacles()
 
-        self.dessine(False)
+        self.dessine(True, self.bleu())
 
         self.afficher_robot()
         self.root.update()
 
-    def dessine(self, b):
+    def dessine(self, b, couleur):
 
         
 
@@ -109,4 +109,11 @@ class SimulationView:
             for i in range(1, len(self.trajet)):
                 x1, y1 = self.trajet[i - 1]
                 x2, y2 = self.trajet[i]
-                self.canvas.create_line(x1, y1, x2, y2, fill="red", width=2)
+                self.canvas.create_line(x1, y1, x2, y2, fill=couleur, width=2)
+
+    def bleu(self):
+        
+        return "blue"
+    
+    def rouge(self):
+        return "red"
