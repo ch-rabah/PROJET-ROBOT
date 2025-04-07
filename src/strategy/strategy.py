@@ -1,4 +1,5 @@
 from adapter.adapter import RobotAdapter
+from model.obstacle import *
 
 class Strategy:
     def __init__(self, robot_adapter):
@@ -27,17 +28,17 @@ class StrategyAvancer(Strategy):
         
 
         # Vérifier si la distance cible est atteinte
-        if self.robot_adapter.calculer_distance_parcourue() >= self.distance_cible:
+        if self.robot_adapter.calculer_distance_parcourue() >= self.distance_cible or self.robot_adapter.get_distance():
             print(f"Distance cible atteinte ({self.robot_adapter.calculer_distance_parcourue():.2f} mm)")
             self.robot_adapter.set_speed_left(0)
             self.robot_adapter.set_speed_right(0)
 
-    def __call__(self, distance_cible, vitesse=30):
+    def __call__(self, distance_cible, vitesse=60):
         self.distance_cible = distance_cible
         self.vitesse = vitesse
 
     def est_terminee(self):
-        if self.robot_adapter.calculer_distance_parcourue() >= self.distance_cible:  # Retourne True si l'objectif est atteint
+        if self.robot_adapter.calculer_distance_parcourue() >= self.distance_cible or self.robot_adapter.get_distance():  # Retourne True si l'objectif est atteint
             self.robot_adapter.reset()
             return True
         return False

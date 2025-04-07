@@ -92,15 +92,21 @@ class SimulationView:
         self.afficher_infos(dt)
         self.afficher_obstacles()
 
-        # Ajouter la position actuelle du robot à la trace
-        self.trajet.append((self.robot.x, self.robot.y))
-
-        # Dessiner la trace du robot (lignes rouges)
-        for i in range(1, len(self.trajet)):
-            x1, y1 = self.trajet[i - 1]
-            x2, y2 = self.trajet[i]
-            self.canvas.create_line(x1, y1, x2, y2, fill="red", width=2)
+        self.dessine(False)
 
         self.afficher_robot()
         self.root.update()
 
+    def dessine(self, b):
+
+        
+
+        # Ajouter la position actuelle du robot à la trace
+        self.trajet.append((self.robot.x, self.robot.y))
+
+        if b:
+            # Dessiner la trace du robot (lignes rouges)
+            for i in range(1, len(self.trajet)):
+                x1, y1 = self.trajet[i - 1]
+                x2, y2 = self.trajet[i]
+                self.canvas.create_line(x1, y1, x2, y2, fill="red", width=2)

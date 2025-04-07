@@ -15,9 +15,10 @@ def main():
     # Initialisation de l'environnement et du robot
     environnement = Environnement((0, 800), (0, 600))
 
-    robot = Robot(400, 300, environnement=environnement, direction=0, vitesse_gauche=0, vitesse_droite=0)
-    environnement.ajouter_obstacle(Rectangle((100, 100), (200, 50)))
-    environnement.ajouter_obstacle(Triangle((600, 300), (650, 350), (700, 300)))
+    robot = Robot(50, 550, environnement=environnement, direction=0, vitesse_gauche=0, vitesse_droite=0)
+    environnement.ajouter_obstacle(Rectangle((0, 0), (200, 50)))
+    environnement.ajouter_obstacle(Rectangle((350, 250), (200, 50)))
+    environnement.ajouter_obstacle(Rectangle((600, 500), (200, 50)))
 
     # Création du robot réel (mock-up dans ce cas)
     robot2 = Robot2I013()
@@ -39,17 +40,17 @@ def main():
 
     # Liste des stratégies
     strategies1 = [
-        (avancer, 25),
-        (tourner, -90)
+        
        
     ]
 
     # Stratégie conditionnelle
     strategy_conditionnelle = StrategyConditionnelle(
         robot_adapter,
-        (StrategyAvancer,20), 
-        (StrategyTourner,90),
-        False
+        
+        (StrategyTourner,180),
+        (StrategyAvancer,600), 
+        robot_adapter.get_distance()
     )
 
 
@@ -57,14 +58,7 @@ def main():
     strategy_sequence = StrategySequentielle(
         robot_adapter, 
         [
-            (StrategyAvancer,40),
-            (StrategyTourner, 90),
-            (StrategyAvancer,40),
-            (StrategyTourner, 90),
-            (StrategyAvancer,40),
-            (StrategyTourner, 90),
-            (StrategyAvancer,40),
-            (StrategyTourner, 90),
+            
         ]
     )
 

@@ -56,8 +56,8 @@ class RobotAdapterSimulation(RobotAdapter):
         return self.angle_parcouru * (180 / pi)
 
     def get_distance(self):
-        obstacle_detecte, distance = self.robot.capteurdistance()
-        return distance if obstacle_detecte else float("inf")
+        obstacle_detecte = self.robot.capteurdistance()
+        return obstacle_detecte
 
     def get_dt(self):
         current_time = time.time()
