@@ -204,4 +204,53 @@ class StrategyBoucleAllerRetour:
 
     def est_terminee(self):
         return self.boucles_effectuees >= 10
+    
+
+
+class StrategieRouge(Strategy):
+    def __init__(self, robot_adapter):
+        """
+        Stratégie pour activer la trace rouge.
+        """
+        super().__init__(robot_adapter)
+
+
+    def execute(self):
+        self.set_dessine(True)  
+        self.set_couleur("red")  
+
+    def est_terminee(self):
+        return True  
+    
+
+class StrategieBleu(Strategy):
+    def __init__(self, robot_adapter):
+        """
+        Stratégie pour activer la trace bleue.
+        """
+        super().__init__(robot_adapter)
+
+
+    def execute(self):
+        self.set_dessine(True)  
+        self.set_couleur("blue")  
+
+    def est_terminee(self):
+        return True  
+    
+
+class StrategieInvisible(Strategy):
+    def __init__(self, robot_adapter):
+        """
+        Stratégie pour désactiver la trace.
+        """
+        super().__init__(robot_adapter)
+
+    def execute(self):
+        self.set_dessine(False)  
+        self.set_couleur("")  # sans couleur 
+
+    def est_terminee(self):
+        return True  
+
 
