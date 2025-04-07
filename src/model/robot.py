@@ -25,11 +25,20 @@ class Robot:
         self.vitesse_max = vitesse_max
         self.environnement = environnement
 
+       # Couleur de la trace
+        self.couleur_trace = "red"  # La couleur initiale est rouge
+
         # Initialisation pour le dessin de la trajectoire
         self.est_dessine = False  # Par défaut, ne dessine pas
-
-        # Liste pour stocker la trajectoire du robot
         self.trajet = []
+
+    def rouge(self):
+        """Change la couleur de la trace à rouge"""
+        self.couleur_trace = "red"
+
+    def bleu(self):
+        """Change la couleur de la trace à bleu"""
+        self.couleur_trace = "blue"
 
     def mise_a_jour_robot(self, dt):
         """

@@ -87,21 +87,22 @@ class SimulationView:
                 f"Vitesse Droite: {self.robot.vitesse_droite:.2f}"
         self.canvas.create_text(10, 10, text=texte, anchor="nw", fill="white")
 
-    def mise_a_jour(self, dt):
-        self.canvas.delete("all")  # Effacer l'écran avant de redessiner
+     def mise_a_jour(self, dt):
+        self.canvas.delete("all")  
         self.afficher_infos(dt)
         self.afficher_obstacles()
 
-        # Si le robot est en mode de dessin de trajectoire, ajouter la position actuelle à la trace
+     
         if self.robot.est_dessine:
             self.trajet.append((self.robot.x, self.robot.y))
 
-        # Dessiner la trace du robot (lignes rouges)
+        
         for i in range(1, len(self.trajet)):
             x1, y1 = self.trajet[i - 1]
             x2, y2 = self.trajet[i]
-            self.canvas.create_line(x1, y1, x2, y2, fill="red", width=2)
+            self.canvas.create_line(x1, y1, x2, y2, fill=self.robot.couleur_trace, width=2)
 
         self.afficher_robot()
-        self.root.update()
+        self.root.update() 
+
 
