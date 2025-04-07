@@ -57,7 +57,7 @@ class RobotAdapterSimulation(RobotAdapter):
 
     def get_distance(self):
         obstacle_detecte, distance = self.robot.capteurdistance()
-        return distance if obstacle_detecte else float("inf")
+        return distance < 30 if obstacle_detecte else float("inf")
 
     def get_dt(self):
         current_time = time.time()

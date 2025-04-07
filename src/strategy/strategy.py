@@ -160,51 +160,62 @@ class StrategySequentielle(Strategy):
         """Retourne True si toutes les stratégies ont été exécutées."""
         return self.current_strategy_index >= len(self.strategies)
 
-class StrategyConditionnelledistance(Strategy):
-    def __init__(self, robot_adapter, strategy1, strategy2):
+
+class StrategieBleu(Strategy):
+    def __init__(self, robot_adapter, set_dessine, set_couleur):
         """
-        Initialise la stratégie conditionnelle avec deux stratégies et une condition.
-        
+        Stratégie pour activer la trace bleue.
         :param robot_adapter: L'adaptateur du robot
-        :param strategy1: Première stratégie sous forme d'un Tuple (Strategie, parametre) (si condition est vraie)
-        :param strategy2: Deuxième stratégie sous forme d'un Tuple (Strategie, parametre) (si condition est fausse)
-        :param condition: un booléen (expression)
+        :param set_dessine: Fonction pour activer/désactiver le traçage
+        :param set_couleur: Fonction pour changer la couleur de la trace
         """
         super().__init__(robot_adapter)
-        strat1, self.param1 = strategy1
-        strat2, self.param2 = strategy2
-        self.strategy1 = strat1(robot_adapter)
-        self.strategy2 = strat2(robot_adapter)
-        self.current_strategy = None
-        self.finished = False
+        self.set_dessine = set_dessine
+        self.set_couleur = set_couleur
 
     def execute(self):
-        """Exécute la stratégie en fonction de la condition."""
-        if self.finished:
-            return True  # Stratégie déjà terminée
-
-        # Déterminer la stratégie à exécuter
-        if self.current_strategy is None:
-            if self.robot_adapter.robot.get_distance() < 50:  # Condition d'obstacle à moins de 100 mm
-                print("Condition remplie, exécution de la première stratégie")
-                self.current_strategy = self.strategy1
-                self.param = self.param1
-            else:
-                print("Condition non remplie, exécution de la deuxième stratégie")
-                self.current_strategy = self.strategy2
-                self.param = self.param2
-            self.current_strategy(self.param)
-
-        # Exécuter la stratégie actuelle
-        self.current_strategy.execute()
-
-        # Vérifier si elle est terminée
-        if self.current_strategy.est_terminee():
-            self.finished = True
-            return True
-
-        return False  # La stratégie continue
+        self.set_dessine(True)  # Activer le traçage
+        self.set_couleur("blue")  # Changer la couleur en bleu
 
     def est_terminee(self):
-        """Retourne True si la stratégie est terminée."""
-        return self.finished
+        return True  # La stratégie est instantanée
+
+
+class StrategieRouge(Strategy):
+    def __init__(self, robot_adapter, set_dessine, set_couleur):
+        """
+        Stratégie pour activer la trace rouge.
+        :param robot_adapter: L'adaptateur du robot
+        :param set_dessine: Fonction pour activer/désactiver le traçage
+        :param set_couleur: Fonction pour changer la couleur de la trace
+        """
+        super().__init__(robot_adapter)
+        self.set_dessine = set_dessine
+        self.set_couleur = set_couleur
+
+    def execute(self):
+        self.set_dessine(True)  # Activer le traçage
+        self.set_couleur("red")  # Changer la couleur en rouge
+
+    def est_terminee(self):
+        return True  # La stratégie est instantanée
+
+
+class StrategieInvisible(Strategy):
+    def __init__(self, robot_adapter, set_dessine, set_couleur):
+        """
+        Stratégie pour désactiver la trace.
+        :param robot_adapter: L'adaptateur du robot
+        :param set_dessine: Fonction pour activer/désactiver le traçage
+        :param set_couleur: Fonction pour changer la couleur de la trace
+        """
+        super().__init__(robot_adapter)
+        self.set_dessine = set_dessine
+        self.set_couleur = set_couleur
+
+    def execute(self):
+        self.set_dessine(False)  # Désactiver le traçage
+        self.set_couleur("")  # Pas de couleur pour la trace invisible
+
+    def est_terminee(self):
+        return True  # La stratégie est instantanée

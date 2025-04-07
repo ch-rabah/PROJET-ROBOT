@@ -4,7 +4,7 @@ from view.affichage_Tkinter import SimulationView
 from model.robot import Robot
 from model.environnement import Environnement
 from model.obstacle import Rectangle, Cercle, Triangle
-from strategy.strategy import StrategyAvancer, StrategyTourner, StrategyConditionnelledistance, StrategySequentielle
+from strategy.strategy import StrategyAvancer, StrategyTourner, StrategyConditionnelle, StrategySequentielle, StrategieBleu, StrategieRouge, StrategieInvisible
 from adapter.adapter import RobotAdapterSimulation, RobotAdapterReel
 from RobotReel.Robot2I013 import Robot2I013
 
@@ -20,6 +20,23 @@ def main():
     environnement.ajouter_obstacle(Rectangle((350, 300), (100, 50)))  # Rectangle au centre
     environnement.ajouter_obstacle(Cercle((400, 100), 50))            # Cercle en haut au milieu
     environnement.ajouter_obstacle(Triangle((350, 500), (400, 550), (450, 500)))  # Triangle en bas au milieu
+
+    # Variables pour le traçage
+    dessine = True
+    couleur = "red"
+
+    def set_dessine(var):
+        nonlocal dessine
+        dessine = var
+
+    def rouge():
+        nonlocal couleur
+        couleur = "red"
+
+    def bleu():
+        nonlocal couleur
+        couleur = "blue"
+
 
     # Création du robot réel (mock-up dans ce cas)
     robot2 = Robot2I013()
@@ -39,31 +56,32 @@ def main():
     avancer = StrategyAvancer(robot_adapter)
     tourner = StrategyTourner(robot_adapter)
 
+    strategy_conditionnelle = StrategyConditionnelle(
+        robot_adapter,
+        (StrategyTourner,90)
+        (StrategyAvancer,20), 
+        robot_adapter.get_distance()
+    )
 
-        
 
-    liste = [StrategyConditionnelledistance(robot_adapter,(tourner,180),(avancer, 20))]*10
+    # Création d'une séquence de stratégies pour dessiner le carré
+    strategy_sequence = StrategySequentielle(
+        robot_adapter, 
+        [
+            (StrategyAvancer,40),
+            (StrategyTourner, 90),
+        ]
+    )
 
-    strategy_sequence = StrategySequentielle(robot_adapter, liste)
-
+    # Boucle principale
     while True:
         current_time = time.time()
         dt = current_time - previous_time
         previous_time = current_time
         tempsecouler += dt
+        
 
-         # Exécuter la stratégie actuelle
-        if current_strategy_index < len(strategies1):
-            current_strategy, param = strategies1[current_strategy_index]
-            current_strategy(param)
-            current_strategy.execute()
-
-            # Vérifier si la stratégie est terminée
-            if current_strategy.est_terminee():
-                current_strategy_index += 1
-
-        # Exécuter la stratégie conditionnelle une fois que les stratégies fixes sont terminées
-        elif not strategy_sequence.est_terminee():
+        if not strategy_sequence.est_terminee():
             print("strategie sequentielle")
             strategy_sequence.execute()
         
@@ -71,10 +89,13 @@ def main():
         elif not strategy_conditionnelle.est_terminee():
             print("strategie conditionnelle")
             strategy_conditionnelle.execute()
+        
+        set_dessine(False)
+        bleu()
 
         # Mettre à jour l'environnement et l'affichage
         environnement.update(robot, dt)
-        simulation.mise_a_jour(tempsecouler)
+        simulation.mise_a_jour(tempsecouler,dessine,couleur)
         time.sleep(1 / 60)
 
 

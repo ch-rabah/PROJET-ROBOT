@@ -87,20 +87,26 @@ class SimulationView:
                 f"Vitesse Droite: {self.robot.vitesse_droite:.2f}"
         self.canvas.create_text(10, 10, text=texte, anchor="nw", fill="white")
 
-    def mise_a_jour(self, dt):
+    def dessine(self,boolean,couleur):
+        """
+        Trace la trajectoire du robot en dessinant une ligne reliant ses positions précédentes.
+        """
+        # Ajouter la position actuelle du robot à la trace
+        self.trajet.append((self.robot.x, self.robot.y))
+
+        if boolean:
+            # Dessiner la trace du robot (lignes rouges)
+            for i in range(1, len(self.trajet)):
+                x1, y1 = self.trajet[i - 1]
+                x2, y2 = self.trajet[i]
+                self.canvas.create_line(x1, y1, x2, y2, fill=couleur, width=2)
+
+    def mise_a_jour(self, dt,var,couleur):
         self.canvas.delete("all")  # Effacer l'écran avant de redessiner
         self.afficher_infos(dt)
         self.afficher_obstacles()
 
-        # Ajouter la position actuelle du robot à la trace
-        self.trajet.append((self.robot.x, self.robot.y))
-
-        # Dessiner la trace du robot (lignes rouges)
-        for i in range(1, len(self.trajet)):
-            x1, y1 = self.trajet[i - 1]
-            x2, y2 = self.trajet[i]
-            self.canvas.create_line(x1, y1, x2, y2, fill="red", width=2)
-
+        self.dessine(var,couleur)  # Dessiner la trajectoire du robot
         self.afficher_robot()
         self.root.update()
 
