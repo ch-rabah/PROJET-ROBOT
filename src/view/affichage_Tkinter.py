@@ -17,8 +17,6 @@ class SimulationView:
         self.canvas = tk.Canvas(self.root, width=environnement.dimensions_x[1], height=environnement.dimensions_y[1], bg="lightgrey")
         self.canvas.pack()
 
-        self.trajet = []  # Liste pour stocker les positions du robot
-
     def afficher_robot(self):
         """
         Dessine le robot sous forme d'un triangle avec deux roues.
