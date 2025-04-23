@@ -87,7 +87,7 @@ class StrategyConditionnelle(Strategy):
         strat2, self.param2 = strategy2
         self.strategy1 = strat1(robot_adapter)
         self.strategy2 = strat2(robot_adapter)
-        self.condition_func = condition_func  # Maintenant, c'est une fonction, pas un booléen
+        self.condition_func = condition_func        # Maintenant, c'est une fonction, pas un booléen
         self.current_strategy = None
         self.finished = False
 
