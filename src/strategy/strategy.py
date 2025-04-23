@@ -73,32 +73,32 @@ class StrategyTourner(Strategy):
         return False
 
 class StrategyConditionnelle(Strategy):
-    def __init__(self, robot_adapter, strategy1, strategy2, condition):
+    def __init__(self, robot_adapter, strategy1, strategy2, condition_func):
         """
-        Initialise la stratégie conditionnelle avec deux stratégies et une condition.
-        
+        Initialise la stratégie conditionnelle avec deux stratégies et une fonction de condition.
+
         :param robot_adapter: L'adaptateur du robot
-        :param strategy1: Première stratégie sous forme d'un Tuple (Strategie, parametre) (si condition est vraie)
-        :param strategy2: Deuxième stratégie sous forme d'un Tuple (Strategie, parametre) (si condition est fausse)
-        :param condition: un booléen (expression)
+        :param strategy1: Première stratégie sous forme d'un Tuple (Strategy, param) si la condition est vraie
+        :param strategy2: Deuxième stratégie sous forme d'un Tuple (Strategy, param) si la condition est fausse
+        :param condition_func: Fonction qui retourne True ou False pour déterminer la stratégie à exécuter
         """
         super().__init__(robot_adapter)
         strat1, self.param1 = strategy1
         strat2, self.param2 = strategy2
         self.strategy1 = strat1(robot_adapter)
         self.strategy2 = strat2(robot_adapter)
-        self.condition = condition
+        self.condition_func = condition_func  # Maintenant, c'est une fonction, pas un booléen
         self.current_strategy = None
         self.finished = False
 
     def execute(self):
-        """Exécute la stratégie en fonction de la condition."""
+        """Exécute la stratégie en fonction du résultat de la fonction condition."""
         if self.finished:
             return True  # Stratégie déjà terminée
 
-        # Déterminer la stratégie à exécuter
+        # Vérifier la condition via la fonction conditionnelle
         if self.current_strategy is None:
-            if self.condition:
+            if self.condition_func():  # Appel de la fonction conditionnelle
                 print("Condition remplie, exécution de la première stratégie")
                 self.current_strategy = self.strategy1
                 self.param = self.param1
@@ -111,7 +111,7 @@ class StrategyConditionnelle(Strategy):
         # Exécuter la stratégie actuelle
         self.current_strategy.execute()
 
-        # Vérifier si elle est terminée
+        # Vérifier si la stratégie est terminée
         if self.current_strategy.est_terminee():
             self.finished = True
             return True
@@ -121,6 +121,7 @@ class StrategyConditionnelle(Strategy):
     def est_terminee(self):
         """Retourne True si la stratégie est terminée."""
         return self.finished
+
 
 class StrategySequentielle(Strategy):
     def __init__(self, robot_adapter, strategies):
