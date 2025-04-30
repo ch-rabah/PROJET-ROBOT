@@ -1,7 +1,9 @@
 import time
+from ursina import color
 from model.environnement import Environnement
 from model.robot import Robot
 from model.obstacle import Rectangle, Triangle, Ligne, Cercle
+from model.balise import Balise
 from strategy.strategy import StrategyAvancer, StrategyTourner, StrategySequentielle
 from adapter.adapter import RobotAdapterSimulation
 from view.affichage_3D import SimulationView3D
@@ -16,6 +18,9 @@ def main():
     env.ajouter_obstacle(Cercle((60, 120), 5))
     env.ajouter_obstacle(Ligne((20, 160), (180, 160), largeur=1))
     env.ajouter_obstacle(Triangle((20, 70), (30, 90), (40, 70)))
+
+    b = Balise(position=(50, 75),forme='sphere', couleur=color.green, hauteur=5)
+    env.ajouter_balise(b)
 
     # Créer le robot simulé
     robot = Robot(x=100, y=100, environnement=env, direction=0)
