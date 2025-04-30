@@ -4,8 +4,8 @@ from model.obstacle import Rectangle, Cercle, Triangle, Ligne
 import math
 import time
 
-HAUTEUR_OBSTACLE = 1
-HAUTEUR_ROBOT = 0.5
+HAUTEUR_OBSTACLE = 10
+HAUTEUR_ROBOT = 2
 
 class SimulationView3D:
     def __init__(self, environnement, robot):
@@ -41,7 +41,7 @@ class SimulationView3D:
         )
 
         # Caméra orbitale qui tourne autour de l'environnement avec la souris
-        self.camera = EditorCamera(position=(center_x, 20, center_z+20), rotation=(30, 45, 0))
+        self.camera = EditorCamera(position=(center_x, 20, center_z), rotation=(30, 45, 0))
 
         # Objets
         self.robot_entity = None
@@ -132,9 +132,34 @@ class SimulationView3D:
     @afficher_obstacle.register
     def _(self, obstacle: Triangle):
         sommets = obstacle.get_sommets()
-        verts = [Vec3(x, 0, y) for x, y in sommets]  # Obtenir les sommets du triangle
-        # Création du mesh avec les sommets du triangle
-        mesh = Mesh(vertices=verts, triangles=[(0, 1, 2)], mode='triangle')  # Création du mesh
+
+        x1, y1 = sommets[0]
+        x2, y2 = sommets[1]
+        x3, y3 = sommets[2]
+
+        h = HAUTEUR_OBSTACLE
+
+        # Base (au sol)
+        p1 = Vec3(x1, 0, y1)
+        p2 = Vec3(x2, 0, y2)
+        p3 = Vec3(x3, 0, y3)
+
+        # Haut (même triangle mais élevé en Y)
+        p4 = Vec3(x1, h, y1)
+        p5 = Vec3(x2, h, y2)
+        p6 = Vec3(x3, h, y3)
+
+        # Construction du mesh avec faces latérales + haut + bas
+        vertices = [p1, p2, p3, p4, p5, p6]
+        triangles = [
+            (0, 1, 2),  # base
+            (3, 5, 4),  # haut
+            (0, 3, 1), (1, 3, 4),  # côté 1
+            (1, 4, 2), (2, 4, 5),  # côté 2
+            (2, 5, 0), (0, 5, 3)   # côté 3
+        ]
+
+        mesh = Mesh(vertices=vertices, triangles=triangles, mode='triangle')
         obj = Entity(model=mesh, color=color.magenta)
         self.obstacle_entities.append(obj)
 
