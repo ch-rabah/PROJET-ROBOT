@@ -48,6 +48,8 @@ class SimulationView3D:
         self.obstacle_entities = []
         self.afficher_obstacles()
 
+        self.afficher_balises()
+
         # Temps
         self.label = Text(text='', origin=(0, 18), background=True)
 
@@ -166,6 +168,22 @@ class SimulationView3D:
     def afficher_obstacles(self):
         for obs in self.environnement.obstacles:
             self.afficher_obstacle(obs)
+
+    def afficher_balises(self):
+        if not hasattr(self.environnement, "balises"):
+            return  # aucune balise à afficher
+
+        for balise in self.environnement.balises:
+            x, y = balise.position
+            taille = balise.taille
+            hauteur = balise.hauteur
+
+            Entity(
+                model=balise.forme,
+                color=balise.couleur,
+                scale=(taille, taille, taille),
+                position=(x, hauteur + taille / 2, y)
+            )
 
     def mise_a_jour(self, temps):
         self.afficher_infos(temps)
