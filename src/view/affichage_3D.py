@@ -36,11 +36,11 @@ class SimulationView3D:
             position=(center_x, 0, center_z),
             texture='white_cube',
             texture_scale=(size_x/10, size_z/10),
-            color=color.black,
+            color=color.white,
             collider='box'
         )
 
-        # Caméra
+        # Caméra orbitale qui tourne autour de l'environnement avec la souris
         self.camera = EditorCamera(position=(center_x, 20, center_z+20), rotation=(30, 45, 0))
 
         # Objets
@@ -62,23 +62,28 @@ class SimulationView3D:
 
     def afficher_robot(self):
         if self.robot_entity is None:
-            taille = self.robot.taille_robot * 0.3
-            angle = self.robot.direction
+            # Assure-toi que les coordonnées x, y sont valides et dans le champ de vision
             x, y = self.robot.x, self.robot.y
+            taille = self.robot.taille_robot * 3  # Augmente la taille du robot pour le rendre visible
+            angle = self.robot.direction
 
+            # Debug : Vérification des valeurs de position et taille du robot
+            print(f"Position du robot : ({x}, {y}), Taille : {taille}, Angle : {angle}")
+
+            # Créer un modèle pour le robot (cylindre dans ce cas)
             self.robot_entity = Entity(
                 model='cylinder',  # Utilisation d'un modèle cylindre pour le robot
                 color=color.red,
                 scale=(taille, HAUTEUR_ROBOT, taille),
                 position=(x, HAUTEUR_ROBOT, y),
-                rotation=(0, -math.degrees(angle), 0)
+                rotation=(0, -math.degrees(angle), 0)  # Assure-toi que l'angle est bien converti en degrés
             )
         else:
             # Mise à jour de la position et de la rotation du robot
             x, y = self.robot.x, self.robot.y
             angle = self.robot.direction
             self.robot_entity.position = (x, HAUTEUR_ROBOT, y)
-            self.robot_entity.rotation_y = -math.degrees(angle)
+            self.robot_entity.rotation_y = -math.degrees(angle)  # S'assurer de la bonne orientation
 
     @singledispatchmethod
     def afficher_obstacle(self, obstacle):
@@ -100,11 +105,12 @@ class SimulationView3D:
     def _(self, obstacle: Cercle):
         x, y = obstacle.position
         r = obstacle.rayon
+        # Utilisation du modèle 'sphere' pour représenter un cercle
         obj = Entity(
-            model='cylinder',
+            model='sphere',  # Correctement écrit en minuscules
             color=color.magenta,
-            scale=(r*2, HAUTEUR_OBSTACLE, r*2),
-            position=(x, HAUTEUR_OBSTACLE/2, y)
+            scale=(r*2, HAUTEUR_OBSTACLE, r*2),  # Utilisation du rayon du cercle pour les dimensions X et Z
+            position=(x, HAUTEUR_OBSTACLE/2, y)  # Positionner l'objet au centre, avec une hauteur ajustée
         )
         self.obstacle_entities.append(obj)
 
@@ -126,8 +132,9 @@ class SimulationView3D:
     @afficher_obstacle.register
     def _(self, obstacle: Triangle):
         sommets = obstacle.get_sommets()
-        verts = [Vec3(x, 0, y) for x, y in sommets]
-        mesh = Mesh(vertices=verts, triangles=[(0, 1, 2)], mode='triangle')
+        verts = [Vec3(x, 0, y) for x, y in sommets]  # Obtenir les sommets du triangle
+        # Création du mesh avec les sommets du triangle
+        mesh = Mesh(vertices=verts, triangles=[(0, 1, 2)], mode='triangle')  # Création du mesh
         obj = Entity(model=mesh, color=color.magenta)
         self.obstacle_entities.append(obj)
 
