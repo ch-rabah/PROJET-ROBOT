@@ -103,4 +103,7 @@ class Environnement:
         robot.mise_a_jour_robot(dt)
 
 
-
+    def ajouter_balise(self, balise):
+        if not hasattr(self, "balises"):
+            self.balises = []
+        self.balises.append(balise)
