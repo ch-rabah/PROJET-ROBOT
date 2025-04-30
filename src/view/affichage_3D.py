@@ -1,20 +1,27 @@
-from vpython import *
-import time
-from view.camera_orbitale import CameraOrbitale
-from model.obstacle import Rectangle, Cercle, Triangle, Ligne
+from ursina import *
 from functools import singledispatchmethod
+from model.obstacle import Rectangle, Cercle, Triangle, Ligne
 import math
+import time
 
 HAUTEUR_OBSTACLE = 1
 HAUTEUR_ROBOT = 0.5
 
 class SimulationView3D:
     def __init__(self, environnement, robot):
+        self.app = Ursina()  # Initialise l'application ici, sans super()
+
         self.environnement = environnement
         self.robot = robot
-        self.scene = canvas(title="Simulation 3D Robot", width=800, height=600, center=vector(0, 0, 0), background=color.gray(0.2))
 
-        # Dimensions de l'environnement
+        window.title = "Simulation 3D Robot (Ursina)"
+        window.borderless = False
+        window.fullscreen = False
+        window.exit_button.visible = True
+        window.fps_counter.enabled = True
+        window.color = color.gray
+
+        # Délimiter l'environnement
         x_min, x_max = self.environnement.dimensions_x
         y_min, y_max = self.environnement.dimensions_y
         size_x = x_max - x_min
@@ -22,41 +29,56 @@ class SimulationView3D:
         center_x = (x_max + x_min) / 2
         center_z = (y_max + y_min) / 2
 
-        # Créer un sol
-        self.sol = box(pos=vector(center_x, -0.1, center_z), size=vector(size_x, 0.1, size_z), color=color.white, opacity=0.5)
+        # Sol
+        self.sol = Entity(
+            model='plane',
+            scale=(size_x, 1, size_z),  # Le sol doit avoir une hauteur (1)
+            position=(center_x, 0, center_z),
+            texture='white_cube',
+            texture_scale=(size_x/10, size_z/10),
+            color=color.black,
+            collider='box'
+        )
 
-        # Caméra orbitale centrée sur la scène
-        self.camera_orbitale = CameraOrbitale(scene=self.scene, target=vector(center_x, 0, center_z))
+        # Caméra
+        self.camera = EditorCamera(position=(center_x, 20, center_z+20), rotation=(30, 45, 0))
 
-        # Texte d'information
-        self.info_label = wtext(text='', style={'font-family': 'sans-serif', 'color': 'white', 'font-size': '14px'})
-        self.scene.append_to_caption("\n")
-
+        # Objets
+        self.robot_entity = None
         self.obstacle_entities = []
         self.afficher_obstacles()
+
+        # Temps
+        self.label = Text(text='', origin=(0, 18), background=True)
 
     def afficher_infos(self, temps):
         texte = f"Temps écoulé : {temps:.2f} s\n"
         texte += f"Vitesse gauche : {self.robot.vitesse_gauche:.2f}\n"
         texte += f"Vitesse droite : {self.robot.vitesse_droite:.2f}"
-        self.info_label.text = texte.replace('\n', '<br>')
+
+        # Affichage dans le terminal
+        print(texte)
+        self.label.text = texte  # Mise à jour du texte
 
     def afficher_robot(self):
-        if hasattr(self, 'objet_robot'):
-            self.objet_robot.visible = False
+        if self.robot_entity is None:
+            taille = self.robot.taille_robot * 0.3
+            angle = self.robot.direction
+            x, y = self.robot.x, self.robot.y
 
-        taille = self.robot.taille_robot * 0.3
-        angle = self.robot.direction
-
-        p1 = vector(self.robot.x + taille * math.cos(angle), HAUTEUR_ROBOT, self.robot.y + taille * math.sin(angle))
-        p2 = vector(self.robot.x + taille * math.cos(angle + 2.5), HAUTEUR_ROBOT, self.robot.y + taille * math.sin(angle + 2.5))
-        p3 = vector(self.robot.x + taille * math.cos(angle - 2.5), HAUTEUR_ROBOT, self.robot.y + taille * math.sin(angle - 2.5))
-
-        self.objet_robot = triangle(
-            v0=vertex(pos=p1, color=color.blue),
-            v1=vertex(pos=p2, color=color.blue),
-            v2=vertex(pos=p3, color=color.blue)
-        )
+            self.robot_entity = Entity(
+                model='cylinder',  # Utilisation d'un modèle cylindre pour le robot
+                color=color.red,
+                scale=(taille, HAUTEUR_ROBOT, taille),
+                position=(x, HAUTEUR_ROBOT, y),
+                rotation=(0, -math.degrees(angle), 0)
+            )
+        else:
+            # Mise à jour de la position et de la rotation du robot
+            x, y = self.robot.x, self.robot.y
+            angle = self.robot.direction
+            self.robot_entity.position = (x, HAUTEUR_ROBOT, y)
+            self.robot_entity.rotation_y = -math.degrees(angle)
 
     @singledispatchmethod
     def afficher_obstacle(self, obstacle):
@@ -66,17 +88,24 @@ class SimulationView3D:
     def _(self, obstacle: Rectangle):
         x, y = obstacle.position
         l, h = obstacle.dimensions
-        obj = box(pos=vector(x + l/2, HAUTEUR_OBSTACLE/2, y + h/2), size=vector(l, HAUTEUR_OBSTACLE, h), color=color.magenta)
+        obj = Entity(
+            model='cube',
+            color=color.magenta,
+            scale=(l, HAUTEUR_OBSTACLE, h),
+            position=(x + l/2, HAUTEUR_OBSTACLE/2, y + h/2)
+        )
         self.obstacle_entities.append(obj)
 
     @afficher_obstacle.register
     def _(self, obstacle: Cercle):
         x, y = obstacle.position
         r = obstacle.rayon
-        obj = cylinder(pos=vector(x, 0, y),
-                    axis=vector(0, 1, 0),
-                    radius=r,
-                    color=color.magenta)
+        obj = Entity(
+            model='cylinder',
+            color=color.magenta,
+            scale=(r*2, HAUTEUR_OBSTACLE, r*2),
+            position=(x, HAUTEUR_OBSTACLE/2, y)
+        )
         self.obstacle_entities.append(obj)
 
     @afficher_obstacle.register
@@ -84,25 +113,23 @@ class SimulationView3D:
         x1, y1 = obstacle.point1
         x2, y2 = obstacle.point2
         dx, dz = x2 - x1, y2 - y1
-        obj = cylinder(pos=vector(x1, HAUTEUR_OBSTACLE/2, y1), axis=vector(dx, 0, dz), radius=obstacle.largeur / 2, color=color.magenta)
+        longueur = math.sqrt(dx**2 + dz**2)
+        milieu = ((x1 + x2) / 2, (y1 + y2) / 2)
+        obj = Entity(
+            model='cube',
+            color=color.red,
+            scale=(longueur, HAUTEUR_OBSTACLE, obstacle.largeur),
+            position=(milieu[0], HAUTEUR_OBSTACLE/2, milieu[1])
+        )
         self.obstacle_entities.append(obj)
 
     @afficher_obstacle.register
     def _(self, obstacle: Triangle):
-        points = [vector(x, 0, y) for x, y in obstacle.get_sommets()]
-        base = [vertex(pos=p, color=color.magenta) for p in points]
-        top = [vertex(pos=vector(p.x, 1, p.z), color=color.magenta) for p in points]
-
-        self.obstacle_entities.extend([
-            triangle(v0=base[0], v1=base[1], v2=base[2]),
-            triangle(v0=top[0], v1=top[1], v2=top[2]),
-            triangle(v0=base[0], v1=base[1], v2=top[1]),
-            triangle(v0=base[0], v1=top[1], v2=top[0]),
-            triangle(v0=base[1], v1=base[2], v2=top[2]),
-            triangle(v0=base[1], v1=top[2], v2=top[1]),
-            triangle(v0=base[2], v1=base[0], v2=top[0]),
-            triangle(v0=base[2], v1=top[0], v2=top[2]),
-        ])
+        sommets = obstacle.get_sommets()
+        verts = [Vec3(x, 0, y) for x, y in sommets]
+        mesh = Mesh(vertices=verts, triangles=[(0, 1, 2)], mode='triangle')
+        obj = Entity(model=mesh, color=color.magenta)
+        self.obstacle_entities.append(obj)
 
     def afficher_obstacles(self):
         for obs in self.environnement.obstacles:
@@ -110,12 +137,14 @@ class SimulationView3D:
 
     def mise_a_jour(self, temps):
         self.afficher_infos(temps)
-        self.camera_orbitale.update()
         self.afficher_robot()
 
     def run(self, update_fn):
-        t0 = time.time()
-        while True:
-            rate(60)
-            t = time.time() - t0
-            update_fn(t)
+        # Enregistrement de l'update dans la boucle Ursina
+        def update():
+            now = time.time()
+            self.mise_a_jour(now)
+            update_fn(now)
+
+        self.app.task = update
+        self.app.run()
