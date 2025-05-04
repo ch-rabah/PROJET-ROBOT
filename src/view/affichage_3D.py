@@ -219,13 +219,3 @@ class SimulationView3D:
     def mise_a_jour(self, temps):
         self.afficher_infos(temps)
         self.afficher_robot()
-
-    def run(self, update_fn):
-        # Enregistrement de l'update dans la boucle Ursina
-        def update():
-            now = time.time()
-            self.mise_a_jour(now)
-            update_fn(now)
-
-        self.app.task = update
-        self.app.run()
