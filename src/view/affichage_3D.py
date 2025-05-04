@@ -49,7 +49,7 @@ class SimulationView3D:
         # Caméra orbitale qui tourne autour de l'environnement avec la souris
         self.camera = EditorCamera(position=(center_x, 20, center_z), rotation=(30, 45, 0))
         camera.ui.enabled = False
-        self.camera1 = Entity(parent=self.robot_entity, position=(0, 1, 0), rotation=(0, 0, 0))
+        self.camera1 = Entity(parent=self.robot_entity, position=(0, 1, 0), rotation=(0, 90, 0))
         self.etat_cam = 'editor'
 
         # Temps

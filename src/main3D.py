@@ -21,6 +21,7 @@ def main():
     simulation = SimulationView3D(env, robot)
 
     sequence = StrategySequentielle(robot_adapter, [
+        (StrategyAvancer, 30),
         (StrategyTourner, 90),
         (StrategyAvancer, 30),
     ])
