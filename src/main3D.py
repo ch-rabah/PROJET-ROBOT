@@ -1,5 +1,4 @@
 import time
-from ursina import color
 from model.environnement import Environnement
 from model.robot import Robot
 from model.obstacle import Rectangle, Triangle, Ligne, Cercle
@@ -19,8 +18,8 @@ def main():
     env.ajouter_obstacle(Ligne((20, 160), (180, 160), largeur=1))
     env.ajouter_obstacle(Triangle((20, 70), (30, 90), (40, 70)))
 
-    b = Balise(position=(50, 75),forme='sphere', couleur=color.green, hauteur=5)
-    env.ajouter_balise(b)
+    # Ajouter une balise
+    env.ajouter_balise(Balise(position=(110, 130), taille=10, hauteur=5, rotation=45))
 
     # Créer le robot simulé
     robot = Robot(x=100, y=100, environnement=env, direction=0)
