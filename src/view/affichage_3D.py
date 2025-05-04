@@ -136,7 +136,7 @@ class SimulationView3D:
         milieu = ((x1 + x2) / 2, (y1 + y2) / 2)
         obj = Entity(
             model='cube',
-            color=color.red,
+            color=color.magenta,
             scale=(longueur, HAUTEUR_OBSTACLE, obstacle.largeur),
             position=(milieu[0], HAUTEUR_OBSTACLE/2, milieu[1])
         )
@@ -182,19 +182,39 @@ class SimulationView3D:
 
     def afficher_balises(self):
         if not hasattr(self.environnement, "balises"):
-            return  # aucune balise à afficher
+            return
 
         for balise in self.environnement.balises:
             x, y = balise.position
             taille = balise.taille
-            hauteur = balise.hauteur
+            h = balise.hauteur
+            rotation = balise.rotation
+            couleurs = balise.couleurs
 
-            Entity(
-                model=balise.forme,
-                color=balise.couleur,
-                scale=(taille, taille, taille),
-                position=(x, hauteur + taille / 2, y)
+            # Créer un parent invisible à la bonne position et rotation
+            parent = Entity(
+                position=(x, h, y),
+                rotation_y=rotation
             )
+
+            # Offsets 2x2 centrés sur le parent
+            offsets = [
+                (-0.5, 0.5),  # haut gauche
+                (0.5, 0.5),   # haut droite
+                (-0.5, -0.5), # bas gauche
+                (0.5, -0.5)   # bas droite
+            ]
+
+            for i in range(4):
+                dx, dy = offsets[i]
+                Entity(
+                    parent=parent,  # attaché au parent
+                    model='quad',
+                    color=couleurs[i],
+                    scale=(taille / 2, taille / 2),
+                    position=(dx * taille / 2, dy * taille / 2, 0)
+                    # pas de rotation ici → hérite de celle du parent
+                )
 
     def mise_a_jour(self, temps):
         self.afficher_infos(temps)
