@@ -41,7 +41,7 @@ class SimulationView3D:
         )
 
         # Objets
-        self.robot_entity = Entity(model='cube', color=color.azure, scale=(5,5,5), position=(center_x,0.5,center_z), collider='box')
+        self.robot_entity = Entity(model='cube', color=color.azure, scale=(5,5,5), position=(center_x,1,center_z), collider='box')
         self.obstacle_entities = []
         self.afficher_obstacles()
         self.afficher_balises()
