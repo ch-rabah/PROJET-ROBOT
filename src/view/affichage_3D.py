@@ -40,18 +40,47 @@ class SimulationView3D:
             collider='box'
         )
 
-        # Caméra orbitale qui tourne autour de l'environnement avec la souris
-        self.camera = EditorCamera(position=(center_x, 20, center_z), rotation=(30, 45, 0))
-
         # Objets
-        self.robot_entity = None
+        self.robot_entity = Entity(model='cube', color=color.azure, scale=(5,5,5), position=(center_x,0.5,center_z), collider='box')
         self.obstacle_entities = []
         self.afficher_obstacles()
-
         self.afficher_balises()
+
+        # Caméra orbitale qui tourne autour de l'environnement avec la souris
+        self.camera = EditorCamera(position=(center_x, 20, center_z), rotation=(30, 45, 0))
+        camera.ui.enabled = False
+        self.camera1 = Entity(parent=self.robot_entity, position=(0, 1, 0), rotation=(0, 0, 0))
+        self.etat_cam = 'editor'
 
         # Temps
         self.label = Text(text='', origin=(0, 18), background=True)
+
+        # Gestion clavier par entité interne
+        class InputHandler(Entity):
+            def __init__(self, parent_view):
+                super().__init__()
+                self.parent_view = parent_view
+
+            def input(self, key):
+                if key == 'tab':
+                    print(">> TAB détecté")
+                    self.parent_view.switch()
+
+        self.input_handler = InputHandler(self)
+
+    def switch(self):
+        if self.etat_cam == '1st':
+            self.camera.enabled = True
+            camera.parent = self.camera
+            camera.world_position = self.camera.world_position
+            camera.world_rotation = self.camera.world_rotation
+            self.etat_cam = 'editor'
+        else :
+            self.camera.enabled = False
+            camera.parent = self.camera1
+            camera.world_position = self.camera1.world_position
+            camera.world_rotation = self.camera1.world_rotation
+            self.etat_cam = '1st'
 
     def afficher_infos(self, temps):
         texte = f"Temps écoulé : {temps:.2f} s\n"
@@ -63,24 +92,6 @@ class SimulationView3D:
         self.label.text = texte  # Mise à jour du texte
 
     def afficher_robot(self):
-        if self.robot_entity is None:
-            # Assure-toi que les coordonnées x, y sont valides et dans le champ de vision
-            x, y = self.robot.x, self.robot.y
-            taille = self.robot.taille_robot * 3  # Augmente la taille du robot pour le rendre visible
-            angle = self.robot.direction
-
-            # Debug : Vérification des valeurs de position et taille du robot
-            print(f"Position du robot : ({x}, {y}), Taille : {taille}, Angle : {angle}")
-
-            # Créer un modèle pour le robot (cylindre dans ce cas)
-            self.robot_entity = Entity(
-                model='cylinder',  # Utilisation d'un modèle cylindre pour le robot
-                color=color.red,
-                scale=(taille, HAUTEUR_ROBOT, taille),
-                position=(x, HAUTEUR_ROBOT, y),
-                rotation=(0, -math.degrees(angle), 0)  # Assure-toi que l'angle est bien converti en degrés
-            )
-        else:
             # Mise à jour de la position et de la rotation du robot
             x, y = self.robot.x, self.robot.y
             angle = self.robot.direction

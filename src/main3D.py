@@ -45,6 +45,7 @@ def main():
     elapsed_time = 0
 
     def update(t):
+        print("executed")
         nonlocal previous_time, elapsed_time
         now = time.time()
         dt = now - previous_time
