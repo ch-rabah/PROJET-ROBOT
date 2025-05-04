@@ -106,6 +106,8 @@ class StrategyConditionnelle(Strategy):
                 print("Condition non remplie, exécution de la deuxième stratégie")
                 self.current_strategy = self.strategy2
                 self.param = self.param2
+            
+            print(f"Stratégie choisie : {self.current_strategy}")  # Affichage de la stratégie choisie
             self.current_strategy(self.param)
 
         # Exécuter la stratégie actuelle
@@ -114,6 +116,7 @@ class StrategyConditionnelle(Strategy):
         # Vérifier si la stratégie est terminée
         if self.current_strategy.est_terminee():
             self.finished = True
+            print(f"Stratégie terminée : {self.current_strategy}")
             return True
 
         return False  # La stratégie continue
