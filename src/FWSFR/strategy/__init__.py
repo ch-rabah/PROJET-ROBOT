@@ -1,4 +1,8 @@
 from .strategy import StrategyAvancer, StrategyTourner, StrategySequentielle, StrategyConditionnelle
+def condition_func_distance_proche(robot_adapter):
+    distance = robot_adapter.get_distance()
+    print(f"[Condition] Distance détectée : {distance}")
+    return distance < 20  # Seuil arbitraire
 
 def initialiser_strategies(robot_adapter):
     avancer = StrategyAvancer(robot_adapter)

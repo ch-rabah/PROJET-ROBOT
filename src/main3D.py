@@ -5,7 +5,7 @@ from FWSFR.model.balise import Balise
 from FWSFR.strategy.strategy import StrategyAvancer, StrategyTourner, StrategySequentielle, StrategyConditionnelle
 from FWSFR.adapter.adapter import RobotAdapterSimulation
 from FWSFR.view.affichage_3D import SimulationView3D
-from FWSFR.strategy import verif_sequence
+from FWSFR.strategy import verif_sequence, condition_func_distance_proche
 from FWSFR.view import mise_a_jour_simulation, mettre_a_jour_temps
 from __init__ import initialiser_simulation
 
@@ -14,19 +14,14 @@ def main():
     env, robot, simulation, sequence, previous_time, elapsed_time = initialiser_simulation()
     robot_adapter = RobotAdapterSimulation(robot)
 
-    # Fonction de condition pour la stratégie conditionnelle
-    def condition_func_distance_proche():
-        distance = robot_adapter.get_distance()
-        print(f"[Condition] Distance détectée : {distance}")
-        return distance < 20  # Seuil arbitraire : obstacle à moins de 20 unités
-
     # Définir la stratégie conditionnelle
     strategy_conditionnelle = StrategyConditionnelle(
-        robot_adapter,
-        (StrategyTourner, 90),      # Si condition vraie : tourne
-        (StrategyAvancer, 40),      # Sinon : avance
-        condition_func_distance_proche
-    )
+    robot_adapter,
+    (StrategyTourner, 90),      # Si condition vraie : tourne
+    (StrategyAvancer, 40),      # Sinon : avance
+    lambda: condition_func_distance_proche(robot_adapter)  #  appel indirect
+)
+
 
     while True:
         previous_time, elapsed_time, dt = mettre_a_jour_temps(previous_time, elapsed_time)
