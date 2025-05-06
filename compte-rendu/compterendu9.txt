@@ -1,0 +1,29 @@
+# Compte Rendu - Semaine 9
+
+**Date :** 06/05/2025  
+
+## Résumé  
+
+### 1. Amélioration de la Version 3D 
+    - Modification de l'affichage avec le moteur Ursina pour permettre le traitement des images.
+    - Création de la classe Affichage3D incluant :
+        __init__
+        afficher_infos
+        afficher_robot
+        afficher_obstacles (cercles, rectangles, triangles et lignes)
+        mise_a_jour
+        afficher_balise
+    - Optimisation du fichier main3d.
+
+### 2. Traitement d'Image
+  - Implémentation d'un algorithme de reconnaissance et de traitement d'images.
+  - Création de la classe Balise avec méthode __init__.
+ 
+### 3. Réorganisation du Code
+  - Réduction du fichier main.py à quelques lignes essentielles.
+  - Réorganisation de la branche pour plus de clarté.
+  - Ajout de fichiers __init__.py pour chaque module afin d’optimiser le fonctionnement de main3d.
+
+### 4. Amélioration des Stratégies
+    - Correction de la stratégie conditionnelle pour accepter une fonction en paramètre.
+    - Test de cette nouvelle version de la stratégie.
