@@ -1,8 +1,8 @@
 import time
-from model import initialiser_environnement_robot
-from strategy import initialiser_strategies
-from view.affichage_3D import SimulationView3D
-from adapter import RobotAdapterSimulation
+from FWSFR.model import initialiser_environnement_robot
+from FWSFR.strategy import initialiser_strategies
+from FWSFR.view.affichage_3D import SimulationView3D
+from FWSFR.adapter import RobotAdapterSimulation
 
 def initialiser_simulation():
     env, robot = initialiser_environnement_robot()

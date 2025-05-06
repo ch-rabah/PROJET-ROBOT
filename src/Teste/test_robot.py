@@ -1,6 +1,14 @@
 import unittest
-from robot import Robot
-import math
+import os
+import sys
+
+THIS_DIR = os.path.dirname(os.path.abspath(__file__))
+SRC_DIR  = os.path.abspath(os.path.join(THIS_DIR, os.pardir))
+
+if SRC_DIR not in sys.path:
+    sys.path.insert(0, SRC_DIR)
+
+from FWSFR.model.robot import Robot
 
 class MockEnvironnement:
     def __init__(self, obstacles=None):

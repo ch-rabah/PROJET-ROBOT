@@ -1,6 +1,6 @@
 from ursina import *
 from functools import singledispatchmethod
-from model.obstacle import Rectangle, Cercle, Triangle, Ligne
+from FWSFR.model.obstacle import Rectangle, Cercle, Triangle, Ligne
 import math
 import time
 

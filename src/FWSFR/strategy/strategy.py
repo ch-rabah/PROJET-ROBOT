@@ -1,4 +1,4 @@
-from adapter.adapter import RobotAdapter
+from FWSFR.adapter.adapter import RobotAdapter
 
 class Strategy:
     def __init__(self, robot_adapter):

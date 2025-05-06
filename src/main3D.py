@@ -1,13 +1,12 @@
 import time
-from model.environnement import Environnement
-from model.robot import Robot
-from model.obstacle import Rectangle, Triangle, Ligne, Cercle
-from model.balise import Balise
-from strategy.strategy import StrategyAvancer, StrategyTourner, StrategySequentielle, StrategyConditionnelle
-from adapter.adapter import RobotAdapterSimulation
-from view.affichage_3D import SimulationView3D
-from strategy import verif_sequence
-from view import mise_a_jour_simulation, mettre_a_jour_temps
+from FWSFR.model.environnement import Environnement
+from FWSFR.model.robot import Robot
+from FWSFR.model.balise import Balise
+from FWSFR.strategy.strategy import StrategyAvancer, StrategyTourner, StrategySequentielle, StrategyConditionnelle
+from FWSFR.adapter.adapter import RobotAdapterSimulation
+from FWSFR.view.affichage_3D import SimulationView3D
+from FWSFR.strategy import verif_sequence
+from FWSFR.view import mise_a_jour_simulation, mettre_a_jour_temps
 from __init__ import initialiser_simulation
 
 
