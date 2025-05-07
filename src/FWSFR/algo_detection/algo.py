@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 # Nom du fichier image à traiter
-IMAGE_PATH = "photo5.jpg"  # À adapter selon ton image
+IMAGE_PATH = "photo7.jpg"  # À adapter selon ton image
 
 # Plages HSV des 4 couleurs de la balise
 PLAGES_HSV = {
@@ -41,3 +41,20 @@ if __name__ == "__main__":
     cv2.imwrite("masque_balise_final.png", masque)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
+    # Détection de la position horizontale de la balise
+    moments = cv2.moments(masque)
+    if moments["m00"] != 0:
+        cx = int(moments["m10"] / moments["m00"])
+        largeur = masque.shape[1]
+
+        if cx < largeur / 3:
+            position = "gauche"
+        elif cx > 2 * largeur / 3:
+            position = "droite"
+        else:
+            position = "centre"
+
+        print(f"Balise détectée à : {position.upper()}")
+    else:
+        print("Aucune balise détectée dans l’image.")
