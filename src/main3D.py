@@ -11,8 +11,7 @@ from __init__ import initialiser_simulation
 
 
 def main():
-    env, robot, simulation, sequence, previous_time, elapsed_time = initialiser_simulation()
-    robot_adapter = RobotAdapterSimulation(robot)
+    env, robot, robot_adapter, simulation, sequence, previous_time, elapsed_time = initialiser_simulation()
 
     # Définir la stratégie conditionnelle
     strategy_conditionnelle = StrategyConditionnelle(

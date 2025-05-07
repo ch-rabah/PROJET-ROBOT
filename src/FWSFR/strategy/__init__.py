@@ -14,7 +14,6 @@ def initialiser_strategies(robot_adapter):
         (StrategyAvancer, 30),
         (StrategyTourner, 90),
         (StrategyAvancer, 30),
-        (StrategyAvancer, 30),
         (StrategyTourner, 90),
         (StrategyAvancer, 30),
     ])

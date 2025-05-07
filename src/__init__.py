@@ -12,4 +12,4 @@ def initialiser_simulation():
     previous_time = time.time()
     elapsed_time = 0
 
-    return env, robot, simulation, sequence, previous_time, elapsed_time
+    return env, robot, robot_adapter, simulation, sequence, previous_time, elapsed_time
