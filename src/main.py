@@ -63,6 +63,7 @@ def main():
             (StrategyTourner, 90),
             (StrategyAvancer,40),
             (StrategyTourner, 90),
+            (StrategyAvancer,40),
         ]
     )
 
@@ -73,28 +74,8 @@ def main():
         previous_time = current_time
         tempsecouler += dt
         
-        # Exécuter la stratégie actuelle
-        if current_strategy_index < len(strategies1):
-            current_strategy, param = strategies1[current_strategy_index]
-            current_strategy(param)
-            current_strategy.execute()
+        strategy_sequence.execute()
 
-            # Vérifier si la stratégie est terminée
-            if current_strategy.est_terminee():
-                current_strategy_index += 1
-
-        # Exécuter la stratégie conditionnelle une fois que les stratégies fixes sont terminées
-        elif not strategy_sequence.est_terminee():
-            print("strategie sequentielle")
-            strategy_sequence.execute()
-        
-        
-        elif not strategy_conditionnelle.est_terminee():
-            print("strategie conditionnelle")
-            strategy_conditionnelle.execute()
-        
-
-        
         # Mettre à jour l'environnement et l'affichage
         environnement.update(robot, dt)
         simulation.mise_a_jour(tempsecouler)
