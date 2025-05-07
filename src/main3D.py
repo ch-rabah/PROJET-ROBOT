@@ -5,9 +5,21 @@ from FWSFR.model.balise import Balise
 from FWSFR.strategy.strategy import StrategyAvancer, StrategyTourner, StrategySequentielle, StrategyConditionnelle
 from FWSFR.adapter.adapter import RobotAdapterSimulation
 from FWSFR.view.affichage_3D import SimulationView3D
-from FWSFR.strategy import verif_sequence, condition_func_distance_proche
+from FWSFR.strategy import verif_sequence, condition_func_distance_proche, initialiser_strategies
 from FWSFR.view import mise_a_jour_simulation, mettre_a_jour_temps
-from __init__ import initialiser_simulation
+from FWSFR.model import initialiser_environnement_robot
+
+
+
+def initialiser_simulation():
+    env, robot = initialiser_environnement_robot()
+    robot_adapter = RobotAdapterSimulation(robot)
+    simulation = SimulationView3D(env, robot)
+    sequence = initialiser_strategies(robot_adapter)
+    previous_time = time.time()
+    elapsed_time = 0
+
+    return env, robot, robot_adapter, simulation, sequence, previous_time, elapsed_time
 
 
 def main():
