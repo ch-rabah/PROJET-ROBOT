@@ -46,7 +46,7 @@ class StrategyTourner(Strategy):
     def __init__(self, robot_adapter):
         super().__init__(robot_adapter)
         self.angle_cible = 0
-        self.vitesse = 2
+        self.vitesse = 30
 
     def execute(self):
         if self.angle_cible > 0:
@@ -62,7 +62,7 @@ class StrategyTourner(Strategy):
             self.robot_adapter.set_speed_left(0)
             self.robot_adapter.set_speed_right(0)
 
-    def __call__(self, angle_cible, vitesse=2):
+    def __call__(self, angle_cible, vitesse=30):
         self.angle_cible = angle_cible
         self.vitesse = vitesse
 

@@ -1,4 +1,4 @@
-from FWSFR.RobotReel.Robot2I013 import Robot2I013
+from FWSFR.RobotReel.Robot2I013 import Robot2IN013
 from math import *
 import time
 
@@ -68,8 +68,8 @@ class RobotAdapterSimulation(RobotAdapter):
 class RobotAdapterReel(RobotAdapter):
     def __init__(self, robot):
         super().__init__()
-        self.robot = robot
-        self.pos_initiale = self.robot.get_motor_position()  # Initialisation de la position des moteurs
+        self.robot = Robot2IN013()
+        self.pos_initiale = self.robot.get_motor_position() 
 
     def set_speed_left(self, dps):
         self.robot.set_motor_dps(self.robot.MOTOR_LEFT, dps)
