@@ -1,4 +1,7 @@
 from FWSFR.RobotReel.Robot2I013 import Robot2I013
+from FWSFR.algo_detection.algo import generer_masque_balise, position_balise_dans_image
+import cv2
+from ursina import application
 from math import *
 import time
 
@@ -29,9 +32,10 @@ class RobotAdapter:
         # Ne pas toucher aux autres variables ici
 
 class RobotAdapterSimulation(RobotAdapter):
-    def __init__(self, robot):
+    def __init__(self, robot, simulation=None):
         super().__init__()
         self.robot = robot  
+        self.simulation = simulation
         self.previous_time = time.time()
 
     def set_speed_left(self, dps):
@@ -64,6 +68,42 @@ class RobotAdapterSimulation(RobotAdapter):
         dt = current_time - self.previous_time
         self.previous_time = current_time
         return dt
+    
+class RobotAdapterSimulation3D(RobotAdapterSimulation):
+    def __init__(self, robot, simulation):
+        super().__init__(robot, simulation)
+
+    from ursina import application
+
+    def capturer_image_camera_embarquee(self, chemin="vue_camera.png"):
+        try:
+            application.screen_texture.save(chemin)
+            print(f"[✓] Capture de l’écran enregistrée dans {chemin}")
+            return chemin
+        except Exception as e:
+            print(f"[ERREUR] capture écran : {e}")
+            return None
+
+    def analyser_position_balise(self):
+        chemin = self.capturer_image_camera_embarquee()
+        if not chemin:
+            print("[ERREUR] Aucune image capturée.")
+            return None
+
+        image = cv2.imread(chemin)
+        if image is None:
+            print(f"[ERREUR] Impossible de lire l'image : {chemin}")
+            return None
+        else:
+            print(f"[INFO] Image chargée : {image.shape}")
+
+
+        print(f"[INFO] Image lue par OpenCV : {image.shape}")
+        masque = generer_masque_balise(image)
+        position = position_balise_dans_image(masque)
+        print(f"[INFO] Position détectée : {position}")
+        return position
+
 
 class RobotAdapterReel(RobotAdapter):
     def __init__(self, robot):

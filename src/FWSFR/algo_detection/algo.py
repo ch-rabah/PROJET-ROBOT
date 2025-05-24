@@ -1,9 +1,6 @@
 import cv2
 import numpy as np
 
-# Nom du fichier image à traiter
-IMAGE_PATH = "photo7.jpg"  # À adapter selon ton image
-
 # Plages HSV des 4 couleurs de la balise
 PLAGES_HSV = {
     "jaune": ((20, 100, 100), (35, 255, 255)),
@@ -14,10 +11,11 @@ PLAGES_HSV = {
 }
 
 def generer_masque_balise(image_bgr):
+    """Retourne un masque binaire où la balise colorée apparaît en blanc."""
     hsv = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2HSV)
     masque_total = np.zeros(hsv.shape[:2], dtype=np.uint8)
 
-    for nom, (bas, haut) in PLAGES_HSV.items():
+    for _, (bas, haut) in PLAGES_HSV.items():
         masque = cv2.inRange(hsv, np.array(bas), np.array(haut))
         masque_total = cv2.bitwise_or(masque_total, masque)
 
@@ -28,33 +26,18 @@ def generer_masque_balise(image_bgr):
 
     return masque_total
 
-# Programme principal pour test
-if __name__ == "__main__":
-    image = cv2.imread(IMAGE_PATH)
-    if image is None:
-        print("Erreur : image non trouvée.")
-        exit()
-
-    masque = generer_masque_balise(image)
-
-    # Affichage
-    cv2.imwrite("masque_balise_final.png", masque)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-
-    # Détection de la position horizontale de la balise
+def position_balise_dans_image(masque):
+    """Analyse le masque pour déterminer si la balise est à gauche, centre, droite ou absente."""
     moments = cv2.moments(masque)
-    if moments["m00"] != 0:
-        cx = int(moments["m10"] / moments["m00"])
-        largeur = masque.shape[1]
+    if moments["m00"] == 0:
+        return None  # Aucune balise détectée
 
-        if cx < largeur / 3:
-            position = "gauche"
-        elif cx > 2 * largeur / 3:
-            position = "droite"
-        else:
-            position = "centre"
+    cx = int(moments["m10"] / moments["m00"])
+    largeur = masque.shape[1]
 
-        print(f"Balise détectée à : {position.upper()}")
+    if cx < largeur / 3:
+        return "gauche"
+    elif cx > 2 * largeur / 3:
+        return "droite"
     else:
-        print("Aucune balise détectée dans l’image.")
+        return "centre"

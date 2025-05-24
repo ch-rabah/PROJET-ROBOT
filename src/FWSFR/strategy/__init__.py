@@ -1,4 +1,4 @@
-from .strategy import StrategyAvancer, StrategyTourner, StrategySequentielle, StrategyConditionnelle
+from .strategy import StrategyAvancer, StrategyTourner, StrategySequentielle, StrategyConditionnelle, StrategySuivreBalise
 def condition_func_distance_proche(robot_adapter):
     distance = robot_adapter.get_distance()
     print(f"[Condition] Distance détectée : {distance}")

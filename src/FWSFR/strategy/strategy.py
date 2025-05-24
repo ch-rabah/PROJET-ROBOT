@@ -161,3 +161,55 @@ class StrategySequentielle(Strategy):
     def est_terminee(self):
         """Retourne True si toutes les stratégies ont été exécutées."""
         return self.current_strategy_index >= len(self.strategies)
+
+
+
+class StrategySuivreBalise(Strategy):
+    def __init__(self, robot_adapter):
+        super().__init__(robot_adapter)
+        self.etat = "cherche"         # "cherche" ou "suit"
+        self.terminee = False
+
+    def execute(self):
+        if self.terminee:
+            return
+
+        if self.etat == "cherche":
+            position = self.robot_adapter.analyser_position_balise()
+
+            if position is None:
+                self.robot_adapter.set_speed_left(15)
+                self.robot_adapter.set_speed_right(-15)
+                angle = self.robot_adapter.calculer_angle_parcouru()
+
+                if abs(angle) >= 360:
+                    print("Tour complet sans balise. Fin de stratégie.")
+                    self.robot_adapter.set_speed_left(0)
+                    self.robot_adapter.set_speed_right(0)
+                    self.terminee = True
+            else:
+                print(f"Balise détectée à : {position}")
+                self.etat = "suit"
+                self.robot_adapter.reset()  # reset angle/distance pour la phase suivante
+
+        elif self.etat == "suit":
+            position = self.robot_adapter.analyser_position_balise()
+
+            if position is None:
+                print("Balise perdue. Retour à la recherche.")
+                self.etat = "cherche"
+                self.robot_adapter.reset()
+                return
+
+            if position == "gauche":
+                self.robot_adapter.set_speed_left(15)
+                self.robot_adapter.set_speed_right(30)
+            elif position == "droite":
+                self.robot_adapter.set_speed_left(30)
+                self.robot_adapter.set_speed_right(15)
+            else:
+                self.robot_adapter.set_speed_left(30)
+                self.robot_adapter.set_speed_right(30)
+
+    def est_terminee(self):
+        return self.terminee
