@@ -18,7 +18,7 @@ def initialiser_strategies(robot_adapter):
     # Séquence avec réutilisation de la même instance de StrategyConditionnelle
     sequence = StrategySequentielle(robot_adapter, [
         (avancer, 30),
-        (tourner, 90),
+        (tourner, -90),
         (suivre_balise, None),  
         
             
