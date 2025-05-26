@@ -3,6 +3,7 @@ from functools import singledispatchmethod
 from FWSFR.model.obstacle import Rectangle, Cercle, Triangle, Ligne
 from panda3d.core import Texture
 import math
+import shutil
 import time
 
 HAUTEUR_OBSTACLE = 10
@@ -53,8 +54,7 @@ class SimulationView3D:
         self.camera1 = Entity(parent=self.robot_entity, position=(0, 1, 0), rotation=(0, 90, 0))
         self.etat_cam = 'editor'
 
-        self.camera_texture = Texture()
-        self.camera1.render_texture = self.camera_texture
+        self.switch()
         
         # Temps
         self.label = Text(text='', origin=(0, 18), background=True)
@@ -85,6 +85,21 @@ class SimulationView3D:
             camera.world_position = self.camera1.world_position
             camera.world_rotation = self.camera1.world_rotation
             self.etat_cam = '1st'
+
+    def render(self):
+        """Capture un screenshot et le remplace toujours au même endroit."""
+        # Capture et sauvegarde dans le répertoire courant
+        original_path = self.app.screenshot()
+        print(f"Screenshot temporaire : {original_path}")
+
+        # Chemin cible constant
+        target_path = "src/fwsfr/adapter/screenshot/screenshot.png"
+
+        # Écrase toujours l'ancien fichier
+        shutil.move(original_path, target_path)
+        print(f"Screenshot écrasé et déplacé vers : {target_path}")
+
+        return target_path
 
     def afficher_infos(self, temps):
         texte = f"Temps écoulé : {temps:.2f} s\n"
@@ -223,3 +238,4 @@ class SimulationView3D:
     def mise_a_jour(self, temps):
         #self.afficher_infos(temps)
         self.afficher_robot()
+        self.render()
