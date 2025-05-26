@@ -1,4 +1,4 @@
-from FWSFR.RobotReel.Robot2I013 import Robot2I013
+from FWSFR.RobotReel.robot2I013 import Robot2I013
 from FWSFR.algo_detection.algo import generer_masque_balise, position_balise_dans_image
 import cv2
 from math import *

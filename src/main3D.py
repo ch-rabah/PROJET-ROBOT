@@ -25,17 +25,15 @@ def initialiser_simulation():
 def main():
     env, robot, robot_adapter, simulation, sequence, previous_time, elapsed_time = initialiser_simulation()
 
-    suivre_balise = StrategySuivreBalise(robot_adapter)
 
     while True:
         previous_time, elapsed_time, dt = mettre_a_jour_temps(previous_time, elapsed_time)
 
-        suivre_balise.execute()
 
-        #verif_sequence(sequence)
+        verif_sequence(sequence)
 
         mise_a_jour_simulation(env, robot, simulation, dt, elapsed_time)
-        time.sleep(1/60)
+        time.sleep(1/120)
 
 if __name__ == "__main__":
     main()

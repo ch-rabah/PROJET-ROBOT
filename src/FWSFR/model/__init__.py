@@ -11,7 +11,7 @@ def initialiser_environnement_robot():
     env.ajouter_obstacle(Triangle((20, 70), (30, 90), (40, 70)))
 
     env.ajouter_balise(Balise(position=(110, 130), taille=10, hauteur=5, rotation=-45))
-    env.ajouter_balise(Balise(position=(200, 50), taille=10, hauteur=5, rotation=90))
+    #env.ajouter_balise(Balise(position=(200, 50), taille=10, hauteur=5, rotation=90))
     
     robot = Robot(x=100, y=10, environnement=env, direction=0)
     

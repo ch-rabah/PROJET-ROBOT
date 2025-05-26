@@ -94,7 +94,7 @@ class SimulationView3D:
         dossier = ""
         chemin_absolu = os.path.abspath(dossier)
         # Chemin cible constant
-        target_path = chemin_absolu + "/FWSFR/adapter/screenshot/screenshot.png"
+        target_path = chemin_absolu+"/src/FWSFR/adapter/screenshot/screenshot.png"
 
         # Écrase toujours l'ancien fichier
         shutil.move(original_path, target_path)
