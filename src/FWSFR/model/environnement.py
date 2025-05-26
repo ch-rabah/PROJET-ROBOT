@@ -95,11 +95,12 @@ class Environnement:
         """
         Met à jour l'état de l'environnement en gérant les collisions et en détectant les sorties.
         """
-        if self.detecter_sorties(robot):
+        """if self.detecter_sorties(robot):
             print("Le robot est sorti des limites de l'environnement!")
             robot.appliquer_vitesse_gauche(0)
             robot.appliquer_vitesse_droite(0)
-        self.gerer_collisions(robot)
+        self.gerer_collisions(robot)"""
+        
         robot.mise_a_jour_robot(dt)
 
 
