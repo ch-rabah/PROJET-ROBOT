@@ -1,4 +1,5 @@
 from FWSFR.adapter.adapter import RobotAdapter
+from FWSFR.algo_detection.algo import generer_masque_balise, position_balise_dans_image
 
 class Strategy:
     def __init__(self, robot_adapter):
@@ -170,49 +171,39 @@ class StrategySequentielle(Strategy):
 class StrategySuivreBalise(Strategy):
     def __init__(self, robot_adapter):
         super().__init__(robot_adapter)
-        self.etat = "cherche"         # "cherche" ou "suit"
+        self.etat = "cherche"  # ou "suit"
         self.terminee = False
 
     def execute(self):
         if self.terminee:
             return
 
-        if self.etat == "cherche":
-            position = self.robot_adapter.analyser_position_balise()
+        # 1. Récupère l’image de la caméra
+        image = self.robot_adapter.get_image()
+        if image is None:
+            print("[INFO] Pas d'image reçue")
+            self.robot_adapter.set_speed_left(0)
+            self.robot_adapter.set_speed_right(0)
+            return
 
-            if position is None:
-                self.robot_adapter.set_speed_left(15)
-                self.robot_adapter.set_speed_right(-15)
-                angle = self.robot_adapter.calculer_angle_parcouru()
+        # 2. Détecte la balise dans l’image
+        masque = generer_masque_balise(image)
+        position = position_balise_dans_image(masque)
 
-                if abs(angle) >= 360:
-                    print("Tour complet sans balise. Fin de stratégie.")
-                    self.robot_adapter.set_speed_left(0)
-                    self.robot_adapter.set_speed_right(0)
-                    self.terminee = True
-            else:
-                print(f"Balise détectée à : {position}")
-                self.etat = "suit"
-                self.robot_adapter.reset()  # reset angle/distance pour la phase suivante
-
-        elif self.etat == "suit":
-            position = self.robot_adapter.analyser_position_balise()
-
-            if position is None:
-                print("Balise perdue. Retour à la recherche.")
-                self.etat = "cherche"
-                self.robot_adapter.reset()
-                return
-
-            if position == "gauche":
-                self.robot_adapter.set_speed_left(15)
-                self.robot_adapter.set_speed_right(30)
-            elif position == "droite":
-                self.robot_adapter.set_speed_left(30)
-                self.robot_adapter.set_speed_right(15)
-            else:
-                self.robot_adapter.set_speed_left(30)
-                self.robot_adapter.set_speed_right(30)
+        # 3. Adapte la conduite selon la position détectée
+        if position is None:
+            # Cherche la balise (exemple : tourne sur place)
+            self.robot_adapter.set_speed_left(-20)
+            self.robot_adapter.set_speed_right(20)
+        elif position == "gauche":
+            self.robot_adapter.set_speed_left(10)
+            self.robot_adapter.set_speed_right(30)
+        elif position == "droite":
+            self.robot_adapter.set_speed_left(30)
+            self.robot_adapter.set_speed_right(10)
+        else:  # centre
+            self.robot_adapter.set_speed_left(30)
+            self.robot_adapter.set_speed_right(30)
 
     def est_terminee(self):
         return self.terminee

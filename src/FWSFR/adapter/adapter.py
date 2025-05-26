@@ -1,7 +1,6 @@
 from FWSFR.RobotReel.Robot2I013 import Robot2I013
 from FWSFR.algo_detection.algo import generer_masque_balise, position_balise_dans_image
 import cv2
-from ursina import application
 from math import *
 import time
 
@@ -68,41 +67,17 @@ class RobotAdapterSimulation(RobotAdapter):
         dt = current_time - self.previous_time
         self.previous_time = current_time
         return dt
-    
-class RobotAdapterSimulation3D(RobotAdapterSimulation):
-    def __init__(self, robot, simulation):
-        super().__init__(robot, simulation)
 
-    from ursina import application
-
-    def capturer_image_camera_embarquee(self, chemin="vue_camera.png"):
-        try:
-            application.screen_texture.save(chemin)
-            print(f"[✓] Capture de l’écran enregistrée dans {chemin}")
-            return chemin
-        except Exception as e:
-            print(f"[ERREUR] capture écran : {e}")
+    def get_image(self):
+        chemin = self.simulation.render()  # capture et sauvegarde un screenshot
+        image_bgr = cv2.imread(chemin)     # lit l'image (par défaut en BGR)
+        
+        if image_bgr is None:
+            print(f"[ERREUR] Impossible de lire l'image depuis : {chemin}")
             return None
+        image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)  # conversion en RGB
 
-    def analyser_position_balise(self):
-        chemin = self.capturer_image_camera_embarquee()
-        if not chemin:
-            print("[ERREUR] Aucune image capturée.")
-            return None
-
-        image = cv2.imread(chemin)
-        if image is None:
-            print(f"[ERREUR] Impossible de lire l'image : {chemin}")
-            return None
-        else:
-            print(f"[INFO] Image chargée : {image.shape}")
-
-
-        print(f"[INFO] Image lue par OpenCV : {image.shape}")
-        masque = generer_masque_balise(image)
-        position = position_balise_dans_image(masque)
-        print(f"[INFO] Position détectée : {position}")
-        return position
+        return image_rgb
 
 
 class RobotAdapterReel(RobotAdapter):

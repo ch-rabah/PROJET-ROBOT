@@ -1,10 +1,10 @@
 from ursina import *
 from functools import singledispatchmethod
 from FWSFR.model.obstacle import Rectangle, Cercle, Triangle, Ligne
-from panda3d.core import Texture
 import math
 import shutil
 import time
+import os
 
 HAUTEUR_OBSTACLE = 10
 HAUTEUR_ROBOT = 2
@@ -90,14 +90,14 @@ class SimulationView3D:
         """Capture un screenshot et le remplace toujours au même endroit."""
         # Capture et sauvegarde dans le répertoire courant
         original_path = self.app.screenshot()
-        print(f"Screenshot temporaire : {original_path}")
 
+        dossier = ""
+        chemin_absolu = os.path.abspath(dossier)
         # Chemin cible constant
-        target_path = "src/fwsfr/adapter/screenshot/screenshot.png"
+        target_path = chemin_absolu + "/FWSFR/adapter/screenshot/screenshot.png"
 
         # Écrase toujours l'ancien fichier
         shutil.move(original_path, target_path)
-        print(f"Screenshot écrasé et déplacé vers : {target_path}")
 
         return target_path
 
@@ -238,4 +238,3 @@ class SimulationView3D:
     def mise_a_jour(self, temps):
         #self.afficher_infos(temps)
         self.afficher_robot()
-        self.render()
