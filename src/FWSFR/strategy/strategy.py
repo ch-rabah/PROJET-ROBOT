@@ -32,7 +32,7 @@ class StrategyAvancer(Strategy):
             self.robot_adapter.set_speed_left(0)
             self.robot_adapter.set_speed_right(0)
 
-    def __call__(self, distance_cible, vitesse=30):
+    def __call__(self, distance_cible, vitesse=50):
         self.distance_cible = distance_cible
         self.vitesse = vitesse
 
