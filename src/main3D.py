@@ -8,6 +8,9 @@ from FWSFR.model import initialiser_environnement_robot
 
 
 def initialiser_simulation():
+    """Initialise la simulation 3D avec Ursina, l'environnement et le robot.
+    :return: Tuple contenant l'environnement, le robot, l'adaptateur de robot, la vue de simulation, la séquence de stratégies, le temps précédent et le temps écoulé
+    """
     env, robot = initialiser_environnement_robot()
     simulation = SimulationView3D(env, robot)
     robot_adapter = RobotAdapterSimulation(robot, simulation)
@@ -24,7 +27,6 @@ def main():
 
     while True:
         previous_time, elapsed_time, dt = mettre_a_jour_temps(previous_time, elapsed_time)
-
 
         verif_sequence(sequence)
 

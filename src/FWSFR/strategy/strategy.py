@@ -17,12 +17,25 @@ class Strategy:
         pass
 
 class StrategyAvancer(Strategy):
+    """
+    Stratégie pour faire avancer le robot en ligne droite sur une distance donnée.
+    Utilise une vitesse fixe, et s’arrête automatiquement lorsque la distance cible est atteinte.
+    """
     def __init__(self, robot_adapter,vitesse):
+        """
+        :param robot_adapter: L'adapter du robot (passé pour compatibilité)
+        :param vitesse: Vitesse de déplacement du robot 
+        """
         super().__init__(robot_adapter)
         self.distance_cible = 0
         self.vitesse = vitesse
 
     def execute(self):
+        """Exécute la stratégie d'avancement.
+        - Vérifie si la distance cible est atteinte.
+        - Si non, avance le robot à la vitesse définie.
+        - Si la distance cible est atteinte, arrête le robot et affiche un message.
+        """
         self.robot_adapter.set_speed_left(self.vitesse)
         self.robot_adapter.set_speed_right(self.vitesse)     
 
@@ -36,18 +49,34 @@ class StrategyAvancer(Strategy):
         self.distance_cible = distance_cible
 
     def est_terminee(self):
+        """Vérifie si la stratégie d'avancement est terminée.
+        Retourne True si la distance cible est atteinte, sinon False.
+        """
         if self.robot_adapter.calculer_distance_parcourue() >= self.distance_cible:  # Retourne True si l'objectif est atteint
             self.robot_adapter.reset()
             return True
         return False
 
 class StrategyTourner(Strategy):
+    """
+    Stratégie permettant de faire tourner le robot sur place d’un angle donné (en degrés).
+    Le robot tourne à une vitesse fixée, et s’arrête lorsque l’angle cible est atteint.
+    """
     def __init__(self, robot_adapter,vitesse):
+        """
+        :param robot_adapter: L'adapter du robot (passé pour compatibilité)
+        :param vitesse: Vitesse de rotation du robot 
+        """
         super().__init__(robot_adapter)
         self.angle_cible = 0
         self.vitesse = vitesse
 
     def execute(self):
+        """Exécute la stratégie de rotation.
+        - Vérifie si l'angle cible est atteint.
+        - Si non, fait tourner le robot à la vitesse définie.
+        - Si l'angle cible est atteint, arrête le robot et affiche un message.
+        """
         if self.angle_cible > 0:
             self.robot_adapter.set_speed_left(self.vitesse)
             self.robot_adapter.set_speed_right(-self.vitesse)
@@ -65,12 +94,21 @@ class StrategyTourner(Strategy):
         self.angle_cible = angle_cible
 
     def est_terminee(self):
+        """Vérifie si la stratégie de rotation est terminée.
+        Retourne True si l'angle cible est atteint, sinon False.
+        """
         if abs(self.robot_adapter.calculer_angle_parcouru()) >= abs(self.angle_cible):
             self.robot_adapter.reset()
             return True
         return False
 
 class StrategyConditionnelle(Strategy):
+    """Stratégie conditionnelle qui choisit entre deux stratégies en fonction d'une condition.
+    - Si la condition est vraie, utilise strategy1 avec param1.
+    - Si la condition est fausse, utilise strategy2 avec param2.
+    La stratégie s'arrête lorsque l'une des deux stratégies est terminée.
+    """
+
     def __init__(self, robot_adapter, strategy1, strategy2, condition_func):
         """
         - strategy1: tuple (StrategyInstance, param)
@@ -106,6 +144,11 @@ class StrategyConditionnelle(Strategy):
         self.finished = False
 
     def execute(self):
+        """
+        Exécute la stratégie conditionnelle.
+        - Si la stratégie actuelle est terminée, on passe à l'autre.
+        - Si aucune stratégie n'est en cours, on vérifie la condition et on choisit la stratégie appropriée.
+        """
         if self.finished:
             return True
         if self.current_strategy is None:
@@ -123,6 +166,7 @@ class StrategyConditionnelle(Strategy):
         return False
 
     def est_terminee(self):
+        """Vérifie si la stratégie conditionnelle est terminée."""
         return self.finished
 
 
@@ -140,6 +184,11 @@ class StrategySequentielle(Strategy):
         self.current_strategy = None
 
     def execute(self):
+        """ Exécute la stratégie séquentielle.
+        - Passe à la stratégie suivante si la stratégie actuelle est terminée.
+        - Exécute la stratégie actuelle.
+        - Si toutes les stratégies sont terminées, ne fait rien.
+        """
         if self.current_strategy_index >= len(self.strategies):
             return  # Toutes les stratégies sont terminées
 
@@ -163,12 +212,21 @@ class StrategySequentielle(Strategy):
             self.current_strategy = None  # Passe à la suivante
 
     def est_terminee(self):
+        """Vérifie si toutes les stratégies de la séquence sont terminées.
+        Retourne True si toutes les stratégies ont été exécutées et sont terminées."""
         return self.current_strategy_index >= len(self.strategies)
 
 
 
 class StrategySuivreBalise(Strategy):
+    """
+    Stratégie de suivi de balise : le robot ajuste ses vitesses pour garder la balise au centre de sa vision.
+    Si la balise est perdue ou non détectée, la stratégie s’arrête.
+    """
     def __init__(self, robot_adapter):
+        """
+        :param robot_adapter: L'adapter du robot (passé pour compatibilité)
+        """
         super().__init__(robot_adapter)
         self.terminee = False
 
@@ -176,6 +234,13 @@ class StrategySuivreBalise(Strategy):
         self.terminee = False
 
     def execute(self):
+        """Exécute la stratégie de suivi de balise.
+        - Récupère l'image du robot.
+        - Génère un masque pour détecter la balise.
+        - Détermine la position de la balise dans l'image.
+        - Ajuste les vitesses du robot en fonction de la position de la balise.
+        - Si la balise n'est pas détectée, arrête le robot et marque la stratégie comme terminée.
+        """
         if self.terminee:
             return
 
@@ -208,6 +273,9 @@ class StrategySuivreBalise(Strategy):
                 self.robot_adapter.set_speed_right(50)
 
     def est_terminee(self):
+        """Vérifie si la stratégie de suivi de balise est terminée.
+        Retourne True si la balise n'est pas détectée ou si la stratégie a été arrêtée.
+        """
         return self.terminee
 
 class StrategyUnDeuxTroisSoleil(Strategy):
@@ -217,12 +285,21 @@ class StrategyUnDeuxTroisSoleil(Strategy):
     la stratégie se termine uniquement quand il est vraiment proche de la balise (capteur de distance).
     """
     def __init__(self, robot_adapter, vitesse=40, distance_cible=20):
+        """
+        :param robot_adapter: L'adapter du robot (passé pour compatibilité)
+        :param vitesse: Vitesse de déplacement du robot (par défaut 40)
+        :param distance_cible: Distance cible à atteindre pour considérer la balise comme proche (par défaut 20 cm)
+        """
         super().__init__(robot_adapter)
         self.terminee = False
         self.vitesse = vitesse
         self.distance_cible = distance_cible  # cm
 
     def __call__(self, vitesse=None, distance_cible=None):
+        """ Réinitialise la stratégie avec de nouveaux paramètres.
+        :param vitesse: Nouvelle vitesse de déplacement (par défaut None, utilise la valeur actuelle)
+        :param distance_cible: Nouvelle distance cible à atteindre (par défaut None, utilise la valeur actuelle)
+        """
         if vitesse is not None:
             self.vitesse = vitesse
         if distance_cible is not None:
@@ -230,6 +307,16 @@ class StrategyUnDeuxTroisSoleil(Strategy):
         self.terminee = False
 
     def execute(self):
+        """Exécute la stratégie 1, 2, 3 soleil.
+        - Vérifie si la stratégie est déjà terminée.
+        - Vérifie la distance à l'obstacle/balise devant.
+        - Si la distance est inférieure à la distance cible, arrête le robot et marque la stratégie comme terminée.
+        - Récupère l'image du robot.
+        - Génère un masque pour détecter la balise.
+        - Détermine la position de la balise dans l'image.
+        - Si la balise est visible, avance le robot.
+        - Si la balise n'est pas visible, arrête le robot et attend qu'elle revienne.
+        """
         if self.terminee:
             return
 
