@@ -169,20 +169,12 @@ class StrategySequentielle(Strategy):
 
 
 class StrategySuivreBalise(Strategy):
-    def __init__(self, robot_adapter, tours_max=2):
+    def __init__(self, robot_adapter):
         super().__init__(robot_adapter)
-        self.tours_max = tours_max
         self.terminee = False
-        self.nb_tours = 0
-        self.cherche = False
 
-    def __call__(self, tours_max=None):
-        if tours_max is not None:
-            self.tours_max = tours_max
+    def __call__(self):
         self.terminee = False
-        self.nb_tours = 0
-        self.cherche = False
-        self.robot_adapter.reset()  # On veut réinitialiser le calcul d'angle
 
     def execute(self):
         if self.terminee:
@@ -192,45 +184,30 @@ class StrategySuivreBalise(Strategy):
         if image is None:
             self.robot_adapter.set_speed_left(0)
             self.robot_adapter.set_speed_right(0)
+            self.terminee = True
             return
 
         masque = generer_masque_balise(image)
         position = position_balise_dans_image(masque)
 
         if position is None:
-            # Début de la phase de recherche
-            if not self.cherche:
-                self.cherche = True
-                self.nb_tours = 0
-                self.robot_adapter.reset()
-            # On tourne sur place
-            self.robot_adapter.set_speed_left(-20)
-            self.robot_adapter.set_speed_right(20)
-            angle = abs(self.robot_adapter.calculer_angle_parcouru())
-            #print(f"Angle tourné : {angle:.1f}° ; Tours déjà faits : {self.nb_tours}")
-            if angle >= 360:
-                self.nb_tours += 1
-                self.robot_adapter.reset()  # On remet l'angle à zéro pour le prochain tour
-                # print(f"Tour complet effectué. Total : {self.nb_tours}/{self.tours_max}")
-            if self.nb_tours >= self.tours_max:
-                print("Condition d'arrêt atteinte : nombre max de tours sans balise ",self.nb_tours)
-                self.terminee = True
-                self.robot_adapter.set_speed_left(0)
-                self.robot_adapter.set_speed_right(0)
+            # Rien détecté : on arrête tout, stratégie finie
+            self.robot_adapter.set_speed_left(0)
+            self.robot_adapter.set_speed_right(0)
+            self.terminee = True
+            print("Balise non détectée, arrêt de la stratégie.")
         else:
-            # Balise trouvée : on reset tout ce qui concerne la recherche
-            self.cherche = False
-            self.nb_tours = 0
-            self.robot_adapter.reset()
+            # On suit la balise selon sa position dans l’image
             if position == "gauche":
                 self.robot_adapter.set_speed_left(10)
-                self.robot_adapter.set_speed_right(30)
+                self.robot_adapter.set_speed_right(40)
             elif position == "droite":
-                self.robot_adapter.set_speed_left(30)
+                self.robot_adapter.set_speed_left(40)
                 self.robot_adapter.set_speed_right(10)
             else:
-                self.robot_adapter.set_speed_left(30)
-                self.robot_adapter.set_speed_right(30)
+                self.robot_adapter.set_speed_left(40)
+                self.robot_adapter.set_speed_right(40)
 
     def est_terminee(self):
         return self.terminee
+

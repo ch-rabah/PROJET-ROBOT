@@ -1,8 +1,4 @@
 import time
-from FWSFR.model.environnement import Environnement
-from FWSFR.model.robot import Robot
-from FWSFR.model.balise import Balise
-from FWSFR.strategy.strategy import StrategyAvancer, StrategyTourner, StrategySequentielle, StrategyConditionnelle, StrategySuivreBalise
 from FWSFR.adapter.adapter import RobotAdapterSimulation
 from FWSFR.view.affichage_3D import SimulationView3D
 from FWSFR.strategy import verif_sequence, initialiser_strategies
@@ -33,7 +29,7 @@ def main():
         verif_sequence(sequence)
 
         mise_a_jour_simulation(env, robot, simulation, dt, elapsed_time)
-        time.sleep(1/120)
+        time.sleep(1/60)
 
 if __name__ == "__main__":
     main()
