@@ -1,4 +1,6 @@
 from FWSFR.adapter.adapter import RobotAdapter
+from FWSFR.algo_detection.algo import generer_masque_balise, position_balise_dans_image
+
 
 class Strategy:
     def __init__(self, robot_adapter):
@@ -15,16 +17,14 @@ class Strategy:
         pass
 
 class StrategyAvancer(Strategy):
-    def __init__(self, robot_adapter):
+    def __init__(self, robot_adapter,vitesse):
         super().__init__(robot_adapter)
         self.distance_cible = 0
-        self.vitesse = 30
+        self.vitesse = vitesse
 
     def execute(self):
         self.robot_adapter.set_speed_left(self.vitesse)
-        self.robot_adapter.set_speed_right(self.vitesse)
-
-        
+        self.robot_adapter.set_speed_right(self.vitesse)     
 
         # Vérifier si la distance cible est atteinte
         if self.robot_adapter.calculer_distance_parcourue() >= self.distance_cible:
@@ -32,9 +32,8 @@ class StrategyAvancer(Strategy):
             self.robot_adapter.set_speed_left(0)
             self.robot_adapter.set_speed_right(0)
 
-    def __call__(self, distance_cible, vitesse=30):
+    def __call__(self, distance_cible):
         self.distance_cible = distance_cible
-        self.vitesse = vitesse
 
     def est_terminee(self):
         if self.robot_adapter.calculer_distance_parcourue() >= self.distance_cible:  # Retourne True si l'objectif est atteint
@@ -43,10 +42,10 @@ class StrategyAvancer(Strategy):
         return False
 
 class StrategyTourner(Strategy):
-    def __init__(self, robot_adapter):
+    def __init__(self, robot_adapter,vitesse):
         super().__init__(robot_adapter)
         self.angle_cible = 0
-        self.vitesse = 2
+        self.vitesse = vitesse
 
     def execute(self):
         if self.angle_cible > 0:
@@ -62,9 +61,8 @@ class StrategyTourner(Strategy):
             self.robot_adapter.set_speed_left(0)
             self.robot_adapter.set_speed_right(0)
 
-    def __call__(self, angle_cible, vitesse=2):
+    def __call__(self, angle_cible):
         self.angle_cible = angle_cible
-        self.vitesse = vitesse
 
     def est_terminee(self):
         if abs(self.robot_adapter.calculer_angle_parcouru()) >= abs(self.angle_cible):
@@ -75,64 +73,66 @@ class StrategyTourner(Strategy):
 class StrategyConditionnelle(Strategy):
     def __init__(self, robot_adapter, strategy1, strategy2, condition_func):
         """
-        Initialise la stratégie conditionnelle avec deux stratégies et une fonction de condition.
-
-        :param robot_adapter: L'adaptateur du robot
-        :param strategy1: Première stratégie sous forme d'un Tuple (Strategy, param) si la condition est vraie
-        :param strategy2: Deuxième stratégie sous forme d'un Tuple (Strategy, param) si la condition est fausse
-        :param condition_func: Fonction qui retourne True ou False pour déterminer la stratégie à exécuter
+        - strategy1: tuple (StrategyInstance, param)
+        - strategy2: tuple (StrategyInstance, param)
+        - condition_func: fonction sans argument (ex: lambda: ...)
         """
         super().__init__(robot_adapter)
         strat1, self.param1 = strategy1
         strat2, self.param2 = strategy2
-        self.strategy1 = strat1(robot_adapter)
-        self.strategy2 = strat2(robot_adapter)
-        self.condition_func = condition_func  # Maintenant, c'est une fonction, pas un booléen
+
+        # Si on passe la classe, on instancie, sinon on utilise l’instance déjà créée
+        self.strategy1 = strat1(robot_adapter) if isinstance(strat1, type) else strat1
+        self.strategy2 = strat2(robot_adapter) if isinstance(strat2, type) else strat2
+        self.condition_func = condition_func
+        self.current_strategy = None
+        self.finished = False
+
+    def __call__(self, param1=None, param2=None):
+        """
+        Remise à zéro complète de la stratégie + paramètres.
+        Peut être appelée avec :
+            - (param1, param2)
+            - ((param1, param2),)
+        """
+        # Autorise le passage d’un tuple unique ((v1,v2),) ou de deux paramètres
+        if isinstance(param1, tuple) and param2 is None:
+            param1, param2 = param1
+        if param1 is not None:
+            self.param1 = param1
+        if param2 is not None:
+            self.param2 = param2
         self.current_strategy = None
         self.finished = False
 
     def execute(self):
-        """Exécute la stratégie en fonction du résultat de la fonction condition."""
         if self.finished:
-            return True  # Stratégie déjà terminée
-
-        # Vérifier la condition via la fonction conditionnelle
+            return True
         if self.current_strategy is None:
-            if self.condition_func():  # Appel de la fonction conditionnelle
-                print("Condition remplie, exécution de la première stratégie")
+            if self.condition_func():
                 self.current_strategy = self.strategy1
                 self.param = self.param1
             else:
-                print("Condition non remplie, exécution de la deuxième stratégie")
                 self.current_strategy = self.strategy2
                 self.param = self.param2
-            
-            print(f"Stratégie choisie : {self.current_strategy}")  # Affichage de la stratégie choisie
             self.current_strategy(self.param)
-
-        # Exécuter la stratégie actuelle
         self.current_strategy.execute()
-
-        # Vérifier si la stratégie est terminée
         if self.current_strategy.est_terminee():
             self.finished = True
-            print(f"Stratégie terminée : {self.current_strategy}")
             return True
-
-        return False  # La stratégie continue
+        return False
 
     def est_terminee(self):
-        """Retourne True si la stratégie est terminée."""
         return self.finished
 
 
 class StrategySequentielle(Strategy):
     def __init__(self, robot_adapter, strategies):
         """
-        Initialise une séquence de stratégies.
-        
-        :param robot_adapter: L'adaptateur du robot
-        :param strategies: Liste de tuples (strategy, param)
+        :param robot_adapter: L'adapter du robot (passé pour compatibilité)
+        :param strategies: Liste de tuples (strategy_instance, param)
+            - strategy_instance : instance déjà créée (pas la classe !)
+            - param : peut être un seul argument, ou un tuple d'arguments à passer à __call__
         """
         super().__init__(robot_adapter)
         self.strategies = strategies
@@ -140,24 +140,72 @@ class StrategySequentielle(Strategy):
         self.current_strategy = None
 
     def execute(self):
-        """Exécute la stratégie actuelle et passe à la suivante quand elle est terminée."""
         if self.current_strategy_index >= len(self.strategies):
             return  # Toutes les stratégies sont terminées
 
-        # Sélection de la stratégie actuelle si elle n'est pas déjà définie
         if self.current_strategy is None:
-            strategy_class, param = self.strategies[self.current_strategy_index]
-            self.current_strategy = strategy_class(self.robot_adapter)
-            self.current_strategy(param)
+            strategy_obj, param = self.strategies[self.current_strategy_index]
+            # Appel __call__ de la stratégie avec unpack des paramètres si besoin
+            if param is not None:
+                # Si le param est un tuple, on déplie (ex: (40, 180) pour conditionnelle)
+                if isinstance(param, tuple):
+                    strategy_obj(*param)
+                else:
+                    strategy_obj(param)
+            else:
+                strategy_obj()
+            self.current_strategy = strategy_obj
 
-        # Exécuter la stratégie actuelle
         self.current_strategy.execute()
 
-        # Vérifier si elle est terminée
         if self.current_strategy.est_terminee():
             self.current_strategy_index += 1
-            self.current_strategy = None  # Réinitialiser pour passer à la suivante
+            self.current_strategy = None  # Passe à la suivante
 
     def est_terminee(self):
-        """Retourne True si toutes les stratégies ont été exécutées."""
         return self.current_strategy_index >= len(self.strategies)
+
+
+
+class StrategySuivreBalise(Strategy):
+    def __init__(self, robot_adapter):
+        super().__init__(robot_adapter)
+        self.terminee = False
+
+    def __call__(self):
+        self.terminee = False
+
+    def execute(self):
+        if self.terminee:
+            return
+
+        image = self.robot_adapter.get_image()
+        if image is None:
+            self.robot_adapter.set_speed_left(0)
+            self.robot_adapter.set_speed_right(0)
+            self.terminee = True
+            return
+
+        masque = generer_masque_balise(image)
+        position = position_balise_dans_image(masque)
+
+        if position is None:
+            # Rien détecté : on arrête tout, stratégie finie
+            self.robot_adapter.set_speed_left(0)
+            self.robot_adapter.set_speed_right(0)
+            self.terminee = True
+            print("Balise non détectée, arrêt de la stratégie.")
+        else:
+            # On suit la balise selon sa position dans l’image
+            if position == "gauche":
+                self.robot_adapter.set_speed_left(20)
+                self.robot_adapter.set_speed_right(50)
+            elif position == "droite":
+                self.robot_adapter.set_speed_left(50)
+                self.robot_adapter.set_speed_right(20)
+            else:
+                self.robot_adapter.set_speed_left(50)
+                self.robot_adapter.set_speed_right(50)
+
+    def est_terminee(self):
+        return self.terminee

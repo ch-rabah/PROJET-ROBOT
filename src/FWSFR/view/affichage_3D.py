@@ -2,7 +2,9 @@ from ursina import *
 from functools import singledispatchmethod
 from FWSFR.model.obstacle import Rectangle, Cercle, Triangle, Ligne
 import math
+import shutil
 import time
+import os
 
 HAUTEUR_OBSTACLE = 10
 HAUTEUR_ROBOT = 2
@@ -52,6 +54,8 @@ class SimulationView3D:
         self.camera1 = Entity(parent=self.robot_entity, position=(0, 1, 0), rotation=(0, 90, 0))
         self.etat_cam = 'editor'
 
+        self.switch()
+        
         # Temps
         self.label = Text(text='', origin=(0, 18), background=True)
 
@@ -81,6 +85,21 @@ class SimulationView3D:
             camera.world_position = self.camera1.world_position
             camera.world_rotation = self.camera1.world_rotation
             self.etat_cam = '1st'
+
+    def render(self):
+        """Capture un screenshot et le remplace toujours au même endroit."""
+        # Capture et sauvegarde dans le répertoire courant
+        original_path = self.app.screenshot()
+
+        dossier = ""
+        chemin_absolu = os.path.abspath(dossier)
+        # Chemin cible constant
+        target_path = chemin_absolu+"/src/FWSFR/adapter/screenshot/screenshot.png"
+
+        # Écrase toujours l'ancien fichier
+        shutil.move(original_path, target_path)
+
+        return target_path
 
     def afficher_infos(self, temps):
         texte = f"Temps écoulé : {temps:.2f} s\n"
@@ -217,5 +236,5 @@ class SimulationView3D:
                 )
 
     def mise_a_jour(self, temps):
-        self.afficher_infos(temps)
+        #self.afficher_infos(temps)
         self.afficher_robot()

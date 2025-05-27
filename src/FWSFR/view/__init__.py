@@ -1,9 +1,4 @@
-from .affichage_3D import SimulationView3D
 import time
-
-def initialiser_simulation(env, robot):
-    return SimulationView3D(env, robot)
-
 
 
 def mettre_a_jour_temps(previous_time, elapsed_time):
