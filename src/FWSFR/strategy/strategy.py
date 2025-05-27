@@ -1,6 +1,7 @@
 from FWSFR.adapter.adapter import RobotAdapter
 from FWSFR.algo_detection.algo import generer_masque_balise, position_balise_dans_image
 
+
 class Strategy:
     def __init__(self, robot_adapter):
         self.robot_adapter = robot_adapter
@@ -16,10 +17,10 @@ class Strategy:
         pass
 
 class StrategyAvancer(Strategy):
-    def __init__(self, robot_adapter):
+    def __init__(self, robot_adapter,vitesse):
         super().__init__(robot_adapter)
         self.distance_cible = 0
-        self.vitesse = 100
+        self.vitesse = vitesse
 
     def execute(self):
         self.robot_adapter.set_speed_left(self.vitesse)
@@ -31,9 +32,8 @@ class StrategyAvancer(Strategy):
             self.robot_adapter.set_speed_left(0)
             self.robot_adapter.set_speed_right(0)
 
-    def __call__(self, distance_cible, vitesse=100):
+    def __call__(self, distance_cible):
         self.distance_cible = distance_cible
-        self.vitesse = vitesse
 
     def est_terminee(self):
         if self.robot_adapter.calculer_distance_parcourue() >= self.distance_cible:  # Retourne True si l'objectif est atteint
@@ -42,10 +42,10 @@ class StrategyAvancer(Strategy):
         return False
 
 class StrategyTourner(Strategy):
-    def __init__(self, robot_adapter):
+    def __init__(self, robot_adapter,vitesse):
         super().__init__(robot_adapter)
         self.angle_cible = 0
-        self.vitesse = 50
+        self.vitesse = vitesse
 
     def execute(self):
         if self.angle_cible > 0:
@@ -61,9 +61,8 @@ class StrategyTourner(Strategy):
             self.robot_adapter.set_speed_left(0)
             self.robot_adapter.set_speed_right(0)
 
-    def __call__(self, angle_cible, vitesse=50):
+    def __call__(self, angle_cible):
         self.angle_cible = angle_cible
-        self.vitesse = vitesse
 
     def est_terminee(self):
         if abs(self.robot_adapter.calculer_angle_parcouru()) >= abs(self.angle_cible):
@@ -199,11 +198,11 @@ class StrategySuivreBalise(Strategy):
         else:
             # On suit la balise selon sa position dans l’image
             if position == "gauche":
-                self.robot_adapter.set_speed_left(10)
+                self.robot_adapter.set_speed_left(20)
                 self.robot_adapter.set_speed_right(50)
             elif position == "droite":
                 self.robot_adapter.set_speed_left(50)
-                self.robot_adapter.set_speed_right(10)
+                self.robot_adapter.set_speed_right(20)
             else:
                 self.robot_adapter.set_speed_left(50)
                 self.robot_adapter.set_speed_right(50)

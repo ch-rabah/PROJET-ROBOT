@@ -1,22 +1,20 @@
 import time
-from FWSFR.adapter.adapter import RobotAdapterReel, RobotAdapterSimulation
+from robot2IN013 import Robot2IN013
+from FWSFR.adapter.adapter import RobotAdapterReel
 from FWSFR.strategy import verif_sequence, initialiser_strategies
 from FWSFR.view import mise_a_jour_simulation, mettre_a_jour_temps
-from FWSFR.model import initialiser_environnement_robot
 
-def initialiser_simulation():
-    env, robot = initialiser_environnement_robot()
-    robot_adapter = RobotAdapterReel()
-    robot_adapter.start_record()
-    sequence = initialiser_strategies(robot_adapter)
+def initialiser_reel():
+    robot_adapter = RobotAdapterReel(Robot2IN013())
+    sequence = initialiser_strategies(robot_adapter,3,2,10)
     previous_time = time.time()
     elapsed_time = 0
 
-    return env, robot, robot_adapter, sequence, previous_time, elapsed_time
+    return  sequence, previous_time, elapsed_time
 
 def main():
 
-    env, robot, robot_adapter, sequence, previous_time, elapsed_time = initialiser_simulation()
+    sequence, previous_time, elapsed_time = initialiser_reel()
 
 
     while True:
