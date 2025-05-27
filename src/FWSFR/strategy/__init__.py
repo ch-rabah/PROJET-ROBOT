@@ -1,4 +1,4 @@
-from .strategy import StrategyAvancer, StrategyTourner, StrategySequentielle, StrategyConditionnelle, StrategySuivreBalise
+from .strategy import StrategyAvancer, StrategyTourner, StrategySequentielle, StrategyConditionnelle, StrategySuivreBalise, StrategyUnDeuxTroisSoleil
 
 
 def initialiser_strategies(robot_adapter,coef_av=1,coef_tou=1,coef_dist=1):
@@ -31,6 +31,12 @@ def initialiser_strategies(robot_adapter,coef_av=1,coef_tou=1,coef_dist=1):
         
             
     ])
+
+    strategie_123soleil = StrategyUnDeuxTroisSoleil(robot_adapter, vitesse=60, distance_cible=50)
+    sequence2 = StrategySequentielle(robot_adapter, [
+        (strategie_123soleil, None),
+    ])
+
     
     return sequence
 

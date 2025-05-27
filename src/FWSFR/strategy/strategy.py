@@ -209,3 +209,56 @@ class StrategySuivreBalise(Strategy):
 
     def est_terminee(self):
         return self.terminee
+
+class StrategyUnDeuxTroisSoleil(Strategy):
+    """
+    1, 2, 3 soleil : le robot avance tant qu'il voit la balise,
+    s'arrête quand il ne la voit plus,
+    la stratégie se termine uniquement quand il est vraiment proche de la balise (capteur de distance).
+    """
+    def __init__(self, robot_adapter, vitesse=40, distance_cible=20):
+        super().__init__(robot_adapter)
+        self.terminee = False
+        self.vitesse = vitesse
+        self.distance_cible = distance_cible  # cm
+
+    def __call__(self, vitesse=None, distance_cible=None):
+        if vitesse is not None:
+            self.vitesse = vitesse
+        if distance_cible is not None:
+            self.distance_cible = distance_cible
+        self.terminee = False
+
+    def execute(self):
+        if self.terminee:
+            return
+
+        # Vérification de la distance
+        distance = self.robot_adapter.get_distance()  # récupère la distance à l'obstacle/balise devant
+        if distance is not None and distance < self.distance_cible:
+            self.robot_adapter.set_speed_left(0)
+            self.robot_adapter.set_speed_right(0)
+            print("Balise très proche : victoire !")
+            self.terminee = True
+            return
+
+        image = self.robot_adapter.get_image()
+        if image is None:
+            self.robot_adapter.set_speed_left(0)
+            self.robot_adapter.set_speed_right(0)
+            return
+
+        masque = generer_masque_balise(image)
+        position = position_balise_dans_image(masque)
+
+        if position is None:
+            # Pas de balise visible : STOP, mais on attend qu'elle revienne
+            self.robot_adapter.set_speed_left(0)
+            self.robot_adapter.set_speed_right(0)
+        else:
+            # Balise vue : on avance
+            self.robot_adapter.set_speed_left(self.vitesse)
+            self.robot_adapter.set_speed_right(self.vitesse)
+
+    def est_terminee(self):
+        return self.terminee
