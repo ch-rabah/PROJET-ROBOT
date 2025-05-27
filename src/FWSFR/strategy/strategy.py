@@ -1,4 +1,5 @@
 from FWSFR.adapter.adapter import RobotAdapter
+from FWSFR.algo_detection.algo import generer_masque_balise, position_balise_dans_image
 
 class Strategy:
     def __init__(self, robot_adapter):
@@ -18,13 +19,11 @@ class StrategyAvancer(Strategy):
     def __init__(self, robot_adapter):
         super().__init__(robot_adapter)
         self.distance_cible = 0
-        self.vitesse = 50
+        self.vitesse = 30
 
     def execute(self):
         self.robot_adapter.set_speed_left(self.vitesse)
-        self.robot_adapter.set_speed_right(self.vitesse)
-
-        
+        self.robot_adapter.set_speed_right(self.vitesse)     
 
         # Vérifier si la distance cible est atteinte
         if self.robot_adapter.calculer_distance_parcourue() >= self.distance_cible:
@@ -32,7 +31,7 @@ class StrategyAvancer(Strategy):
             self.robot_adapter.set_speed_left(0)
             self.robot_adapter.set_speed_right(0)
 
-    def __call__(self, distance_cible, vitesse=50):
+    def __call__(self, distance_cible, vitesse=30):
         self.distance_cible = distance_cible
         self.vitesse = vitesse
 
@@ -46,7 +45,7 @@ class StrategyTourner(Strategy):
     def __init__(self, robot_adapter):
         super().__init__(robot_adapter)
         self.angle_cible = 0
-        self.vitesse = 30
+        self.vitesse = 2
 
     def execute(self):
         if self.angle_cible > 0:
@@ -62,7 +61,7 @@ class StrategyTourner(Strategy):
             self.robot_adapter.set_speed_left(0)
             self.robot_adapter.set_speed_right(0)
 
-    def __call__(self, angle_cible, vitesse=30):
+    def __call__(self, angle_cible, vitesse=2):
         self.angle_cible = angle_cible
         self.vitesse = vitesse
 
@@ -168,3 +167,70 @@ class StrategySequentielle(Strategy):
         return self.current_strategy_index >= len(self.strategies)
 
 
+
+class StrategySuivreBalise(Strategy):
+    def __init__(self, robot_adapter, tours_max=2):
+        super().__init__(robot_adapter)
+        self.tours_max = tours_max
+        self.terminee = False
+        self.nb_tours = 0
+        self.cherche = False
+
+    def __call__(self, tours_max=None):
+        if tours_max is not None:
+            self.tours_max = tours_max
+        self.terminee = False
+        self.nb_tours = 0
+        self.cherche = False
+        self.robot_adapter.reset()  # On veut réinitialiser le calcul d'angle
+
+    def execute(self):
+        if self.terminee:
+            return
+
+        image = self.robot_adapter.get_image()
+        if image is None:
+            self.robot_adapter.set_speed_left(0)
+            self.robot_adapter.set_speed_right(0)
+            return
+
+        masque = generer_masque_balise(image)
+        position = position_balise_dans_image(masque)
+
+        if position is None:
+            # Début de la phase de recherche
+            if not self.cherche:
+                self.cherche = True
+                self.nb_tours = 0
+                self.robot_adapter.reset()
+            # On tourne sur place
+            self.robot_adapter.set_speed_left(-20)
+            self.robot_adapter.set_speed_right(20)
+            angle = abs(self.robot_adapter.calculer_angle_parcouru())
+            #print(f"Angle tourné : {angle:.1f}° ; Tours déjà faits : {self.nb_tours}")
+            if angle >= 360:
+                self.nb_tours += 1
+                self.robot_adapter.reset()  # On remet l'angle à zéro pour le prochain tour
+                # print(f"Tour complet effectué. Total : {self.nb_tours}/{self.tours_max}")
+            if self.nb_tours >= self.tours_max:
+                print("Condition d'arrêt atteinte : nombre max de tours sans balise ",self.nb_tours)
+                self.terminee = True
+                self.robot_adapter.set_speed_left(0)
+                self.robot_adapter.set_speed_right(0)
+        else:
+            # Balise trouvée : on reset tout ce qui concerne la recherche
+            self.cherche = False
+            self.nb_tours = 0
+            self.robot_adapter.reset()
+            if position == "gauche":
+                self.robot_adapter.set_speed_left(10)
+                self.robot_adapter.set_speed_right(30)
+            elif position == "droite":
+                self.robot_adapter.set_speed_left(30)
+                self.robot_adapter.set_speed_right(10)
+            else:
+                self.robot_adapter.set_speed_left(30)
+                self.robot_adapter.set_speed_right(30)
+
+    def est_terminee(self):
+        return self.terminee
