@@ -1,6 +1,6 @@
 import time
 from FWSFR.adapter.adapter import RobotAdapterReel, RobotAdapterSimulation
-from FWSFR.strategy import verif_sequence, condition_func_distance_proche, initialiser_strategies
+from FWSFR.strategy import verif_sequence, initialiser_strategies
 from FWSFR.view import mise_a_jour_simulation, mettre_a_jour_temps
 from FWSFR.model import initialiser_environnement_robot
 
