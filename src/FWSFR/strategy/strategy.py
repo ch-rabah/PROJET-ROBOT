@@ -19,7 +19,7 @@ class StrategyAvancer(Strategy):
     def __init__(self, robot_adapter):
         super().__init__(robot_adapter)
         self.distance_cible = 0
-        self.vitesse = 50
+        self.vitesse = 100
 
     def execute(self):
         self.robot_adapter.set_speed_left(self.vitesse)
@@ -31,7 +31,7 @@ class StrategyAvancer(Strategy):
             self.robot_adapter.set_speed_left(0)
             self.robot_adapter.set_speed_right(0)
 
-    def __call__(self, distance_cible, vitesse=50):
+    def __call__(self, distance_cible, vitesse=100):
         self.distance_cible = distance_cible
         self.vitesse = vitesse
 
@@ -45,7 +45,7 @@ class StrategyTourner(Strategy):
     def __init__(self, robot_adapter):
         super().__init__(robot_adapter)
         self.angle_cible = 0
-        self.vitesse = 30
+        self.vitesse = 50
 
     def execute(self):
         if self.angle_cible > 0:
@@ -61,7 +61,7 @@ class StrategyTourner(Strategy):
             self.robot_adapter.set_speed_left(0)
             self.robot_adapter.set_speed_right(0)
 
-    def __call__(self, angle_cible, vitesse=30):
+    def __call__(self, angle_cible, vitesse=50):
         self.angle_cible = angle_cible
         self.vitesse = vitesse
 
@@ -200,13 +200,13 @@ class StrategySuivreBalise(Strategy):
             # On suit la balise selon sa position dans l’image
             if position == "gauche":
                 self.robot_adapter.set_speed_left(10)
-                self.robot_adapter.set_speed_right(30)
+                self.robot_adapter.set_speed_right(50)
             elif position == "droite":
-                self.robot_adapter.set_speed_left(30)
+                self.robot_adapter.set_speed_left(50)
                 self.robot_adapter.set_speed_right(10)
             else:
-                self.robot_adapter.set_speed_left(30)
-                self.robot_adapter.set_speed_right(30)
+                self.robot_adapter.set_speed_left(50)
+                self.robot_adapter.set_speed_right(50)
 
     def est_terminee(self):
         return self.terminee

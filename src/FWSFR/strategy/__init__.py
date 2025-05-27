@@ -17,15 +17,15 @@ def initialiser_strategies(robot_adapter):
 
     # Séquence avec réutilisation de la même instance de StrategyConditionnelle
     sequence = StrategySequentielle(robot_adapter, [
-        (avancer, 30),
+        (avancer, 200),
         (tourner, -90),
-        (avancer, 30),
+        (avancer, 200),
         (tourner, -90),
-        (avancer, 30),
+        (avancer, 200),
         (tourner, -90),
-        (avancer, 30),
+        (avancer, 200),
         (tourner, -90),
-        (conditionnelle,(90,30)),
+        (conditionnelle,(90,400)),
         (conditionnelle,(-90,50)),
         (suivre_balise, None),  
         
