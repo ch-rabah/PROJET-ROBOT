@@ -1,4 +1,4 @@
-from FWSFR.RobotReel.Robot2I013 import Robot2IN013
+from robot2IN013 import Robot2IN013
 from FWSFR.algo_detection.algo import generer_masque_balise, position_balise_dans_image
 import cv2
 from math import *
@@ -81,9 +81,9 @@ class RobotAdapterSimulation(RobotAdapter):
 
 
 class RobotAdapterReel(RobotAdapter):
-    def __init__(self, robot):
+    def __init__(self):
         super().__init__()
-        self.robot = robot
+        self.robot = Robot2IN013()
         self.pos_initiale = self.robot.get_motor_position()  # Initialisation de la position des moteurs
 
     def set_speed_left(self, dps):
@@ -122,6 +122,9 @@ class RobotAdapterReel(RobotAdapter):
     
     def get_image(self):
         return self.robot.get_image()
+    
+    def start_record(self):
+        self.robot.start_recording()
 
     def reset(self):
         super().reset()

@@ -3,7 +3,7 @@ from .strategy import StrategyAvancer, StrategyTourner, StrategySequentielle, St
 
 def initialiser_strategies(robot_adapter):
     def condition_func_distance_proche():
-        return robot_adapter.get_distance() < 40
+        return robot_adapter.get_distance() < 400
     
     avancer = StrategyAvancer(robot_adapter)
     tourner = StrategyTourner(robot_adapter)
@@ -19,6 +19,14 @@ def initialiser_strategies(robot_adapter):
     sequence = StrategySequentielle(robot_adapter, [
         (avancer, 30),
         (tourner, -90),
+        (avancer, 30),
+        (tourner, -90),
+        (avancer, 30),
+        (tourner, -90),
+        (avancer, 30),
+        (tourner, -90),
+        (conditionnelle,(90,30)),
+        (conditionnelle,(-90,50)),
         (suivre_balise, None),  
         
             
