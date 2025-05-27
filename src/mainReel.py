@@ -2,7 +2,7 @@ import time
 from robot2IN013 import Robot2IN013
 from FWSFR.adapter.adapter import RobotAdapterReel
 from FWSFR.strategy import verif_sequence, initialiser_strategies
-from FWSFR.view import mise_a_jour_simulation, mettre_a_jour_temps
+from FWSFR.view import mettre_a_jour_temps
 
 def initialiser_simulation():
     robot_adapter = RobotAdapterReel(Robot2IN013())
