@@ -11,6 +11,11 @@ HAUTEUR_ROBOT = 2
 
 class SimulationView3D:
     def __init__(self, environnement, robot):
+        """
+        Initialise la vue 3D de la simulation avec Ursina.
+        :param environnement: Instance de l'environnement de simulation
+        :param robot: Instance du robot à afficher dans la simulation
+        """
         self.app = Ursina()  # Initialise l'application ici, sans super()
 
         self.environnement = environnement
@@ -73,6 +78,7 @@ class SimulationView3D:
         self.input_handler = InputHandler(self)
 
     def switch(self):
+        """Bascule entre la caméra orbitale et la caméra 1ère personne."""
         if self.etat_cam == '1st':
             self.camera.enabled = True
             camera.parent = self.camera
