@@ -2,6 +2,13 @@ from .strategy import StrategyAvancer, StrategyTourner, StrategySequentielle, St
 
 
 def initialiser_strategies(robot_adapter,coef_av=1,coef_tou=1,coef_dist=1):
+    """    Initialise les stratégies de base pour le robot.
+    Args:
+        robot_adapter (RobotAdapter): L'adaptateur du robot pour interagir avec le matériel.
+        coef_av (float): Coefficient pour ajuster la vitesse d'avancement pour le robot reel pour regler l'echelles.
+        coef_tou (float): Coefficient pour ajuster la vitesse de rotation pour le robot reel pour regler l'echelles.
+        coef_dist (float): Coefficient pour ajuster la distance de détection des obstacles pour le robot reel pour regler l'echelles
+    ."""
     def condition_func_distance_proche():
         return robot_adapter.get_distance() < 40*coef_dist
     
