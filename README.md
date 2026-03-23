@@ -68,15 +68,15 @@ Ces modules peuvent être testés de manière isolée et sont composables. On pe
 
 ```mermaid
 graph TD
-    A[<b>Classes de Base</b><br>Actions Unitaires] --> |"Sont assemblées par"| B(<b>Classes de Composition</b><br>Arbres de Décisions)
+    A["Classes de Base<br>Actions Unitaires"] -->|"Sont assemblées par"| B("Classes de Composition<br>Arbres de Décisions")
     A1(StrategyAvancer) --> A
     A2(StrategyTourner) --> A
     A3(StrategySuivreBalise) --> A
     
-    B --> B1(StrategySequentielle<br/><i>Exécute les listes une à une</i>)
-    B --> B2(StrategyConditionnelle<br/><i>Choisit via clause If/Else</i>)
-    B1 -.-> |<i>"D'abord"</i>| A1
-    B1 -.-> |<i>"Puis"</i>| A2
+    B --> B1("StrategySequentielle<br/>Exécute les listes une à une")
+    B --> B2("StrategyConditionnelle<br/>Choisit via clause If/Else")
+    B1 -. "D'abord" .-> A1
+    B1 -. "Puis" .-> A2
 ```
 
 ---
